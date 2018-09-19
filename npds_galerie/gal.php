@@ -110,9 +110,7 @@ switch($op) {
 
 // Vote pour une image
    case "vote":
-      echo '<div class="card">';
       PostVote($gal_id, $pos, $pic_id, $value);
-      echo '</div>';
    break;
 
    case "sendcard":
@@ -131,9 +129,7 @@ switch($op) {
 // Proposition d'images par les membres
    case "formimgs" :
       if(autorisation(1)) {
-      echo '<div class="card">';
       PrintFormImgs();
-      echo '</div>';
       }
       else {
       redirect_url($nuke_url);
