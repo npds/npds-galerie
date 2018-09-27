@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2017 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2018 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -13,8 +13,8 @@
 /* (c) 2007 Xgonin, Lopez - http://modules.npds.org                     */
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
-/* npds_galerie v 3.0                                                   */
-/* Changement de nom du module version Rev16 par jpb/phr janv 2017      */
+/* MAJ jpb, phr -2017 renommé npds_galerie                              */
+/* v 3.0                                                                */
 /************************************************************************/
 
 // For More security
@@ -68,108 +68,122 @@ if ($admin) {
 
    echo '
    <div id="adm_men">
-      <h2><img class="mr-2" src="modules/npds_galerie/npds_galerie.png" alt="icon_npds_galerie">'.gal_translate('Galeries de photos').'<small class="float-right">'.$npds_gal_version.'</small></h2>
-      <div class="card mb-2">
-         <div class="card-body">
-            <ul class="list-inline">
-               <li class="list-inline-item"><a class="btn btn-secondary my-1" href="'.$ThisFile.'" role="button" title="'.gal_translate("Accueil").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-home" aria-hidden="true"></i></a></li>
-               <li class="list-inline-item"><a class="btn btn-secondary my-1" href="'.$ThisFile.'&amp;subop=viewarbo" role="button" title="'.gal_translate("Arborescence").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-sitemap" aria-hidden="true"></i></a></li>
-               <li class="list-inline-item"><a class="btn btn-secondary my-1" href="'.$ThisFile.'&amp;subop=formcregal" role="button" title="'.gal_translate("Ajout galerie").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-plus mr-2" aria-hidden="true"></i>Gal</a></li>
-               <li class="list-inline-item"><a class="btn btn-secondary my-1" href="'.$ThisFile.'&amp;subop=formcat" role="button" title="'.gal_translate("Ajout catégorie").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-plus mr-2" aria-hidden="true"></i>Cat</a></li>
-               <li class="list-inline-item"><a class="btn btn-secondary my-1" href="'.$ThisFile.'&amp;subop=formsscat" role="button" title="'.gal_translate("Ajout sous-catégorie").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-plus mr-2" aria-hidden="true"></i>S-Cat</a></li>
-               <li class="list-inline-item"><a class="btn btn-secondary my-1" href="'.$ThisFile.'&amp;subop=formimgs" role="button" title="'.gal_translate("Ajout images").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-plus mr-2" aria-hidden="true"></i><i class="fa fa-picture-o"></i></a></li>
-               <li class="list-inline-item"><a class="btn btn-secondary my-1" href="'.$ThisFile.'&amp;subop=import" role="button" title="'.gal_translate("Import images").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></a></li>
-               <li class="list-inline-item"><a class="btn btn-secondary my-1" href="'.$ThisFile.'&amp;subop=export" role="button" title="'.gal_translate("Export catégorie").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></a></li>
-               <li class="list-inline-item"><a class="btn btn-secondary my-1" href="'.$ThisFile.'&amp;subop=config" role="button" title="'.gal_translate("Configuration").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-cogs" aria-hidden="true"></i></a></li>
-            </ul>
-         </div>
+      <h2 class="mb-3"><img class="mr-2 mb-2" src="modules/npds_galerie/npds_galerie.png" alt="icon_npds_galerie">'.gal_translate('Galeries de photos').'<small class="float-right">'.$npds_gal_version.'</small></h2>
+      <div class=" mb-2 p-2 border rounded">
+         <ul class="nav nav-pills nav-fill">
+            <li class="nav-item">
+               <a class="nav-link" href="'.$ThisFile.'" title="'.gal_translate("Accueil").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-home fa-2x"></i></a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="'.$ThisFile.'&amp;subop=viewarbo" role="button" title="'.gal_translate("Arborescence").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-sitemap fa-2x" ></i></a>
+            </li>
+            <li class="nav-item dropdown">
+               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-plus-square fa-2x mr-1 align-middle" ></i>Ajouter</a>
+               <div class="dropdown-menu">
+                  <a class="dropdown-item" href="'.$ThisFile.'&amp;subop=formcat">'.gal_translate("Ajout catégorie").'</a>
+                  <a class="dropdown-item" href="'.$ThisFile.'&amp;subop=formsscat">'.gal_translate("Ajout sous-catégorie").'</a>
+                  <a class="dropdown-item" href="'.$ThisFile.'&amp;subop=formcregal">'.gal_translate("Ajout galerie").'</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="'.$ThisFile.'&amp;subop=formimgs">'.gal_translate("Ajout images").'</a>
+               </div>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="'.$ThisFile.'&amp;subop=import" role="button" title="'.gal_translate("Import images").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-long-arrow-down fa-2x" ></i></a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="'.$ThisFile.'&amp;subop=export" role="button" title="'.gal_translate("Export catégorie").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-long-arrow-up fa-2x" ></i></a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="'.$ThisFile.'&amp;subop=config" role="button" title="'.gal_translate("Configuration").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-cogs fa-2x" ></i></a>
+            </li>
+         </ul>
       </div>';
    settype($subop,'string');
    settype($go, 'boolean');
    switch($subop) {
-   case "formcat" :
+   case 'formcat' :
      PrintFormCat();
      break;
-   case "addcat" :
+   case 'addcat' :
      AddACat($newcat,$acces);
      break;
-   case "formsscat" :
+   case 'formsscat' :
      PrintFormSSCat();
      break;
-   case "addsscat" :
+   case 'addsscat' :
      AddSsCat($cat,$newsscat,$acces);
      break;
-   case "formcregal" :
+   case 'formcregal' :
      PrintCreerGalery();
      break;
-   case "creegal" :
+   case 'creegal' :
      AddNewGal($galcat,$newgal,$acces);
      break;
-   case "formimgs" :
+   case 'formimgs' :
      PrintFormImgs();
      break;
-   case "addimgs" :
+   case 'addimgs' :
      AddImgs($imggal,$newcard1,$newdesc1,$newcard2,$newdesc2,$newcard3,$newdesc3,$newcard4,$newdesc4,$newcard5,$newdesc5);
      break;
-   case "viewarbo" :
+   case 'viewarbo' :
      PrintArbo();
      break;
-   case "delcat" :
+   case 'delcat' :
      DelCat($catid,$go);
      break;
-   case "editcat" :
-     Edit("Cat",$catid);
+   case 'editcat' :
+     Edit('Cat',$catid);
      break;
-   case "delsscat" :
+   case 'delsscat' :
      DelSsCat($sscatid,$go);
      break;
-   case "delgal" :
+   case 'delgal' :
      DelGal($galid,$go);
      break;
-   case "editgal" :
-     Edit("Gal",$galid);
+   case 'editgal' :
+     Edit('Gal',$galid);
      break;
-   case "editimg" :
+   case 'editimg' :
      EditImg($imgid);
      break;
-   case "doeditimg" :
+   case 'doeditimg' :
      DoEditImg($imgid,$imggal,$newdesc);
      break;
-   case "delimg" :
+   case 'delimg' :
      DelImg($imgid,$go);
      break;
-   case "delimgbatch" :
+   case 'delimgbatch' :
      DelImgBatch($imgids,$go);
      break;
-   case "validimg" :
+   case 'validimg' :
      DoValidImg($imgid);
      break;
-   case "delcomimg" :
+   case 'delcomimg' :
      DelComImg($id,$picid);
      break;
-   case "rename" :
+   case 'rename' :
      if ($actualname == $newname) redirect_url($ThisRedo);
      ChangeName($type,$gcid,$newname,$newgalcat,$newacces);
      break;
-   case "config" :
+   case 'config' :
      PrintFormConfig();
      break;
-   case "wrtconfig" :
+   case 'wrtconfig' :
      WriteConfig($maxszimg,$maxszthb,$nbimlg,$nbimpg,$nbimcomment,$nbimvote,$viewalea,$viewlast,$votegal,$commgal,$votano,$comano,$postano,$notifadmin);
      break;
-   case "import" :
+   case 'import' :
      import();
      break;
-   case "massimport" :
+   case 'massimport' :
      massimport($imggal, $descri);
      break;
-   case "export" :
+   case 'export' :
      PrintExportCat();
      break;
-   case "massexport" :
+   case 'massexport' :
      MassExportCat($cat);
      break;
-   case "ordre" :
+   case 'ordre' :
      ordre($img_id, $ordre, $desc);
      break;
 
@@ -183,15 +197,15 @@ if ($admin) {
      $nviews = sql_fetch_row(sql_query("SELECT SUM(view) FROM ".$NPDS_Prefix."tdgal_img"));
      $numgal[0] = ($numgal[0] -1);
    echo '
-   <p class="lead"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Tableau récapitulatif").'</p>
+   <h3 class="my-3">'.gal_translate("Tableau récapitulatif").'</h3>
    <ul class="list-group">
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de catégories").'<span class="badge badge-secondary">'.$ncateg[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de sous-catégories").'<span class="badge badge-secondary">'.$nsscat[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de galeries").'<span class="badge badge-secondary">'.$numgal[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre d'images").'<span class="badge badge-secondary">'.$ncards[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de commentaires").'<span class="badge badge-secondary">'.$ncomms[0].'</span></li> 
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de votes").'<span class="badge badge-secondary">'.$nvotes[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Images vues").'<span class="badge badge-secondary">'.$nviews[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Nombre de catégories").'<span class="badge badge-secondary">'.$ncateg[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Nombre de sous-catégories").'<span class="badge badge-secondary">'.$nsscat[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Nombre de galeries").'<span class="badge badge-secondary">'.$numgal[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Nombre d'images").'<span class="badge badge-secondary">'.$ncards[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Nombre de commentaires").'<span class="badge badge-secondary">'.$ncomms[0].'</span></li> 
+      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Nombre de votes").'<span class="badge badge-secondary">'.$nvotes[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Images vues").'<span class="badge badge-secondary">'.$nviews[0].'</span></li>
    </ul>';
      break;
    }

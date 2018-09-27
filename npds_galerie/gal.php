@@ -19,7 +19,7 @@
 
 // For More security
 if (!stristr($_SERVER['PHP_SELF'],"modules.php")) die();
-if (strstr($ModPath,"..") || strstr($ModStart,"..") || stristr($ModPath, "script") || stristr($ModPath, "cookie") || stristr($ModPath, "iframe") || stristr($ModPath, "applet") || stristr($ModPath, "object") || stristr($ModPath, "meta") || stristr($ModStart, "script") || stristr($ModStart, "cookie") || stristr($ModStart, "iframe") || stristr($ModStart, "applet") || stristr($ModStart, "object") || stristr($ModStart, "meta"))
+if (strstr($ModPath,'..') || strstr($ModStart,'..') || stristr($ModPath, 'script') || stristr($ModPath, 'cookie') || stristr($ModPath, 'iframe') || stristr($ModPath, 'applet') || stristr($ModPath, 'object') || stristr($ModPath, 'meta') || stristr($ModStart, 'script') || stristr($ModStart, 'cookie') || stristr($ModStart, 'iframe') || stristr($ModStart, 'applet') || stristr($ModStart, 'object') || stristr($ModStart, 'meta'))
    die();
 global $language, $NPDS_Prefix;
 // For More security
@@ -31,7 +31,7 @@ include_once("modules/$ModPath/lang/galerie-$language.php");
 include ("modules/$ModPath/admin/pages.php");
 
 // Paramètres utilisé par le script
-$ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=$ModStart";
+$ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
 $ThisRedo = "modules.php?ModPath=$ModPath&ModStart=$ModStart";
 
 include("header.php");
@@ -39,7 +39,7 @@ settype($op,'string');
 switch($op) {
 
 // Affichage des catégories et ses galeries
-   case "cat":
+   case 'cat':
       echo '<div class="card">';
       FabMenuCat($catid);
       ListGalCat($catid);
@@ -69,7 +69,7 @@ switch($op) {
       if ($pos < 0) $pos = GetPos($galid, $pos);
       echo '<div class="card">';
       FabMenuImg($galid, $pos);
-      ViewImg($galid, $pos, "");
+      ViewImg($galid, $pos, '');
       echo '</div>';
    break;
 
@@ -128,12 +128,10 @@ switch($op) {
 
 // Proposition d'images par les membres
    case "formimgs" :
-      if(autorisation(1)) {
-      PrintFormImgs();
-      }
-      else {
-      redirect_url($nuke_url);
-      }
+      if(autorisation(1))
+         PrintFormImgs();
+      else
+         redirect_url($nuke_url);
       break;
 
    case "addimgs" :
@@ -147,12 +145,12 @@ switch($op) {
       FabMenu();
       echo '</div>';
       if ($view_alea) {
-      echo '<div class="card my-2">';
+      echo '<div class="card my-3">';
       ViewAlea();
       echo '</div>';
       }
       if ($view_last) {
-      echo '<div class="card my-2">';
+      echo '<div class="card my-3">';
       ViewLastAdd();
       echo '</div>';
      }

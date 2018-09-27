@@ -1,11 +1,20 @@
 <?php
 /************************************************************************/
-/* Module de gestion de galeries d'images pour NPDS                     */
-/************************************************************************/
+/* DUNE by NPDS                                                         */
 /*                                                                      */
-/* Evolution Td-galerie 2.5                                             */
-/* npds_galerie version 3 pour revolution 16 version bootstrappée 4     */
-/* développé par jpb/phr mars 2016                                      */
+/* NPDS Copyright (c) 2002-2018 by Philippe Brunier                     */
+/*                                                                      */
+/* This program is free software. You can redistribute it and/or modify */
+/* it under the terms of the GNU General Public License as published by */
+/* the Free Software Foundation; either version 2 of the License.       */
+/* Module de gestion de galeries pour NPDS                              */
+/*                                                                      */
+/* (c) 2004-2005 Tribal-Dolphin - http://www.tribal-dolphin.net         */
+/* (c) 2007 Xgonin, Lopez - http://modules.npds.org                     */
+/* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
+/* MAJ Dev - 2011                                                       */
+/* MAJ jpb, phr -2017 renommé npds_galerie                              */
+/* v 3.0                                                                */
 /************************************************************************/
 /************************************************************************/
 /* Fonctions du module                                                  */
@@ -15,25 +24,26 @@
 
 function FabMenu() {
    global $NPDS_Prefix, $ThisFile, $aff_comm, $aff_vote, $ModPath, $user;
-   $query = sql_query("SELECT id,nom,acces FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='0' ORDER BY nom");
+   $query = sql_query("SELECT id, nom, acces FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='0' ORDER BY nom");
    if (sql_num_rows($query) != 0) {
-      $n = 0; $ibid='';
+      $ibid='';
       while($row = sql_fetch_row($query)) {
          if (autorisation($row[2])) {
-            $ibid.='<div class="col-lg-3"><a href="'.$ThisFile.'&amp;op=cat&amp;catid='.$row[0].'"><i class="fa fa-folder fa-lg mr-2"></i>'.stripslashes($row[1]).'</a></div>';
-            $n++;
-            if ($n == 4){ $ibid.= '</div><div class="row lead">'; $n = 0;}
+            $ibid.='
+            <div class="col-md-4 mb-2">
+            <a href="'.$ThisFile.'&amp;op=cat&amp;catid='.$row[0].'"><i class="fa fa-folder fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'</a>
+            </div>';
          }
       }
       if ($ibid) {
-         echo '<h5 class="card-header"><span class="breadcrumb-item active col-md-2 my-1">'.gal_translate("Accueil").'</span>';
+         echo '<h5 class="card-header"><span class="breadcrumb-item my-1 mr-2"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</span><span class="float-right">';
          if ($aff_comm)
-            echo '<a class="btn btn-secondary btn-sm col-md-3 my-1 mr-1" href="modules.php?ModPath='.$ModPath.'&ModStart=gal&op=topcomment">'.gal_translate("Top-Commentaires").'</a>';
+            echo '<a class="btn btn-outline-secondary btn-sm  my-1 mr-2" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=topcomment">'.gal_translate("Top-Commentaires").'</a>';
          if ($aff_vote)
-            echo '<a class="btn btn-secondary btn-sm  col-md-3 my-1 mr-1" href="modules.php?ModPath='.$ModPath.'&ModStart=gal&op=topvote">'.gal_translate("Top-Votes").'</a>';
+            echo '<a class="btn btn-outline-secondary btn-sm my-1 mr-2" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=topvote">'.gal_translate("Top-Votes").'</a>';
          if (isset($user))
-            echo '<a class="btn btn-secondary btn-sm  col-md-3 my-1" href="modules.php?ModPath='.$ModPath.'&ModStart=gal&op=formimgs">'.gal_translate("Proposer des images").'</a>';
-         echo '</h5>
+            echo '<a class="btn btn-outline-secondary btn-sm my-1" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=formimgs">'.gal_translate("Proposer des images").'</a>';
+         echo '</span></h5>
          <div class="card-body">
             <div class="row lead">';
          echo $ibid;
@@ -43,91 +53,108 @@ function FabMenu() {
       }
    } else 
       echo '
-         <div class="alert alert-info" role="alert">
-            <i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Aucune catégorie trouvée").'
-         </div>';
+         <div class="alert alert-info">'.gal_translate("Aucune catégorie trouvée").'</div>';
 }
 
 function FabMenuCat($catid) {
-   global $NPDS_Prefix, $ThisFile,$ModPath;
+ global $NPDS_Prefix, $ModPath;
+   $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
    settype($catid,'integer');
    $nbsc='';
-   $cat = sql_fetch_row(sql_query("SELECT nom,acces FROM ".$NPDS_Prefix."tdgal_cat WHERE id='".$catid."'"));
+   $cat = sql_fetch_row(sql_query("SELECT nom, acces FROM ".$NPDS_Prefix."tdgal_cat WHERE id='".$catid."'"));
    if (autorisation($cat[1])) {
-      $query = sql_query("SELECT id,nom,acces FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='".$catid."' ORDER BY nom");
+      $query = sql_query("SELECT id, nom, acces FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='".$catid."' ORDER BY nom");
       $nbsc = sql_num_rows($query);
       echo '
-      <nav class="card-header">
-         <a class="breadcrumb-item" href="modules.php?ModPath='.$ModPath.'&ModStart=gal">'.gal_translate("Accueil").'</a>
+      <nav class="card-header lead">
+         <a class="breadcrumb-item" href="'.$ThisFile.'"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>
          <span class="breadcrumb-item active">'.stripslashes($cat[0]).'</span>
       </nav>';
- if($nbsc>0) 
-      echo '
+      if($nbsc>0) { 
+         echo '
       <div class="card-body">
+         <h4>'.gal_translate("Sous catégories").'<span class="float-right badge badge-secondary badge-pill">'.$nbsc.'</span></h4>
+         <hr />
          <div class="row lead">';
-      $n = 0;
-      while ($row = sql_fetch_row($query)) {
-         if (autorisation($row[2])) {
-            echo '<div class="col-lg-3"><a href="'.$ThisFile.'&amp;op=sscat&amp;catid='.$catid.'&amp;sscid='.$row[0].'"><i class="fa fa-folder fa-lg mr-2"></i>'.stripslashes($row[1]).'</a></div>';
-            $n++;
-            if ($n == 4) { echo '</div><div class="row lead">'; $n = 0;}
+         while ($row = sql_fetch_row($query)) {
+            if (autorisation($row[2])) {
+               $ngal = sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_gal WHERE cid='".$row[0]."'");
+               $nbgal=sql_num_rows($ngal);
+               echo '
+               <div class="col-md-4 mb-2">';
+               if($nbgal>0)
+                  echo '
+                  <a href="'.$ThisFile.'&amp;op=sscat&amp;catid='.$catid.'&amp;sscid='.$row[0].'"><i class="fa fa-folder fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'</a> <span class="badge badge-secondary badge-pill">'.$nbgal.'</span>';
+               else
+                  echo '
+                  <a class="text-muted"><i class="fa fa-folder-o fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'</a>';
+               echo '
+               </div>';
+            }
          }
+      echo '
+         </div>
+      </div>';
       }
-      if($nbsc>0) echo '</div></div>';
    }
    else 
       echo '
-      <p class="lead">'.gal_translate("Aucune catégorie trouvée").'</p>';
+      <div class="alert alert-danger">'.gal_translate("Aucune catégorie trouvée").'</div>';
 }
 
 function FabMenuSsCat($catid, $sscid) {
-   global $NPDS_Prefix, $ThisFile, $ModPath;
+   global $NPDS_Prefix, $ModPath;
+   $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
+
    settype($catid,'integer');
    settype($sscid,'integer');
-   $cat = sql_fetch_row(sql_query("SELECT nom,acces FROM ".$NPDS_Prefix."tdgal_cat WHERE id='".$catid."'"));
+   $cat = sql_fetch_row(sql_query("SELECT nom, acces FROM ".$NPDS_Prefix."tdgal_cat WHERE id='".$catid."'"));
    if (autorisation($cat[1])) {
-      $sscat = sql_fetch_row(sql_query("SELECT nom,acces FROM ".$NPDS_Prefix."tdgal_cat WHERE id='".$sscid."'"));
+      $sscat = sql_fetch_row(sql_query("SELECT nom, acces FROM ".$NPDS_Prefix."tdgal_cat WHERE id='".$sscid."'"));
       if (autorisation($sscat[1]))
          echo '
-      <nav class="card-header">
-         <a class="breadcrumb-item" href="modules.php?ModPath='.$ModPath.'&ModStart=gal">'.gal_translate("Accueil").'</a>
+      <nav class="card-header lead">
+         <a class="breadcrumb-item" href="'.$ThisFile.'"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>
          <a class="breadcrumb-item" href="'.$ThisFile.'&op=cat&amp;catid='.$catid.'">'.stripslashes($cat[0]).'</a>
          <span class="breadcrumb-item active">'.stripslashes($sscat[0]).'</span>
       </nav>';
       else 
          echo '
-      <p class="text-danger"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Aucune catégorie trouvée").'</p>';
+      <div class="alert alert-danger">'.gal_translate("Aucune catégorie trouvée").'</div>';
    }
    else
-      echo '<p class="text-danger"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Aucune catégorie trouvée").'</p>';
+      echo '<div class="alert alert-danger">'.gal_translate("Aucune catégorie trouvée").'</div>';
 }
 
 function FabMenuGal($galid) {
-   global $NPDS_Prefix, $ThisFile, $ModPath;
+   global $NPDS_Prefix, $ModPath;
+   $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
+
    settype($galid,"integer");
    $gal = sql_fetch_row(sql_query("SELECT nom,acces FROM ".$NPDS_Prefix."tdgal_gal WHERE id='".$galid."'"));
    if (autorisation($gal[1])) {
       echo '
-      <nav class="card-header" aria-label="breadcrumb" role="navigation">
-         <a class="breadcrumb-item" href="modules.php?ModPath='.$ModPath.'&ModStart=gal">'.gal_translate("Accueil").'</a>';
+      <nav class="card-header lead" aria-label="breadcrumb" role="navigation">
+         <a class="breadcrumb-item" href="'.$ThisFile.'"><i class="fa fa-camera fa-2x mr-2 align-middle"></i>'.gal_translate("Accueil").'</a>';
       echo GetGalArbo($galid);
       echo '<span class="breadcrumb-item active">'.stripslashes($gal[0]).'</span>
       </nav>';
    }
    else 
       echo '
-      <p class="text-danger"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Aucune galerie trouvée").'</p>';
+      <div class="alert alert-danger">'.gal_translate("Aucune galerie trouvée").'</div>';
 }
 
 function FabMenuImg($galid, $pos) {
-   global $NPDS_Prefix, $ThisFile, $ModPath;
+   global $NPDS_Prefix, $ModPath;
+   $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
    settype($galid,'integer');
    settype($pos,'integer');
    $gal = sql_fetch_row(sql_query("SELECT nom,acces FROM ".$NPDS_Prefix."tdgal_gal WHERE id='".$galid."'"));
    if (autorisation($gal[1])) {
       echo '
-      <nav class="card-header" aria-label="breadcrumb" role="navigation">
-         <a class="breadcrumb-item" href="modules.php?ModPath='.$ModPath.'&ModStart=gal">'.gal_translate("Accueil").'</a>';
+      <nav class="card-header lead" aria-label="breadcrumb" role="navigation">
+         <a class="breadcrumb-item" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>';
       echo GetGalArbo($galid);
       echo '
          <a class="breadcrumb-item" href="'.$ThisFile.'&amp;op=gal&amp;galid='.$galid.'">'.stripslashes($gal[0]).'</a>';
@@ -139,41 +166,45 @@ function FabMenuImg($galid, $pos) {
    }
    else 
       echo '
-      <p class="text-danger"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Aucune galerie trouvée").'</p>';
+      <div class="alert alert-danger">'.gal_translate("Aucune galerie trouvée").'</div>';
 }
 // les menus
 
 function ListGalCat($catid) {
-   global $NPDS_Prefix, $ThisFile;
+   global $NPDS_Prefix, $ModPath;
+   $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
    settype($catid,'integer');
    $gal = sql_query("SELECT id,nom,date,acces FROM ".$NPDS_Prefix."tdgal_gal WHERE cid='".$catid."' ORDER BY nom");
-
-   if (sql_num_rows($gal) != 0) {
-      $n = 0;
+   $nb_gal= sql_num_rows($gal);
+   if ($nb_gal != 0) {
       $ibid='';
       while ($row = sql_fetch_row($gal)) {
          if (autorisation($row[3])) {
             $nimg = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='".$row[0]."' and noaff='0'"));
             $ibid.= '
-            <div class="col-lg-3">
-            <a href="'.$ThisFile.'&amp;op=gal&amp;galid='.$row[0].'"><i class="fa fa-folder fa-lg mr-2"></i>'.stripslashes($row[1]).'</a> ('.$nimg[0].')
-            <br />'.gal_translate("Créée le").' '.date(translate("dateinternal"),$row[2]).'
+            <div class="col-md-4 mb-2">';
+            if($nimg[0]!='0')
+               $ibid.= '<a href="'.$ThisFile.'&amp;op=gal&amp;galid='.$row[0].'"><i class="fa fa-folder fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'</a> <span class="badge badge-success badge-pill" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.$nimg[0].'</span>
+               <br /><span class="small">'.gal_translate("Créée le").' '.date(translate("dateinternal"),$row[2]).'</span>';
+            else 
+               $ibid.= '<span class="text-muted"><i class="fa fa-folder-o fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'<br /><span class="small">'.gal_translate("Créée le").' '.date(translate("dateinternal"),$row[2]).'</span></span>';
+            $ibid.= '
             </div>';
-            $n++;
-            if ($n == 4){  $ibid.= '</div><div class="row lead">'; $n = 0;}
          }
       }
       if ($ibid!='')
          echo '
          <div class="card-body">
+            <h4>'.gal_translate("Galeries").'<span class="float-right badge badge-secondary badge-pill">'.$nb_gal.'</span></h4>
+            <hr />
             <div class="row lead">'.$ibid.'</div>
          </div>';
-//     echo '</div>';
    }
 }
 
 function ViewGal($galid, $page){
-   global $NPDS_Prefix, $ModPath, $ThisFile, $imglign, $imgpage, $MaxSizeThumb, $aff_comm, $aff_vote, $galid, $pos,$pid;
+   global $NPDS_Prefix, $ModPath, $imglign, $imgpage, $MaxSizeThumb, $aff_comm, $aff_vote, $galid, $pos,$pid;
+   $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
    settype($galid,'integer');
    settype($page,'integer');
    $num=0;
@@ -182,11 +213,19 @@ function ViewGal($galid, $page){
       $num = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='".$galid."' AND noaff='0'"));
    if ($num == 0)
       echo '
-      <div class="card-body"><p class="card-text lead"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Aucune image trouvée").'</p></div>';
+      <div class="alert alert-danger">'.gal_translate("Aucune image trouvée").'</div>';
    else {
       $start = ($page - 1) * $imgpage;
       $query = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='".$galid."' AND noaff='0' ORDER BY ordre,id LIMIT ".$start.",".$imgpage."");
       $pos = $start;
+      $nbPages = ceil($num/$imgpage);
+      $current = 1;
+      if ($page >= 1)
+         $current=$page;
+      else if ($page < 1)
+         $current=1;
+      else
+         $current = $nbPages;
 
       echo '
       <div class="card-columns p-2 mt-2">';
@@ -215,30 +254,27 @@ function ViewGal($galid, $page){
       }
       echo '
       </div>
-      <button class="btn btn-outline-primary btn-sm m-2" data-toggle="modal" data-target=".carou">'.gal_translate("Diaporama").'</button>
-      <div class="modal fade carou" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal fade carou wrapper mx-auto" tabindex="-1" role="dialog" aria-hidden="true" >
          <div class="modal-dialog modal-lg">
             <div class="modal-content">';
             ViewDiapo($galid, $pos, $pid);
       echo '
             </div>
          </div>
-      </div>
+      </div>';
+      echo '
+      <nav class="d-flex my-2 mx-2 justify-content-between flex-wrap border-top pt-2">
+         <div>
+            <button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target=".carou">'.gal_translate("Diaporama").'</button>
+         </div>
+         <div>';
+      echo paginate_single('modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=gal&amp;galid='.$galid.'&amp;page=', '', $nbPages, $current, $adj=3,'',$page);
+      echo '
+         </div>
+      </nav>
       <div class="mx-2">';
       echo meta_lang('comment_system(galerie,'.$galid.')');
       echo '</div>';
-
-   $nbPages = ceil($num/$imgpage);
-   $current = 1;
-   if ($page >= 1)
-      $current=$page;
-   else if ($page < 1)
-      $current=1;
-   else
-      $current = $nbPages;
-   echo '<div class="ml-2">';
-   echo paginate_single('modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=gal&amp;galid='.$galid.'&amp;page=', '', $nbPages, $current, $adj=3,'',$page);
-   echo '</div>';
    }
 }
 
@@ -261,49 +297,49 @@ function watermark() {
 }
 
 function ViewImg($galid, $pos, $interface) {
-   global $NPDS_Prefix, $ModPath, $ThisFile, $user, $vote_anon, $comm_anon, $post_anon, $aff_vote, $aff_comm, $admin, $pid;
+   global $NPDS_Prefix, $ModPath, $user, $vote_anon, $comm_anon, $post_anon, $aff_vote, $aff_comm, $admin, $pid;
+   $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
 
    settype($galid,'integer');
    settype($pos,'integer');
-   if ($admin) $no_aff=''; else $no_aff="and noaff='0'";
+   if ($admin) $no_aff=''; else $no_aff="AND noaff='0'";
    $gal = sql_fetch_row(sql_query("SELECT acces FROM ".$NPDS_Prefix."tdgal_gal WHERE id='".$galid."'"));
    if (autorisation($gal[0])) {
       $num = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='".$galid."' $no_aff"));
       if ($interface!="no")
          $row = sql_fetch_row(sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='".$galid."' $no_aff ORDER BY ordre,id LIMIT $pos,1"));
       else
-         $row = sql_fetch_row(sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE id='".$pos."' and gal_id='".$galid."' $no_aff"));
+         $row = sql_fetch_row(sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE id='".$pos."' AND gal_id='".$galid."' $no_aff"));
       list($width, $height, $type) = @getimagesize("modules/$ModPath/imgs/$row[2]");
       echo watermark().'
-   <img class="card-img-top mx-auto img-fluid img_awesome" src="modules/'.$ModPath.'/imgs/'.$row[2].'" alt="'.stripslashes($row[3]).'" />
-   <div class="card-body">
-      <p class="card-title">'.stripslashes($row[3]).'</p>';
-      
-      
-      //
-//       <div class="d-flex justify-content-between mt-1">
-//     <div class="py-2">!N_previous_article!</div>
-//     <div class="ml-auto py-2">!N_next_article!</div>
-//   </div>
-      
+   <img class="card-img-top mx-auto img-fluid img_awesome" src="modules/'.$ModPath.'/imgs/'.$row[2].'" alt="'.stripslashes($row[3]).'" />';
+      if($row[3]!='')
+         echo '
+   <p class="border-bottom p-2 mb-0">'.stripslashes($row[3]).'</p>';
+      echo '
+   <div class="card-body">';
       if ($interface!='no') {
          echo '
-         <div class="text-center">';
+         <ul class="nav justify-content-center">';
          if ($pos > 0)
             echo '
-            <a class="btn btn-outline-primary btn-sm mr-2" href="'.$ThisFile.'&amp;op=img&amp;galid='.$galid.'&amp;pos='.($pos-1).'"><i class="fa fa-chevron-left fa-lg"></i></a>';
+            <li class="nav-item">
+               <a class="nav-link" href="'.$ThisFile.'&amp;op=img&amp;galid='.$galid.'&amp;pos='.($pos-1).'"><i class="fa fa-chevron-left fa-2x"></i></a>
+            </li>';
          if ($pos < ($num-1))
-            echo '
-            <a class="btn btn-outline-primary btn-sm" href="'.$ThisFile.'&amp;op=img&amp;galid='.$galid.'&amp;pos='.($pos+1).'"><i class="fa fa-chevron-right fa-lg"></i></a>';
          echo '
-         </div>';
+            <li class="nav-item">
+               <a class="nav-link" href="'.$ThisFile.'&amp;op=img&amp;galid='.$galid.'&amp;pos='.($pos+1).'"><i class="fa fa-chevron-right fa-2x"></i></a>
+            </li>';
          if (isset($user) || $post_anon)
-            $link_card = '<a class="" href="'.$ThisFile.'&amp;op=ecard&amp;galid='.$galid.'&amp;pos='.$pos.'&amp;pid='.$row[0].'"><i class="fa fa-envelope-o fa-lg"></i></a></p>';
-         else
-            $link_card.= '</p>';
-         echo $link_card;
+         echo '
+            <li class="nav-item">
+               <a class="nav-link" href="'.$ThisFile.'&amp;op=ecard&amp;galid='.$galid.'&amp;pos='.$pos.'&amp;pid='.$row[0].'" title="'.gal_translate("Envoyer comme e-carte").'" data-toggle="tooltip" data-placement="right"><i class="fa fa-at fa-2x"></i></a>
+            </li>';
+         echo '
+      </ul>';
       }
-
+      
       $update = sql_query("UPDATE ".$NPDS_Prefix."tdgal_img SET view = view + 1 WHERE id='".$row[0]."'");
 
       if ($interface!='no') {
@@ -319,7 +355,7 @@ function ViewImg($galid, $pos, $interface) {
                   $star .='<i class="fa fa-star" aria-hidden="true"></i>';
                   echo '
                      <div class="col-xs-2">
-                        <a class="btn btn-outline-success btn-sm mr-1" href="'.$ThisFile.'&amp;op=vote&amp;value='.$i.'&amp;pic_id='.$row[0].'&amp;gal_id='.$galid.'&amp;pos='.$pos.'">'.$star.'</a>
+                        <a class="btn btn-outline-primary btn-sm mr-1" href="'.$ThisFile.'&amp;op=vote&amp;value='.$i.'&amp;pic_id='.$row[0].'&amp;gal_id='.$galid.'&amp;pos='.$pos.'">'.$star.'</a>
                      </div>';
                   $i++;
                }
@@ -335,7 +371,7 @@ function ViewImg($galid, $pos, $interface) {
    $taille = $tailleo/1000;
    echo '
    <h4 class="card-title">'.gal_translate("Informations sur l'image").'</h4>
-   <ul class="list-group">
+   <ul class="list-group lead">
       <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Taille du fichier").'<span class="badge badge-secondary">'.$taille.' Ko</span></li>
       <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Dimensions").'<span class="badge badge-secondary">'.$width.' x '.$height.' Pixels</span></li>';
    if ($aff_vote) {
@@ -344,7 +380,7 @@ function ViewImg($galid, $pos, $interface) {
       $i=0;
       while($i<=$note) {$star.='<i class="fa fa-star mx-1"></i>';$i++;}
       echo '
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Note ").$rowV[0].' '.gal_translate("vote(s)").'<span class="badge badge-secondary">'.$star.'</span></li>';
+      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Note ").$rowV[0].' '.gal_translate("vote(s)").'<span class="text-success">'.$star.'</span></li>';
       }
    echo '
       <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Affichées").'<span class="badge badge-secondary">'.($row[4] + 1).' '.gal_translate("fois").'</span></li>
@@ -358,7 +394,7 @@ function ViewImg($galid, $pos, $interface) {
             $num_comm = sql_num_rows($qcomment);
             if (($num_comm > 0) || (isset($user) || $comm_anon)) {
                echo '
-      <h4 class="card-title mt-2">'.gal_translate("Commentaire(s)").'</h4>';
+      <h4 class="card-title mt-3">'.gal_translate("Commentaire(s)").'</h4>';
                while ($rowC = sql_fetch_row($qcomment)) {
                   echo '
       <div class="card mb-2"><div class="card-header"><strong>'.$rowC[2].'</strong><span class="small float-right">'.gal_translate('Posté le').' '.date(translate("dateinternal"),$rowC[5]).'</span></div>
@@ -374,10 +410,10 @@ function ViewImg($galid, $pos, $interface) {
                      <input type="hidden" name="pos" value="'.$pos.'">
                      <input type="hidden" name="pic_id" value="'.$row[0].'" />
                      <fieldset class="form-group">
-                        <label><h4>'.gal_translate("Ajoutez votre commentaire").'</h4></label>
+                        <label class="col-form-label" for="com">'.gal_translate("Ajoutez votre commentaire").'</label>
                         <textarea class="form-control tin" id="com" name="comm" rows="5"></textarea>
                      </fieldset>';
-                  echo aff_editeur("comm", "false");
+                  echo aff_editeur('comm', '');
                   echo Q_spambot();
                   echo '
                   <button class="btn btn-primary" type="submit">OK</button>
@@ -396,6 +432,17 @@ function ViewDiapo($galid, $pos, $pid) {
    $gal = sql_fetch_row(sql_query("SELECT acces FROM ".$NPDS_Prefix."tdgal_gal WHERE id='".$galid."'"));
    if (autorisation($gal[0])) {
       echo '
+      <style>
+.wrapper {
+  max-width:300px;
+  width:100%;
+}
+.carousel-item-next, .carousel-item-prev, .carousel-item.active {
+    display: block !important;
+}
+</style>
+      
+<div class="wrapper">
       <div id="photosIndicators" class="carousel slide" data-ride="carousel" data-wrap="true" data-interval="3000">
          <ol class="carousel-indicators">';
        $i = 0;
@@ -413,7 +460,7 @@ function ViewDiapo($galid, $pos, $pid) {
          <div class="carousel-inner" role="listbox">';
       $i = 0;
       $j = 0;
-      settype($pos,"integer");
+      settype($pos,'integer');
       $pic_query = sql_query("SELECT id, name, comment FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='$galid' AND noaff='0' ORDER BY ordre ASC");
       while($picture = sql_fetch_assoc($pic_query)) {
          if($i==0)
@@ -440,17 +487,19 @@ function ViewDiapo($galid, $pos, $pid) {
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
          </a>
+      </div>
       </div>';
    }
 }
 
 function PrintFormEcard($galid, $pos, $pid) {
-   global $NPDS_Prefix, $ThisRedo, $ThisFile, $ModPath, $MaxSizeThumb, $user, $anonymous;
-   settype($galid,"integer");
+   global $NPDS_Prefix, $ThisRedo, $ModPath, $MaxSizeThumb, $user, $anonymous;
+   $ThisFile ='modules.php?ModPath='.$ModPath.'&amp;ModStart=gal';
+   settype($galid,'integer');
    $gal = sql_fetch_row(sql_query("SELECT acces FROM ".$NPDS_Prefix."tdgal_gal WHERE id='".$galid."'"));
    if (autorisation($gal[0])) {
-      settype($pos,"integer");
-      settype($pid,"integer");
+      settype($pos,'integer');
+      settype($pid,'integer');
       $query = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE id='".$pid."' AND noaff='0'");
       $row = sql_fetch_row($query);
       if (@file_exists("modules/$ModPath/mini/".$row[2])) {
@@ -470,7 +519,7 @@ function PrintFormEcard($galid, $pos, $pid) {
       if ($username == '')
          $username = $anonymous;
       echo '
-      <div class="card-header"><a href="modules.php?ModPath='.$ModPath.'&ModStart=gal">'.gal_translate("Accueil").'</a></div>
+      <div class="card-header lead"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a></div>
       <div class="card-body">
          <h4 class="">'.gal_translate("Envoyer une E-carte de la part de").' <span class="text-muted">'.$username.'</span></h4>
          <hr />
@@ -480,7 +529,7 @@ function PrintFormEcard($galid, $pos, $pid) {
                '.$ibid.'
            </div>
          </div>
-         <form id="sendecard" action="'.$ThisFile.'" method="post" name="FormCard" class="">
+         <form id="sendecard" action="'.$ThisFile.'" method="post" name="FormCard" >
             <input type="hidden" name="op" value="sendcard" />
             <input type="hidden" name="galid" value="'.$galid.'" />
             <input type="hidden" name="pos" value="'.$pos.'" />
@@ -517,7 +566,7 @@ function PrintFormEcard($galid, $pos, $pid) {
             </div>
             <div class="form-group">
                <label class="col-form-label" for="card_msg">'.gal_translate("Message").'</label>
-               <textarea class="tin form-control" name="card_msg" id="card_msg" rows="5" required="required"></textarea>
+               <textarea class="form-control tin " name="card_msg" id="card_msg" rows="5" required="required"></textarea>
             </div>';
       aff_editeur("card_msg","true");
       echo Q_spambot();
@@ -671,13 +720,13 @@ function PostComment($gal_id, $pos, $pic_id, $comm) {
    $comment = removeHack($comm);
    $qverif = sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='$pic_id' AND user='$name' AND comhostname='$host'");
    if (sql_num_rows($qverif) == 0) {
-      $stamp = time()+($gmt*3600);
+      $stamp = time()+((integer)$gmt*3600);
       sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_com VALUES('',$pic_id,'$name','$comment','$host','$stamp')");
       redirect_url($ThisRedo."&op=img&galid=$gal_id&pos=$pos");
    } else {
       echo '
       <div class="card-body">
-         <p class="lead text-danger"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Vous avez déjà commenté cette photo").'</p>
+         <div class="lead alert alert-danger"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Vous avez déjà commenté cette photo").'</div>
       </div>
       <script  type="text/javascript">
          //<![CDATA[
@@ -723,7 +772,7 @@ function PostVote($gal_id, $pos, $pic_id, $value) {
 }
 
 function ViewAlea() {
-   global $NPDS_Prefix, $ModPath, $ThisFile, $imglign, $imgpage, $MaxSizeThumb, $aff_comm;
+   global $NPDS_Prefix, $ModPath, $ThisFile, $imgpage, $MaxSizeThumb, $aff_comm;
    $tab_groupe=autorisation_local();
    // Fabrication de la requête 1
    $where1='';
@@ -775,7 +824,7 @@ function ViewAlea() {
 }
 
 function ViewLastAdd() {
-   global $NPDS_Prefix, $ModPath, $ThisFile, $imglign, $imgpage, $MaxSizeThumb, $aff_comm;
+   global $NPDS_Prefix, $ModPath, $ThisFile, $imgpage, $MaxSizeThumb, $aff_comm;
    // Fabrication de la requête 1
    $where1='';
    $tab_groupe=autorisation_local();
@@ -854,7 +903,8 @@ function GetPos($galid, $pos) {
 
 // SOUS-FONCTIONS
 function GetGalArbo($galid) {
-   global $NPDS_Prefix, $ThisFile;
+   global $NPDS_Prefix, $ModPath;
+   $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
    settype($galid,'integer');
    $temp = sql_fetch_row(sql_query("SELECT cid FROM ".$NPDS_Prefix."tdgal_gal WHERE id='".$galid."'"));
    $query = sql_query("SELECT cid,nom FROM ".$NPDS_Prefix."tdgal_cat WHERE id='".$temp[0]."'");
@@ -910,8 +960,8 @@ function TopCV($typeOP, $nbtop) {
 
    settype($nbtop,"integer");
    echo '
-   <div class="card-header">
-      <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal">'.gal_translate("Accueil").'</a>
+   <div class="card-header lead">
+      <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>
    </div>
    <div class="card-body">
       <h5 class="card-title">';
@@ -928,7 +978,7 @@ function TopCV($typeOP, $nbtop) {
    $NombreComs1=sql_num_rows($TableRep2);
    echo '
       <hr />
-      <ul class="list-group mb-3">
+      <ul class="list-group mb-3 lead">
          <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre d'images").'<span class="badge badge-secondary badge-pill">'.$NombreEntrees.'</span></li>
          <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de commentaires").'<span class="badge badge-secondary badge-pill">'.$NombreComs.'</span></li>
          <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de notes").'<span class="badge badge-secondary badge-pill">'.$NombreComs1.'</span></li>
@@ -1033,7 +1083,7 @@ function PrintFormImgs() {
       redirect_url($ThisRedo);
    echo '
    <div class="card">
-      <div class="card-header"><a href="modules.php?ModPath='.$ModPath.'&ModStart=gal">'.gal_translate("Accueil").'</a></div>
+      <div class="card-header lead"><a href="modules.php?ModPath='.$ModPath.'&ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a></div>
       <div class="card-body">
          <h5 class="card-title">'.gal_translate("Proposer des images").'</h5>
          <hr />
