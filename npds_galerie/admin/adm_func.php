@@ -13,7 +13,7 @@
 /* (c) 2007 Xgonin, Lopez - http://modules.npds.org                     */
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
-/* MAJ jpb, phr -2017 renommé npds_galerie                              */
+/* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
 /* v 3.0                                                                */
 /************************************************************************/
 
@@ -677,7 +677,7 @@ function WriteConfig($maxszimg,$maxszthb,$nbimlg,$nbimpg,$nbimcomment,$nbimvote,
    $content.= "/* (c) 2007 Xgonin, Lopez - http://modules.npds.org                     */\n";
    $content.= "/* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */\n";
    $content.= "/* MAJ Dev - 2011                                                       */\n";
-   $content.= "/* MAJ jpb, phr -2017 renommé npds_galerie                              */\n";
+   $content.= "/* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */\n";
    $content.= "/* v 3.0                                                                */\n";
    $content.= "/************************************************************************/\n\n";
    $content.= "// Dimension max des images\n";
@@ -1637,29 +1637,53 @@ function CreateThumb($Image, $Source, $Destination, $Max, $ext) {
 
 function import() {
    global $ModPath, $ModStart, $NPDS_Prefix, $ThisFile, $ThisRedo;
+   $handle=opendir("modules/$ModPath/import");
+   while ($file = readdir($handle)) $filelist[] = $file;
+   closedir($handle);
+   $j=0;
+   foreach($filelist as $v) {
+      if(preg_match('#\.gif|\.jpg|\.jpeg|\.png$#i', $v)) $j++;
+   }
    echo '
    <h3 class="my-3">'.gal_translate("Images").'</h3>
-   <h4>'.gal_translate("Import images").'</h4>
+   <hr />';
+   if($j!=0) {
+      echo '
+   <h4>'.gal_translate("Import images").'<span class="badge badge-success float-right">'.$j.'</span></h4>
    <blockquote class="blockquote my-3">
-      Import des images du dossier <code>/modules/npds_galerie/import</code> (avec création des imagettes) vers la galerie choisie.<br />
-      Les images importées seront supprimées du dossier.
+      '.gal_translate("Images du dossier").' <code>/modules/npds_galerie/import</code><br />
+      '.gal_translate("Création des images et imagettes dans").' <code>/modules/npds_galerie/imgs</code> &amp; <code>/modules/npds_galerie/mini</code><br />
+      '.gal_translate("Affectation vers la galerie choisie.").'<br />
+      '.gal_translate("Les images importées seront supprimées du dossier").' <code>/modules/npds_galerie/import</code>.
    </blockquote>
-   <hr />
    <form id="massimport" method="post" action="'.$ThisFile.'" name="MassImport">
       <input type="hidden" name="subop" value="massimport" />
       <div class="form-group">
          <label class="col-form-label" for="imggal">'.gal_translate("Affectation").'</label>
          <select class="custom-select" name="imggal" id="imggal">';
-   echo select_arbo('');
-   echo '
+      echo select_arbo('');
+      echo '
          </select>
       </div>
       <div class="form-group">
-         <label for="descri">'.gal_translate("Description").'</label>
-         <input type="text" class="form-control" name="descri" id="descri" maxlength="255" />
+         <label class="col-form-label" for="descri">'.gal_translate("Description").'</label>
+         <textarea class="form-control" name="descri" id="descri" maxlength="255" rows="2"></textarea>
+         <span class="help-block">'.gal_translate("Pour toutes les images de cet import.").'<span class="float-right" id="countcar_descri"></span></span>
       </div>
       <button class="btn btn-primary" type="submit">'.gal_translate("Importer").'</button>
    </form>';
+      $arg1 = '
+   var formulid = ["massimport"]
+   inpandfieldlen("descri",255);';
+      adminfoot('fv','',$arg1,'1');
+   }
+   else {
+      echo '
+      <h4 class="my-3">'.gal_translate("Import images").'<span class="badge badge-danger float-right">'.$j.'</span></h4>
+      <div class="alert alert-danger">
+            '.gal_translate("Aucune image dans le dossier").' <code>/modules/npds_galerie/import</code> !! <br />
+      </div>';
+   }
 }
 
 function massimport($imggal, $descri) {
@@ -1675,7 +1699,7 @@ function massimport($imggal, $descri) {
 
    $i=1;
    while (list ($key, $file) = each ($filelist)) {
-      if (preg_match('#\.gif|\.jpg|\.png$#i', strtolower($file))) {
+      if (preg_match('#\.gif|\.jpg|\.jpeg|\.png$#i', strtolower($file))) {
          $filename_ext = strtolower(substr(strrchr($file, "."),1));
          $newfilename = $year.$month.$day.$hour.$min.$sec."-".$i.".".$filename_ext;
          rename("modules/$ModPath/import/$file","modules/$ModPath/import/$newfilename");
@@ -1701,7 +1725,7 @@ function massimport($imggal, $descri) {
 function ordre($ximg, $xordre, $xdesc) {
    global $ThisRedo, $NPDS_Prefix;
    while(list($ibid,$img_id)=each($ximg)) {
-      echo $img_id, $xordre[$ibid]."<br />";
+      echo $img_id, $xordre[$ibid].'<br />';
       sql_query("UPDATE ".$NPDS_Prefix."tdgal_img SET ordre='$xordre[$ibid]', comment='$xdesc[$ibid]' WHERE id='$img_id'");
    }
    redirect_url($ThisRedo."&subop=viewarbo");
@@ -1716,7 +1740,7 @@ function PrintExportCat() {
       <input type="hidden" name="subop" value="massexport" />
       <div class="form-group">
          <label class= "col-form-label" for="cat">'.gal_translate("Nom de la catégorie").'</label>
-         <select name="cat" class="custom-select" id="cat">
+         <select class="custom-select" name="cat" id="cat">
             <option value="none" selected="selected">'.gal_translate("Choisissez").'</option>';
    $query = sql_query("SELECT id,nom,acces FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='0' ORDER BY nom ASC");
    while ($row = sql_fetch_row($query)) {
@@ -1730,7 +1754,6 @@ function PrintExportCat() {
    </form>';
 }
 
-//revu phr 02/02/16 voir pour ajout message pour informer du bon déroulement de l'op ....jpb > ne fonctionne pas dans tout les cas ???
 function MassExportCat($cat) {
    global $NPDS_Prefix, $ThisRedo, $ModPath;
 
