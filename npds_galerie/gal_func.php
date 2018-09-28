@@ -13,7 +13,7 @@
 /* (c) 2007 Xgonin, Lopez - http://modules.npds.org                     */
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
-/* MAJ jpb, phr -2017 renommé npds_galerie                              */
+/* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
 /* v 3.0                                                                */
 /************************************************************************/
 /************************************************************************/
@@ -519,60 +519,62 @@ function PrintFormEcard($galid, $pos, $pid) {
       if ($username == '')
          $username = $anonymous;
       echo '
-      <div class="card-header lead"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a></div>
-      <div class="card-body">
-         <h4 class="">'.gal_translate("Envoyer une E-carte de la part de").' <span class="text-muted">'.$username.'</span></h4>
-         <hr />
-         <div class="form-group row">
-            <label class="col-form-label col-sm-4" for="from_name">'.gal_translate("Image").'</label>
-            <div class="col-sm-8">
-               '.$ibid.'
-           </div>
-         </div>
-         <form id="sendecard" action="'.$ThisFile.'" method="post" name="FormCard" >
-            <input type="hidden" name="op" value="sendcard" />
-            <input type="hidden" name="galid" value="'.$galid.'" />
-            <input type="hidden" name="pos" value="'.$pos.'" />
-            <input type="hidden" name="pid" value="'.$pid.'" />
+      <div class="card">
+         <div class="card-header lead"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a></div>
+         <div class="card-body">
+            <h4 class="">'.gal_translate("Envoyer une E-carte de la part de").' <span class="text-muted">'.$username.'</span></h4>
+            <hr />
             <div class="form-group row">
-               <label class="col-form-label col-sm-4" for="from_name">'.gal_translate("Votre nom").'</label>
+               <label class="col-form-label col-sm-4" for="from_name">'.gal_translate("Image").'</label>
                <div class="col-sm-8">
-                 <input type="text" class="form-control" id="from_name" name="from_name" placeholder="'.gal_translate("Votre nom").'" value="'.$data_user_name.'" required="required" />
+                  '.$ibid.'
               </div>
             </div>
-            <div class="form-group row">
-               <label class="col-form-label col-sm-4" for="from_mail">'.gal_translate("Votre adresse e-mail").'</label>
-               <div class="col-sm-8">
-                  <input type="email" class="form-control" name="from_mail" id="from_mail" placeholder="'.gal_translate("Votre adresse e-mail").'" value="'.$data_user_mail.'" required="required" />
+            <form id="sendecard" action="'.$ThisFile.'" method="post" name="FormCard" >
+               <input type="hidden" name="op" value="sendcard" />
+               <input type="hidden" name="galid" value="'.$galid.'" />
+               <input type="hidden" name="pos" value="'.$pos.'" />
+               <input type="hidden" name="pid" value="'.$pid.'" />
+               <div class="form-group row">
+                  <label class="col-form-label col-sm-4" for="from_name">'.gal_translate("Votre nom").'</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" id="from_name" name="from_name" placeholder="'.gal_translate("Votre nom").'" value="'.$data_user_name.'" required="required" />
+                 </div>
                </div>
-            </div>
-            <div class="form-group row">
-               <label class="col-form-label col-sm-4" for="to_name">'.gal_translate("Nom du destinataire").'</label>
-               <div class="col-sm-8">
-                  <input type="text" class="form-control" name="to_name" id="to_name" placeholder="'.gal_translate("Nom du destinataire").'" required="required" />
+               <div class="form-group row">
+                  <label class="col-form-label col-sm-4" for="from_mail">'.gal_translate("Votre adresse e-mail").'</label>
+                  <div class="col-sm-8">
+                     <input type="email" class="form-control" name="from_mail" id="from_mail" placeholder="'.gal_translate("Votre adresse e-mail").'" value="'.$data_user_mail.'" required="required" />
+                  </div>
                </div>
-            </div>
-            <div class="form-group row">
-               <label class="col-form-label col-sm-4" for="to_mail">'.gal_translate("Adresse e-mail du destinataire").'</label>
-               <div class="col-sm-8">
-                  <input type="email" class="form-control" name="to_mail" id="to_mail" placeholder="'.gal_translate("Adresse e-mail du destinataire").'" required="required" />
+               <div class="form-group row">
+                  <label class="col-form-label col-sm-4" for="to_name">'.gal_translate("Nom du destinataire").'</label>
+                  <div class="col-sm-8">
+                     <input type="text" class="form-control" name="to_name" id="to_name" placeholder="'.gal_translate("Nom du destinataire").'" required="required" />
+                  </div>
                </div>
-            </div>
-            <div class="form-group row">
-               <label class="col-form-label col-sm-4" for="card_sujet">'.gal_translate("Sujet").'</label>
-               <div class="col-sm-8">
-                  <input type="text" class="form-control" name="card_sujet" id="card_sujet" placeholder="'.gal_translate("Sujet").'" required="required" />
+               <div class="form-group row">
+                  <label class="col-form-label col-sm-4" for="to_mail">'.gal_translate("Adresse e-mail du destinataire").'</label>
+                  <div class="col-sm-8">
+                     <input type="email" class="form-control" name="to_mail" id="to_mail" placeholder="'.gal_translate("Adresse e-mail du destinataire").'" required="required" />
+                  </div>
                </div>
-            </div>
-            <div class="form-group">
-               <label class="col-form-label" for="card_msg">'.gal_translate("Message").'</label>
-               <textarea class="form-control tin " name="card_msg" id="card_msg" rows="5" required="required"></textarea>
-            </div>';
+               <div class="form-group row">
+                  <label class="col-form-label col-sm-4" for="card_sujet">'.gal_translate("Sujet").'</label>
+                  <div class="col-sm-8">
+                     <input type="text" class="form-control" name="card_sujet" id="card_sujet" placeholder="'.gal_translate("Sujet").'" required="required" />
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-form-label" for="card_msg">'.gal_translate("Message").'</label>
+                  <textarea class="form-control tin " name="card_msg" id="card_msg" rows="5" required="required"></textarea>
+               </div>';
       aff_editeur("card_msg","true");
       echo Q_spambot();
       echo '
-            <button class="btn btn-primary" type="submit">'.gal_translate("Envoyer comme e-carte").'</button>
-         </form>
+               <button class="btn btn-primary" type="submit">'.gal_translate("Envoyer comme e-carte").'</button>
+            </form>
+         </div>
       </div>';
       $arg1 = '
    var formulid = ["sendecard"]';
@@ -672,11 +674,12 @@ function PostEcard($galid, $pos, $pid, $from_name, $from_mail, $to_name, $to_mai
          $result=email($tomail, $to_mail, $card_sujet, $message, $tomail, $extra_headers);
       }
    }
-   echo '';
    if (!empty($error) || !$result )
-      echo '<p class="card-text alert alert-danger" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Erreur").'<br />';
+      echo '
+      <p class="card-text alert alert-danger" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Erreur").'<br />';
    else
-      echo '<p class="card-text alert alert-success" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Résultat").'<br />';
+      echo '
+      <p class="card-text alert alert-success" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Résultat").'<br />';
    if (!empty($error)) {
       if ($error == "01") echo gal_translate("Votre adresse mail est incorrecte.").'<br />';
       if ($error == "02") echo gal_translate("Le nom du destinataire ne peut être vide.").'<br />';
@@ -686,20 +689,17 @@ function PostEcard($galid, $pos, $pid, $from_name, $from_mail, $to_name, $to_mai
    }
    if ($result) echo gal_translate("Votre E-Carte a été envoyée");
    if (!$result) echo gal_translate("Votre E-carte n'a pas été envoyée");
-   echo '<script  type="text/javascript">';
-   echo "//<![CDATA[\n";
-   echo "function redirect() {";
-   echo "  window.location=\"".$ThisRedo."&op=img&galid=$galid&pos=$pos\"";
-   echo "}";
-   echo "setTimeout(\"redirect()\",5000);";
-   echo "//]]>\n";
-   echo '</script>';
-   echo '</p>';
+   echo '
+      </p>
+      <script  type="text/javascript">
+      //<![CDATA[
+         function redirect() {
+            window.location="'.$ThisRedo.'&op=img&galid='.$galid.'&pos='.$pos.'"
+         }
+         setTimeout("redirect()",5000);
+      //]]>
+      </script>';
 }
-
-/*******************************************************/
-//à faire
-/*******************************************************/
 
 function PostComment($gal_id, $pos, $pic_id, $comm) {
    global $NPDS_Prefix, $ThisRedo, $gmt, $user, $anonymous, $nuke_url, $asb_question, $asb_reponse;
@@ -957,14 +957,14 @@ function validate_email($email) {
 
 function TopCV($typeOP, $nbtop) {
    global $ThisFile, $ModPath, $NPDS_Prefix;
-
-   settype($nbtop,"integer");
+   settype($nbtop,'integer');
    echo '
-   <div class="card-header lead">
-      <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>
-   </div>
-   <div class="card-body">
-      <h5 class="card-title">';
+   <div class="card">
+      <div class="card-header lead">
+         <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>
+      </div>
+      <div class="card-body">
+         <h5 class="card-title">';
    if ($typeOP=='comment')
       echo gal_translate("Top").' '.$nbtop.' '.gal_translate("des images les plus commentées").'</h5>';
    else
@@ -977,19 +977,19 @@ function TopCV($typeOP, $nbtop) {
    $TableRep2=sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_vot");
    $NombreComs1=sql_num_rows($TableRep2);
    echo '
-      <hr />
-      <ul class="list-group mb-3 lead">
-         <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre d'images").'<span class="badge badge-secondary badge-pill">'.$NombreEntrees.'</span></li>
-         <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de commentaires").'<span class="badge badge-secondary badge-pill">'.$NombreComs.'</span></li>
-         <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de notes").'<span class="badge badge-secondary badge-pill">'.$NombreComs1.'</span></li>
-      </ul>';
+         <hr />
+         <ul class="list-group mb-3 lead">
+            <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre d'images").'<span class="badge badge-secondary badge-pill">'.$NombreEntrees.'</span></li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de commentaires").'<span class="badge badge-secondary badge-pill">'.$NombreComs.'</span></li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de notes").'<span class="badge badge-secondary badge-pill">'.$NombreComs1.'</span></li>
+         </ul>';
 
    if ($typeOP=='comment')
       $result1 = sql_query("SELECT pic_id, count(user) AS pic_nbcom FROM ".$NPDS_Prefix."tdgal_com GROUP BY pic_id ORDER BY pic_nbcom DESC LIMIT 0,$nbtop");
    else
       $result1 = sql_query("SELECT pic_id, count(user) AS pic_nbvote FROM ".$NPDS_Prefix."tdgal_vot GROUP BY pic_id ORDER BY pic_nbvote DESC LIMIT 0,$nbtop");
    echo '
-      <div class="card-columns p-0 mt-2">';
+         <div class="card-columns p-0 mt-2">';
    $j=1;
    while (list($pic_id, $nb) = sql_fetch_row($result1)) {
       $result2=sql_fetch_assoc(sql_query("SELECT gal_id, name, comment FROM ".$NPDS_Prefix."tdgal_img WHERE id='$pic_id' AND noaff='0'"));
@@ -997,26 +997,27 @@ function TopCV($typeOP, $nbtop) {
       if ($result2) {
          $comm_vignette=StripSlashes($result2['comment']);
          echo '
-         <div class="card" title="'.$result2['name'].'" data-toggle="tooltip" data-placement="bottom" >
-            <div class="card-body px-0 pt-1 pb-1 text-center">
-               <div class="h2 text-center">
-                  <span class="badge badge-success badge-pill ">'.$j.'</span>
-               </div>
-               <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=img&amp;galid='.($result2['gal_id']).'&amp;pos=-'.$pic_id.'" ><img class="n-irl" src="modules/'.$ModPath.'/mini/'.$result2['name'].'" alt="'.$comm_vignette.'" /></a>
-               <div class="card-text">
-               <span class="badge badge-secondary badge-pill" data-toggle="tooltip" data-placement="left"';
+            <div class="card" title="'.$result2['name'].'" data-toggle="tooltip" data-placement="bottom" >
+               <div class="card-body px-0 pt-1 pb-1 text-center">
+                  <div class="h2 text-center">
+                     <span class="badge badge-success badge-pill ">'.$j.'</span>
+                  </div>
+                  <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=img&amp;galid='.($result2['gal_id']).'&amp;pos=-'.$pic_id.'" ><img class="n-irl" src="modules/'.$ModPath.'/mini/'.$result2['name'].'" alt="'.$comm_vignette.'" /></a>
+                  <div class="card-text">
+                  <span class="badge badge-secondary badge-pill" data-toggle="tooltip" data-placement="left"';
          if ($typeOP=='comment')
             echo ' title="'.gal_translate("Nombre de commentaires").'"';
          else
             echo ' title="'.gal_translate("Nombre de vote(s)").'"';
          echo ' >'.$nb.'</span>
+                  </div>
                </div>
-            </div>
-         </div>';
+            </div>';
       }
       $j++;
    }
    echo '
+         </div>
       </div>
    </div>';
    sql_free_result($result1);
