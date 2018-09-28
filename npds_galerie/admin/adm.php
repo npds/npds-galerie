@@ -13,7 +13,7 @@
 /* (c) 2007 Xgonin, Lopez - http://modules.npds.org                     */
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
-/* MAJ jpb, phr -2017 renommé npds_galerie                              */
+/* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
 /* v 3.0                                                                */
 /************************************************************************/
 
