@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2018 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2019 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -129,12 +129,14 @@ function AddSsCat($idparent,$newcat,$acces) {
    if (!empty($newcat)) {
       $newcat = addslashes(removeHack($newcat));
       if (sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='$idparent' AND nom='$newcat'")))
-         echo '<p class="lead text-warning"><i class="fa fa-info-circle mr-2"></i>'.gal_translate("Cette sous-catégorie existe déjà").'</p>';
+         echo '
+         <div class="alert alert-danger lead">'.gal_translate("Cette sous-catégorie existe déjà").'</div>';
       else {
          if ($add = sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_cat VALUES ('','$idparent','$newcat','$acces')"))
             redirect_url($ThisRedo);
          else
-            echo '<div class="alert alert-danger lead "><i class="fa fa-info-circle mr-2"></i>'.gal_translate("Erreur lors de l'ajout de la sous-catégorie").'</div>';
+            echo '
+         <div class="alert alert-danger lead ">'.gal_translate("Erreur lors de l'ajout de la sous-catégorie").'</div>';
       }
    }
    else
