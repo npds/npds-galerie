@@ -7,7 +7,7 @@ CREATE TABLE tdgal_cat (
   nom varchar(150) NOT NULL default '',
   acces tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) TYPE=MyISAM DEFAULT CHARSET=utf8;
 
 #
 # Structure de la table `tdgal_com`
@@ -20,7 +20,7 @@ CREATE TABLE tdgal_com (
   comhostname varchar(60) NOT NULL default '',
   comtimestamp varchar(14) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) TYPE=MyISAM DEFAULT CHARSET=utf8;
 
 #
 # Structure de la table `tdgal_gal`
@@ -32,7 +32,7 @@ CREATE TABLE tdgal_gal (
   date varchar(14) default NULL,
   acces tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) TYPE=MyISAM DEFAULT CHARSET=utf8;
 #
 INSERT INTO tdgal_gal VALUES (1, -1, 'Import', NULL, -127);
 # --------------------------------------------------------
@@ -49,7 +49,7 @@ CREATE TABLE tdgal_img (
   ordre int(11) NOT NULL default '0',
   noaff int(1) unsigned default '0',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) TYPE=MyISAM DEFAULT CHARSET=utf8;
 
 #
 # Structure de la table `tdgal_vot`
@@ -62,4 +62,4 @@ CREATE TABLE tdgal_vot (
   ratinghostname varchar(60) NOT NULL default '',
   ratingtimestamp varchar(14) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) TYPE=MyISAM DEFAULT CHARSET=utf8;
