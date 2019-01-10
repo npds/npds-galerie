@@ -1,16 +1,16 @@
 ######################################################################################
 ##
-## Nom:  TD-Galerie
-## Version: 2.4
-## Date:  02/07/2008
-## Auteurs: Tribal-Dolphin - Xgonin - Lopez - Dev
+## Nom:  npds-galerie
+## Version: 3.0
+## Date:  2017
+## Auteurs: Tribal-Dolphin - Xgonin - Lopez - Dev -jpb -phr
 ## 
 ## Description: Module de gestion de galerie photos
 ## 
 ## Niveau d'installation : Facile
 ## Temps d'installation : 2 minutes
 ## Fichiers a éditer :  Aucuns
-## Minimum Requis : NPDS SABLE 
+## Minimum Requis : NPDS REvolutiion 16 
 ##
 ## Support sur: http://modules.npds.org/
 ##
@@ -30,7 +30,6 @@
 ## 2. Créer la base de données à l'aide du fichier SQL joint
 ## 3. Mettez un CHMOD 766 sur le fichier gal_conf.php
 ## 4. Mettez un CHMOD 777 sur les dossiers imgs/ et mini/
-## 5. Copier le contenu de extend-modules.txt dans votre extend-modules.txt (répertoire admin de NPDS)
 ##
 ## CONFIGURATION
 ## Via Admin-Plugins de NPDS.
@@ -54,7 +53,7 @@
 ## remarque: 
 ## imgalea_priv.php permet de faire apparaitre également dans le bloc les vignettes
 ## provenant de galeries photo membre ou privées (autorisées à un groupe NPDS), mais pour pouvoir consulter
-## les galeries en question, il faut biensûr être inscrit, faire partie du groupe et être connecté.
+## les galeries en question, il faut bien sûr être inscrit, faire partie du groupe et être connecté.
 ##
 ## imgealea_priv.php permet donc de donner un aperçu des galeries privées de manière à inciter
 ## les utilisateurs à s'enregistrer et se connecter.

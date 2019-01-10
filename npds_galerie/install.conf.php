@@ -11,7 +11,7 @@
 /*                                                                      */
 /* NPDS : Net Portal Dynamic System                                     */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2015 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2019 by Philippe Brunier                     */
 /*                                                                      */
 /* v2.0 for NPDS 16 jpb 2016                                            */
 /* This program is free software. You can redistribute it and/or modify */
@@ -28,8 +28,9 @@ $path_adm_module = 'admin/adm';
 
 $req_adm='';//do not fill
 if ($path_adm_module!='')
-$req_adm="INSERT INTO fonctions (fid,fnom,fdroits1,fdroits1_descr,finterface,fetat,fretour,fretour_h,fnom_affich,ficone,furlscript,fcategorie,fcategorie_nom,fordre) VALUES ('', '".$ModInstall."', 1, '', 1, 1, '', '', 'npds_galerie 3.0', 'npds_galerie', 'href=\"admin.php?op=Extend-Admin-SubModule&ModPath=".$ModInstall."&ModStart=".$path_adm_module."\"', 6, 'Modules', 0);";
-
+$req_adm="INSERT INTO fonctions (fid,fnom,fdroits1,fdroits1_descr,finterface,fetat,fretour,fretour_h,fnom_affich,ficone,furlscript,fcategorie,fcategorie_nom,fordre) VALUES (0, '".$ModInstall."', 1, '', 1, 1, '', '', 'npds_galerie 3.0', 'npds_galerie', 'href=\"admin.php?op=Extend-Admin-SubModule&ModPath=".$ModInstall."&ModStart=".$path_adm_module."\"', 6, 'Modules', 0);";
+$req_al='';//do not fill
+//$req_adm="INSERT INTO fonctions (fid,fnom,fdroits1,fdroits1_descr,finterface,fetat,fretour,fretour_h,fnom_affich,ficone,furlscript,fcategorie,fcategorie_nom,fordre) VALUES ('', '".$ModInstall."', 1, '', 1, 1, '', '', 'npds_galerie 3.0', 'npds_galerie', 'href=\"admin.php?op=Extend-Admin-SubModule&ModPath=".$ModInstall."&ModStart=".$path_adm_module."\"', 9, 'Alerte', 0);";
 
 #autodoc $sql = array(""): Si votre module doit exécuter une ou plusieurs requêtes SQL, tapez vos requêtes ici.
 #autodoc Attention! UNE requête par élément de tableau!
