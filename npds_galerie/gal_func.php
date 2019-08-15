@@ -434,7 +434,6 @@ function ViewDiapo($galid, $pos, $pid) {
       echo '
       <style>
 .wrapper {
-  max-width:300px;
   width:100%;
 }
 .carousel-item-next, .carousel-item-prev, .carousel-item.active {
@@ -1174,7 +1173,7 @@ function AddImgs($imgscat,$newcard1,$newdesc1,$newcard2,$newdesc2,$newcard3,$new
          $upload->maxupload_size=200000*100;
          $origin_filename = trim($upload->getFileName("newcard".$i));
          $filename_ext = strtolower(substr(strrchr($origin_filename, "."),1));
-      
+
          if ( ($filename_ext=="jpg") or ($filename_ext=="jpeg") or ($filename_ext=="gif") or ($filename_ext=="png") ) {
             $newfilename = $year.$month.$day.$hour.$min.$sec."-".$i.".".$filename_ext;
             if ($upload->saveAs($newfilename,"modules/$ModPath/imgs/", "newcard".$i,true)) {
@@ -1206,7 +1205,9 @@ function AddImgs($imgscat,$newcard1,$newdesc1,$newcard2,$newdesc2,$newcard3,$new
       $message=gal_translate("Des photos viennent d'être proposées dans la galerie photo du site ").$nuke_url.gal_translate(" par ").$user_connecte;
       send_email($adminmail, $subject, $message, '', true, 'html');
    }
-   echo '</div>';
+   echo '
+      </div>
+   </div>';
 }
 
 // CreateThumb($newfilename, "modules/$ModPath/imgs/", "modules/$ModPath/mini/", $MaxSizeThumb, $filename_ext);
