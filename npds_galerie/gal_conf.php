@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2017 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2019 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -27,17 +27,17 @@ $MaxSizeThumb = 300;
 $imglign = 4;
 
 // Nombre de photos par page
-$imgpage = 4;
+$imgpage = 12;
 
 // Nombre d'images à afficher dans le top commentaires
-$nbtopcomment = 5;
+$nbtopcomment = 10;
 
 // Nombre d'images à afficher dans le top votes
 $nbtopvote = 5;
 
 // Personnalisation de l'affichage
-$view_alea = false;
-$view_last = false;
+$view_alea = true;
+$view_last = true;
 $aff_vote = true;
 $aff_comm = true;
 
