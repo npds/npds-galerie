@@ -61,7 +61,7 @@ function AddACat($newcat,$acces) {
       if (sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='0' AND nom='$newcat'")))
          echo '<p class="lead text-warning"><i class="fa fa-info-circle mr-2"></i>'.gal_translate("Cette catégorie existe déjà").'</p>';
       else {
-         if ($add = sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_cat VALUES ('','0','$newcat','$acces')"))
+         if ($add = sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_cat VALUES ('0','0','$newcat','$acces')"))
             redirect_url($ThisRedo);
          else
             echo '<p class="lead text-danger"><i class="fa fa-info-circle mr-2"></i>'.gal_translate("Erreur lors de l'ajout de la catégorie").'</p>';
@@ -132,7 +132,7 @@ function AddSsCat($idparent,$newcat,$acces) {
          echo '
          <div class="alert alert-danger lead">'.gal_translate("Cette sous-catégorie existe déjà").'</div>';
       else {
-         if ($add = sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_cat VALUES ('','$idparent','$newcat','$acces')"))
+         if ($add = sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_cat VALUES ('0','$idparent','$newcat','$acces')"))
             redirect_url($ThisRedo);
          else
             echo '
@@ -201,7 +201,7 @@ function AddNewGal($galcat,$newgal,$acces) {
       <div class="alert alert-danger lead"><i class="fa fa-info-circle mr-2"></i>'.gal_translate("Cette galerie existe déjà").'</div>';
       else {
          $regdate = time()+((integer)$gmt*3600);
-         if ($add = sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_gal VALUES ('','$galcat','$newgal','$regdate','$acces')")) {
+         if ($add = sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_gal VALUES ('0','$galcat','$newgal','$regdate','$acces')")) {
             $new_gal_id = sql_last_id();
 //   echo '<h4><i class="fa fa-plus"></i> '.gal_translate("Ajouter des photos à cette nouvelle galerie").'</h4>';
    echo '
