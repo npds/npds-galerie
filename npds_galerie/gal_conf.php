@@ -13,8 +13,8 @@
 /* (c) 2007 Xgonin, Lopez - http://modules.npds.org                     */
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
-/* npds_galerie v 3.0                                                   */
-/* Changement de nom du module version Rev16 par jpb/phr mars 2017      */
+/* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
+/* v 3.0                                                                */
 /************************************************************************/
 
 // Dimension max des images
@@ -27,7 +27,7 @@ $MaxSizeThumb = 300;
 $imglign = 4;
 
 // Nombre de photos par page
-$imgpage = 12;
+$imgpage = 24;
 
 // Nombre d'images à afficher dans le top commentaires
 $nbtopcomment = 10;

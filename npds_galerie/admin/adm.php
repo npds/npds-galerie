@@ -88,10 +88,10 @@ if ($admin) {
                </div>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="'.$ThisFile.'&amp;subop=import" role="button" title="'.gal_translate("Import images").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-long-arrow-down fa-2x" ></i></a>
+               <a class="nav-link" href="'.$ThisFile.'&amp;subop=import" role="button" title="'.gal_translate("Import images").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-long-arrow-alt-down fa-2x" ></i></a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="'.$ThisFile.'&amp;subop=export" role="button" title="'.gal_translate("Export catégorie").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-long-arrow-up fa-2x" ></i></a>
+               <a class="nav-link" href="'.$ThisFile.'&amp;subop=export" role="button" title="'.gal_translate("Export catégorie").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-long-arrow-alt-up fa-2x" ></i></a>
             </li>
             <li class="nav-item">
                <a class="nav-link" href="'.$ThisFile.'&amp;subop=config" role="button" title="'.gal_translate("Configuration").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-cogs fa-2x" ></i></a>

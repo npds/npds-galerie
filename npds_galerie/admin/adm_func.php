@@ -335,7 +335,7 @@ function PrintFormImgs() {
          <label class="">'.gal_translate("Image").' '.$i.'</label>
          <div class="input-group mb-2 mr-sm-2">
             <div class="input-group-prepend" onclick="reset2($(\'#newcard'.$i.'\'),'.$i.');">
-               <div class="input-group-text"><i class="fa fa-refresh"></i></div>
+               <div class="input-group-text"><i class="fas fa-sync"></i></div>
             </div>
             <div class="custom-file">
                <input type="file" class="custom-file-input" name="newcard'.$i.'" id="newcard'.$i.'" />
@@ -792,7 +792,7 @@ function PrintArbo() {
             $affgaltemp.= '
                   <a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=editimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-edit fa-2x align-middle" title="Editer" data-toggle="tooltip"></i></a>';
          $affgaltemp.= '
-                  <a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-trash-o fa-2x text-danger" title="Effacer" data-toggle="tooltip"></i></a>
+                  <a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$rowZ_img[0].'"><i class="fas fa-trash fa-2x text-danger" title="Effacer" data-toggle="tooltip"></i></a>
                </div>
             </div>';
      }
@@ -856,7 +856,7 @@ function PrintArbo() {
                <a class="ml-2"><i class=" mr-2 "></i></a>';
             $affcatgal .= stripslashes($rowX_gal[2]).' <small>( '.gal_translate("Galerie").' )</small>
                <span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.$nb_imgpargal.'</span>
-               <span class="float-right mr-3"><a href="'.$ThisFile.'&amp;subop=editgal&amp;galid='.$rowX_gal[0].'"><i class="fa fa-edit align-middle" title="'.gal_translate("Editer").' '.gal_translate("Galerie").'" data-toggle="tooltip"></i></a><a class="" href="'.$ThisFile.'&amp;subop=delgal&amp;galid='.$rowX_gal[0].'"><i class="fa fa-trash-o text-danger ml-3" title="'.gal_translate("Effacer").' '.gal_translate("Galerie").'" data-toggle="tooltip"></i></a></span>
+               <span class="float-right mr-3"><a href="'.$ThisFile.'&amp;subop=editgal&amp;galid='.$rowX_gal[0].'"><i class="fa fa-edit align-middle" title="'.gal_translate("Editer").' '.gal_translate("Galerie").'" data-toggle="tooltip"></i></a><a class="" href="'.$ThisFile.'&amp;subop=delgal&amp;galid='.$rowX_gal[0].'"><i class="fas fa-trash text-danger ml-3" title="'.gal_translate("Effacer").' '.gal_translate("Galerie").'" data-toggle="tooltip"></i></a></span>
             </h5>
             <div class="card-body collapse" id="galcat'.$rowX_gal[0].'">
                <form action="'.$ThisFile.'&amp;subop=ordre" method="post" name="FormArbo'.$rowX_gal[0].'">
@@ -903,7 +903,7 @@ function PrintArbo() {
                   $affcatgalimg .= '
                         <a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=editimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-edit fa-2x align-middle" title="Editer" data-toggle="tooltip"></i></a>';
                $affcatgalimg .= '
-                        <a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-trash-o fa-2x text-danger" title="Effacer" data-toggle="tooltip"></i></a>';
+                        <a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$rowZ_img[0].'"><i class="fas fa-trash fa-2x text-danger" title="Effacer" data-toggle="tooltip"></i></a>';
                $i++;
                $affcatgalimg .= '
                      </div>
@@ -942,7 +942,7 @@ function PrintArbo() {
                      <a class="" data-toggle="collapse" href="#galscat'.$row_gal[0].'" aria-expanded="false" aria-checks="galscat'.$row_sscat[0].'">
                      <i class="toggle-icon fa fa-caret-down fa-lg mr-2" data-toggle="tooltip" data-placement="top" title="'.gal_translate("Cliquer pour déplier").'"></i></a>'.stripslashes($row_gal[2]).' <small>( '.gal_translate("Galerie").' )</small>
                      <span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.$nb_imgpargalscat.'</span>
-                     <span class="float-right mr-3"><a class="" href="'.$ThisFile.'&amp;subop=editgal&amp;galid='.$row_gal[0].'"><i class="fa fa-edit" title="'.gal_translate("Editer").' '.gal_translate("Galerie").'" data-toggle="tooltip"></i></a><a class="" href="'.$ThisFile.'&amp;subop=delgal&amp;galid='.$row_gal[0].'"><i class="fa fa-trash-o text-danger ml-3" title="'.gal_translate("Effacer").' '.gal_translate("Galerie").'" data-toggle="tooltip"></i></a></span>
+                     <span class="float-right mr-3"><a class="" href="'.$ThisFile.'&amp;subop=editgal&amp;galid='.$row_gal[0].'"><i class="fa fa-edit" title="'.gal_translate("Editer").' '.gal_translate("Galerie").'" data-toggle="tooltip"></i></a><a class="" href="'.$ThisFile.'&amp;subop=delgal&amp;galid='.$row_gal[0].'"><i class="fas fa-trash text-danger ml-3" title="'.gal_translate("Effacer").' '.gal_translate("Galerie").'" data-toggle="tooltip"></i></a></span>
                   </h5>
                </div>
                <div class="card-body collapse" id="galscat'.$row_gal[0].'">
@@ -988,7 +988,7 @@ function PrintArbo() {
                               <span><a href="'.$ThisFile.'&amp;subop=validimg&amp;imgid='.$row_img[0].'">Valider</a>';
                   else
                      $affsoucatgalimg .= '<span><a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=editimg&amp;imgid='.$row_img[0].'"><i class="fa fa-edit fa-2x align-middle" title="Editer" data-toggle="tooltip"></i></a>';
-                  $affsoucatgalimg .= '<a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$row_img[0].'"><i class="fa fa-trash-o fa-2x text-danger" title="Effacer" data-toggle="tooltip"></i></a></span>
+                  $affsoucatgalimg .= '<a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$row_img[0].'"><i class="fa fa-trash fa-2x text-danger" title="Effacer" data-toggle="tooltip"></i></a></span>
                            </div>
                         </div>';
                }
@@ -1020,7 +1020,7 @@ function PrintArbo() {
                   <span class="badge badge-secondary badge-pill ml-2" title="'.gal_translate("Nombre de galeries").'" data-toggle="tooltip" data-placement="right">'.$nb_galparsouscat.'</span>
                   <span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.$nbto_imgpargalscat.'</span>
 
-                  <span class="float-right mr-3"><a href="'.$ThisFile.'&amp;subop=editcat&amp;catid='.$row_sscat[0].'"><i class="fa fa-edit" title="'.gal_translate("Editer").' '.gal_translate("Sous-catégorie").'" data-toggle="tooltip"></i></a><a class="" href="'.$ThisFile.'&amp;subop=delsscat&amp;sscatid='.$row_sscat[0].'"><i class="fa fa-trash-o text-danger ml-3" data-original-title="'.gal_translate("Effacer").' '.gal_translate("Sous-catégorie").'" data-toggle="tooltip"></i></a></span>
+                  <span class="float-right mr-3"><a href="'.$ThisFile.'&amp;subop=editcat&amp;catid='.$row_sscat[0].'"><i class="fa fa-edit" title="'.gal_translate("Editer").' '.gal_translate("Sous-catégorie").'" data-toggle="tooltip"></i></a><a class="" href="'.$ThisFile.'&amp;subop=delsscat&amp;sscatid='.$row_sscat[0].'"><i class="fas fa-trash text-danger ml-3" data-original-title="'.gal_translate("Effacer").' '.gal_translate("Sous-catégorie").'" data-toggle="tooltip"></i></a></span>
                </h5>
             <div class="collapse" id="scat'.$row_sscat[0].'">';
            // SOUS-CATEGORIE
@@ -1042,7 +1042,7 @@ function PrintArbo() {
             <span class="badge badge-dark badge-pill ml-2" title="'.gal_translate("Nombre de sous-catégories").'" data-toggle="tooltip" data-placement="right">'.$nb_souscat.'</span>
             <span class="badge badge-secondary badge-pill ml-2" title="'.gal_translate("Nombre de galeries").'" data-toggle="tooltip" data-placement="right">'.($nb_galparcat+$nb_to_galparsouscat).'</span>
             <span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.($nbto_imgpargal+$nbto_imgpargalscat).'</span>
-            <span class="float-right"><a href="'.$ThisFile.'&amp;subop=editcat&amp;catid='.$row_cat[0].'"><i class="fa fa-edit align-middle" title="'.gal_translate("Editer").' '.gal_translate("Catégorie").'" data-toggle="tooltip"></i></a><a href="'.$ThisFile.'&amp;subop=delcat&amp;catid='.$row_cat[0].'"><i class="fa fa-trash-o text-danger  ml-3" title="'.gal_translate("Effacer").' '.gal_translate("Catégorie").'" data-toggle="tooltip"></i></a></span>
+            <span class="float-right"><a href="'.$ThisFile.'&amp;subop=editcat&amp;catid='.$row_cat[0].'"><i class="fa fa-edit align-middle" title="'.gal_translate("Editer").' '.gal_translate("Catégorie").'" data-toggle="tooltip"></i></a><a href="'.$ThisFile.'&amp;subop=delcat&amp;catid='.$row_cat[0].'"><i class="fas fa-trash text-danger  ml-3" title="'.gal_translate("Effacer").' '.gal_translate("Catégorie").'" data-toggle="tooltip"></i></a></span>
          </h5>
       </div>
       <div class="collapse " id="cat'.$row_cat[0].'">
@@ -1298,7 +1298,7 @@ function EditImg($id) {
       <ul class="list-group mt-4">';
    while ($rowC = sql_fetch_row($qcomment)) {
       echo '
-         <li class="d-flex list-group-item list-group-item-light justify-content-between align-items-left">'.userpopover($rowC[2],40).' '.$rowC[2].' '.gal_translate("a posté le").' '.date(translate("dateinternal"),$rowC[5]).'<span class="ml-auto"><a href="'.$ThisFile.'&amp;subop=delcomimg&amp;id='.$rowC[0].'&amp;picid='.$rowC[1].'"><i class="fa fa-trash-o fa-lg text-danger" title="Effacer" data-toggle="tooltip"></i></a></span></li>
+         <li class="d-flex list-group-item list-group-item-light justify-content-between align-items-left">'.userpopover($rowC[2],40).' '.$rowC[2].' '.gal_translate("a posté le").' '.date(translate("dateinternal"),$rowC[5]).'<span class="ml-auto"><a href="'.$ThisFile.'&amp;subop=delcomimg&amp;id='.$rowC[0].'&amp;picid='.$rowC[1].'"><i class="fas fa-trash fa-lg text-danger" title="Effacer" data-toggle="tooltip"></i></a></span></li>
          <li class="list-group-item">'.stripslashes($rowC[3]).'</li>';
    }
    echo '
@@ -1509,7 +1509,7 @@ function PrintJavaCodeGal() {
    echo "cde_all[2] = '-127'; txt_all[2] = '".gal_translate("Administrateurs")."';\n";
    if (count($tmp_groupe) != 0) {
       $i = 3;
-      while (list($val, $nom) = each($tmp_groupe)) {
+      foreach($tmp_groupe as $val => $nom) {
          echo "cde_usr[".($i-1)."] = '".$val."'; txt_usr[".($i-1)."] = '".$nom."';\n";
          echo "cde_all[".$i."] = '".$val."'; txt_all[".$i."] = '".$nom."';\n";
          $i++;
@@ -1554,7 +1554,7 @@ function PrintJavaCodeGal() {
 function Fab_Option_Group($GrpActu='0') {
    settype($txt,'string');
    $tmp_group = Get_Name_Group('list', $GrpActu);
-   while (list($val, $nom) = each($tmp_group)) {
+   foreach($tmp_group as $val => $nom) {
       if ($val == $GrpActu)
          $txt.= '<option value="'.$val.'" selected="selected">&nbsp;'.$nom.'&nbsp;</option>';
       else
@@ -1700,7 +1700,7 @@ function massimport($imggal, $descri) {
    asort($filelist);
 
    $i=1;
-   while (list ($key, $file) = each ($filelist)) {
+   foreach($filelist as $key => $file) {
       if (preg_match('#\.gif|\.jpg|\.jpeg|\.png$#i', strtolower($file))) {
          $filename_ext = strtolower(substr(strrchr($file, "."),1));
          $newfilename = $year.$month.$day.$hour.$min.$sec."-".$i.".".$filename_ext;

@@ -234,7 +234,7 @@ function ViewGal($galid, $page){
         $nbvote = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_vot WHERE pic_id='".$row[0]."'"));
         if (@file_exists("modules/$ModPath/imgs/".$row[2])) {
            list($width, $height, $type, $attr) = @getimagesize("modules/$ModPath/imgs/$row[2]");
-           $ibid = '<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).' '.$attr.'" title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-toggle="tooltip" data-placement="bottom" />';
+           $ibid = '<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-toggle="tooltip" data-placement="bottom" />';
         } else
            $ibid = ReducePic($row[2],stripslashes($row[3]),$MaxSizeThumb);
         echo '
@@ -776,7 +776,7 @@ function ViewAlea() {
    // Fabrication de la requête 1
    $where1='';
    $count = count($tab_groupe); $i = 0;
-   while (list($X, $val) = each($tab_groupe)) {
+   foreach($tab_groupe as $X => $val) {
       $where1.= "(acces='$val')";
       $i++;
       if ($i < $count) $where1.= ' OR ';
@@ -828,7 +828,7 @@ function ViewLastAdd() {
    $where1='';
    $tab_groupe=autorisation_local();
    $count = count($tab_groupe); $i = 0;
-   while (list($X, $val) = each($tab_groupe)) {
+   foreach($tab_groupe as $X => $val) {
       $where1.= "(acces='$val')";
       $i++;
       if ($i < $count) $where1.= ' OR ';
@@ -1104,7 +1104,7 @@ function PrintFormImgs() {
                <label class="">'.gal_translate("Image").' '.$i.'</label>
                <div class="input-group mb-2 mr-sm-2">
                   <div class="input-group-prepend" onclick="reset2($(\'#newcard'.$i.'\'),'.$i.');">
-                     <div class="input-group-text"><i class="fa fa-refresh"></i></div>
+                     <div class="input-group-text"><i class="fas fa-sync"></i></div>
                   </div>
                   <div class="custom-file">
                      <input type="file" class="custom-file-input" name="newcard'.$i.'" id="newcard'.$i.'" />

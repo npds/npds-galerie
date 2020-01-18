@@ -38,7 +38,7 @@ $tab_groupe[] = 0;
 // Fabrication de la requête 1
 $where1='';
 $count = count($tab_groupe); $i = 0;
-while (list($X, $val) = each($tab_groupe)) {
+foreach($tab_groupe as $X => $val) {
    $where1.= "(acces='$val')";
    $i++;
    if ($i < $count) $where1.= " OR ";
