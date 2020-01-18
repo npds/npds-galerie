@@ -1,5 +1,5 @@
 # npds-galerie
-Modules galerie photos pourle CMS NPDS compatible avec les versions supérieures ou égales à 16.
+Modules galerie photos pour le CMS NPDS compatible avec les versions supérieures ou égales à 16.
 
 ## Installation
 Télécharger l'archive dans le répertoire  
