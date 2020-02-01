@@ -87,7 +87,7 @@ function FabMenuCat($catid) {
                   <a href="'.$ThisFile.'&amp;op=sscat&amp;catid='.$catid.'&amp;sscid='.$row[0].'"><i class="fa fa-folder fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'</a> <span class="badge badge-secondary badge-pill">'.$nbgal.'</span>';
                else
                   echo '
-                  <a class="text-muted"><i class="fa fa-folder-o fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'</a>';
+                  <a class="text-muted"><i class="far fa-folder fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'</a>';
                echo '
                </div>';
             }
@@ -187,7 +187,7 @@ function ListGalCat($catid) {
                $ibid.= '<a href="'.$ThisFile.'&amp;op=gal&amp;galid='.$row[0].'"><i class="fa fa-folder fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'</a> <span class="badge badge-success badge-pill" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.$nimg[0].'</span>
                <br /><span class="small">'.gal_translate("Créée le").' '.date(translate("dateinternal"),$row[2]).'</span>';
             else 
-               $ibid.= '<span class="text-muted"><i class="fa fa-folder-o fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'<br /><span class="small">'.gal_translate("Créée le").' '.date(translate("dateinternal"),$row[2]).'</span></span>';
+               $ibid.= '<span class="text-muted"><i class="far fa-folder fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'<br /><span class="small">'.gal_translate("Créée le").' '.date(translate("dateinternal"),$row[2]).'</span></span>';
             $ibid.= '
             </div>';
          }
