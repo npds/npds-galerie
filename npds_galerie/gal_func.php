@@ -67,8 +67,10 @@ function FabMenuCat($catid) {
       $nbsc = sql_num_rows($query);
       echo '
       <nav class="card-header lead">
-         <a class="breadcrumb-item" href="'.$ThisFile.'"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>
-         <span class="breadcrumb-item active">'.stripslashes($cat[0]).'</span>
+         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center">
+            <li class="breadcrumb-item active"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-lg align-middle mr-2"></i>'.gal_translate("Accueil").'</a></li>
+            <li class="breadcrumb-item active">'.stripslashes($cat[0]).'</li>
+         </ol>
       </nav>';
       if($nbsc>0) { 
          echo '
@@ -113,10 +115,12 @@ function FabMenuSsCat($catid, $sscid) {
       $sscat = sql_fetch_row(sql_query("SELECT nom, acces FROM ".$NPDS_Prefix."tdgal_cat WHERE id='".$sscid."'"));
       if (autorisation($sscat[1]))
          echo '
-      <nav class="card-header lead">
-         <a class="breadcrumb-item" href="'.$ThisFile.'"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>
-         <a class="breadcrumb-item" href="'.$ThisFile.'&op=cat&amp;catid='.$catid.'">'.stripslashes($cat[0]).'</a>
-         <span class="breadcrumb-item active">'.stripslashes($sscat[0]).'</span>
+      <nav class="card-header lead" aria-label="breadcrumb" role="navigation">
+         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center">
+            <li class="breadcrumb-item"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-lg align-middle mr-2"></i>'.gal_translate("Accueil").'</a></li>
+            <li class="breadcrumb-item"><a href="'.$ThisFile.'&op=cat&amp;catid='.$catid.'">'.stripslashes($cat[0]).'</a></li>
+            <li class="breadcrumb-item active">'.stripslashes($sscat[0]).'</li>
+         </ol>
       </nav>';
       else 
          echo '
@@ -135,9 +139,12 @@ function FabMenuGal($galid) {
    if (autorisation($gal[1])) {
       echo '
       <nav class="card-header lead" aria-label="breadcrumb" role="navigation">
-         <a class="breadcrumb-item" href="'.$ThisFile.'"><i class="fa fa-camera fa-2x mr-2 align-middle"></i>'.gal_translate("Accueil").'</a>';
+         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center">
+            <li class="breadcrumb-item"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-lg mr-2 align-middle"></i>'.gal_translate("Accueil").'</a></li>';
       echo GetGalArbo($galid);
-      echo '<span class="breadcrumb-item active">'.stripslashes($gal[0]).'</span>
+      echo '
+            <li class="breadcrumb-item active">'.stripslashes($gal[0]).'</li>
+         </ol>
       </nav>';
    }
    else 
@@ -910,13 +917,13 @@ function GetGalArbo($galid) {
    $row = sql_fetch_row($query);
    if ($row[0] == 0)
       $retour = '
-      <a class="breadcrumb-item" href="'.$ThisFile.'&amp;op=cat&amp;catid='.$temp[0].'">'.stripslashes($row[1]).'</a>';
+      <li class="breadcrumb-item"><a href="'.$ThisFile.'&amp;op=cat&amp;catid='.$temp[0].'">'.stripslashes($row[1]).'</a></li>';
    else {
       $queryX = sql_query("SELECT nom FROM ".$NPDS_Prefix."tdgal_cat WHERE id='".$row[0]."'");
       $rowX = sql_fetch_row($queryX);
       $retour = '
-      <a class="breadcrumb-item" href="'.$ThisFile.'&amp;op=cat&amp;catid='.$row[0].'">'.stripslashes($rowX[0]).'</a>
-      <a class="breadcrumb-item" href="'.$ThisFile.'&amp;op=sscat&amp;catid='.$row[0].'&amp;sscid='.$temp[0].'">'.stripslashes($row[1]).'</a>';
+      <li class="breadcrumb-item"><a href="'.$ThisFile.'&amp;op=cat&amp;catid='.$row[0].'">'.stripslashes($rowX[0]).'</a></li>
+      <li class="breadcrumb-item"><a href="'.$ThisFile.'&amp;op=sscat&amp;catid='.$row[0].'&amp;sscid='.$temp[0].'">'.stripslashes($row[1]).'</a></li>';
    }
    return $retour;
 }
