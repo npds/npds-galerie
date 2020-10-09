@@ -64,6 +64,8 @@ if ($admin) {
    $ThisRedo = "admin.php?op=Extend-Admin-SubModule&ModPath=$ModPath&ModStart=$ModStart";
 
 // En-Tête
+
+   $hlpfile='';
    GraphicAdmin($hlpfile);
 
    echo '
