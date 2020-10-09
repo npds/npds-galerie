@@ -216,7 +216,7 @@ function AddNewGal($galcat,$newgal,$acces) {
          <label class="">'.gal_translate("Image").' '.$i.'</label>
          <div class="input-group mb-2 mr-sm-2">
             <div class="input-group-prepend" onclick="reset2($(\'#newcard'.$i.'\'),'.$i.');">
-               <div class="input-group-text"><i class="fa fa-refresh"></i></div>
+               <div class="input-group-text"><i class="fas fa-sync"></i></div>
             </div>
             <div class="custom-file">
                <input type="file" class="custom-file-input" name="newcard'.$i.'" id="newcard'.$i.'" />
