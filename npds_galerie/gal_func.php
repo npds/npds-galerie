@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2019 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2020 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -14,7 +14,7 @@
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
-/* v 3.0                                                                */
+/* v 3.1                                                                */
 /************************************************************************/
 /************************************************************************/
 /* Fonctions du module                                                  */
@@ -36,14 +36,21 @@ function FabMenu() {
          }
       }
       if ($ibid) {
-         echo '<h5 class="card-header"><span class="breadcrumb-item my-1 mr-2"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</span><span class="float-right">';
+         echo '
+         <nav class="card-header lead nav flex-column flex-sm-row pl-0 align-items-center" role="navigation">
+               <a class="nav-link disabled"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>';
          if ($aff_comm)
-            echo '<a class="btn btn-outline-secondary btn-sm  my-1 mr-2" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=topcomment">'.gal_translate("Top-Commentaires").'</a>';
+            echo '
+               <a class="nav-link" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=topcomment">'.gal_translate("Top-Commentaires").'</a>';
          if ($aff_vote)
-            echo '<a class="btn btn-outline-secondary btn-sm my-1 mr-2" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=topvote">'.gal_translate("Top-Votes").'</a>';
+            echo '
+               <a class="nav-link" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=topvote">'.gal_translate("Top-Votes").'</a>';
          if (isset($user))
-            echo '<a class="btn btn-outline-secondary btn-sm my-1" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=formimgs">'.gal_translate("Proposer des images").'</a>';
-         echo '</span></h5>
+            echo '
+               <a class="nav-link" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=formimgs">'.gal_translate("Proposer des images").'</a>';
+         echo '
+            </ul>
+         </nav>
          <div class="card-body">
             <div class="row lead">';
          echo $ibid;
@@ -67,7 +74,7 @@ function FabMenuCat($catid) {
       $nbsc = sql_num_rows($query);
       echo '
       <nav class="card-header lead">
-         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center">
+         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center border-0">
             <li class="breadcrumb-item active"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-lg align-middle mr-2"></i>'.gal_translate("Accueil").'</a></li>
             <li class="breadcrumb-item active">'.stripslashes($cat[0]).'</li>
          </ol>
@@ -116,7 +123,7 @@ function FabMenuSsCat($catid, $sscid) {
       if (autorisation($sscat[1]))
          echo '
       <nav class="card-header lead" aria-label="breadcrumb" role="navigation">
-         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center">
+         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center border-0">
             <li class="breadcrumb-item"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-lg align-middle mr-2"></i>'.gal_translate("Accueil").'</a></li>
             <li class="breadcrumb-item"><a href="'.$ThisFile.'&op=cat&amp;catid='.$catid.'">'.stripslashes($cat[0]).'</a></li>
             <li class="breadcrumb-item active">'.stripslashes($sscat[0]).'</li>
@@ -139,7 +146,7 @@ function FabMenuGal($galid) {
    if (autorisation($gal[1])) {
       echo '
       <nav class="card-header lead" aria-label="breadcrumb" role="navigation">
-         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center">
+         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center border-0">
             <li class="breadcrumb-item"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-lg mr-2 align-middle"></i>'.gal_translate("Accueil").'</a></li>';
       echo GetGalArbo($galid);
       echo '
@@ -161,14 +168,17 @@ function FabMenuImg($galid, $pos) {
    if (autorisation($gal[1])) {
       echo '
       <nav class="card-header lead" aria-label="breadcrumb" role="navigation">
-         <a class="breadcrumb-item" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>';
+         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center border-0">
+            <li class="breadcrumb-item"><a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a></li>';
       echo GetGalArbo($galid);
       echo '
-         <a class="breadcrumb-item" href="'.$ThisFile.'&amp;op=gal&amp;galid='.$galid.'">'.stripslashes($gal[0]).'</a>';
+            <li class="breadcrumb-item"> <a href="'.$ThisFile.'&amp;op=gal&amp;galid='.$galid.'">'.stripslashes($gal[0]).'</a></li>';
       $img = sql_fetch_row(sql_query("SELECT comment FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='".$galid."' and noaff='0' ORDER BY ordre,id LIMIT $pos,1"));
       if ($img[0]!='')
-         echo '<span class="breadcrumb-item active">'.stripslashes($img[0]).'</span>';
+         echo '
+            <li class="breadcrumb-item active">'.stripslashes($img[0]).'</li>';
       echo '
+         </ol>
       </nav>';
    }
    else 
