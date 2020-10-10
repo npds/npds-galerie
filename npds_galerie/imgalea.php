@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2019 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2020 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -14,7 +14,7 @@
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
-/* v 3.0                                                                */
+/* v 3.1                                                                */
 /************************************************************************/
 if (stristr($_SERVER['PHP_SELF'],'imgalea.php')) die();
 /**************************************************************************************************/
@@ -30,9 +30,8 @@ if (isset($user) and $user !='') {
    $tab_groupe = valid_group($user);
    $tab_groupe[] = 1;
 }
-if (isset($admin) && $admin!='') {
+if (isset($admin) && $admin!='')
    $tab_groupe[] = 127;
-}
 $tab_groupe[] = 0;
 
 // Fabrication de la requête 1
