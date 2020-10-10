@@ -680,7 +680,7 @@ function WriteConfig($maxszimg,$maxszthb,$nbimlg,$nbimpg,$nbimcomment,$nbimvote,
    $content.= "/* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */\n";
    $content.= "/* MAJ Dev - 2011                                                       */\n";
    $content.= "/* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */\n";
-   $content.= "/* v 3.0                                                                */\n";
+   $content.= "/* v 3.1                                                                */\n";
    $content.= "/************************************************************************/\n\n";
    $content.= "// Dimension max des images\n";
 //   $content.= "\$MaxSizeImg = ".$maxszimg.";\n\n";
@@ -711,7 +711,7 @@ function WriteConfig($maxszimg,$maxszthb,$nbimlg,$nbimpg,$nbimcomment,$nbimvote,
    $content.= "// Notification admin par email de la proposition\n";
    $content.= "\$notif_admin = ".$notifadmin.";\n\n";
    $content.= "// Version du module\n";
-   $content.= "\$npds_gal_version = \"V 3.0\";\n";
+   $content.= "\$npds_gal_version = \"V 3.1\";\n";
    $content.= "?>";
      
    if ($myfile = fopen("$filename", "wb")) {
