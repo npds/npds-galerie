@@ -372,7 +372,7 @@ function ViewImg($galid, $pos, $interface) {
                   $star .='<i class="fa fa-star" aria-hidden="true"></i>';
                   echo '
                      <div class="col-xs-2">
-                        <a class="btn btn-outline-primary btn-sm mr-1" href="'.$ThisFile.'&amp;op=vote&amp;value='.$i.'&amp;pic_id='.$row[0].'&amp;gal_id='.$galid.'&amp;pos='.$pos.'">'.$star.'</a>
+                        <a class="btn btn-outline-primary btn-sm mr-1" href="'.$ThisFile.'&amp;op=vote&amp;value='.($i+1).'&amp;pic_id='.$row[0].'&amp;gal_id='.$galid.'&amp;pos='.$pos.'">'.$star.'</a>
                      </div>';
                   $i++;
                }
@@ -393,11 +393,13 @@ function ViewImg($galid, $pos, $interface) {
       <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Dimensions").'<span class="badge badge-secondary">'.$width.' x '.$height.' Pixels</span></li>';
    if ($aff_vote) {
       $rowV = sql_fetch_row(sql_query("SELECT COUNT(id), AVG(rating) FROM ".$NPDS_Prefix."tdgal_vot WHERE pic_id='".$row[0]."'"));
-      $note = round($rowV[1]);$star='';
-      $i=0;
-      while($i<=$note) {$star.='<i class="fa fa-star mx-1"></i>';$i++;}
+      $note = round($rowV[1]); $star='';
+      if($note) {
+         $i=0;
+         while($i<$note) {$star.='<i class="fa fa-star mx-1"></i>';$i++;}
+      }
       echo '
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Note ").$rowV[0].' '.gal_translate("vote(s)").'<span class="text-success">'.$star.'</span></li>';
+      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Note ").$rowV[0].' '.gal_translate("vote(s)").'<span class="text-success" title="'.$note.'/6" data-toggle="tooltip" data-placement="left">'.$star.'</span></li>';
       }
    echo '
       <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Affichées").'<span class="badge badge-secondary">'.($row[4] + 1).' '.gal_translate("fois").'</span></li>
@@ -450,18 +452,18 @@ function ViewDiapo($galid, $pos, $pid) {
    if (autorisation($gal[0])) {
       echo '
       <style>
-.wrapper {
-  width:100%;
-}
-.carousel-item-next, .carousel-item-prev, .carousel-item.active {
-    display: block !important;
-}
-</style>
+         .wrapper {
+           width:100%;
+         }
+         .carousel-item-next, .carousel-item-prev, .carousel-item.active {
+             display: block !important;
+         }
+      </style>
       
-<div class="wrapper">
+      <div class="wrapper">
       <div id="photosIndicators" class="carousel slide" data-ride="carousel" data-wrap="true" data-interval="3000">
          <ol class="carousel-indicators">';
-       $i = 0;
+      $i = 0;
       settype($pos,"integer");
       $pic_query = sql_query("SELECT id, name FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='$galid' AND noaff='0'");
       while($picture = sql_fetch_assoc($pic_query)) {
@@ -765,6 +767,7 @@ function PostVote($gal_id, $pos, $pic_id, $value) {
    settype($pos,'integer');
    settype($pic_id,'integer');
    settype($value,'integer');
+   if($value==0 or $value>6) die('<div class="alert alert-danger">'.$host.' Merci d\'utiliser l\'interface !</div>');
    $picverif = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE id='$pic_id'");
    $qverif = sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_vot WHERE pic_id='$pic_id' AND user='$name' AND ratinghostname='$host'");
    if ((sql_num_rows($qverif) == 0) and (sql_num_rows($picverif) !='')) {
