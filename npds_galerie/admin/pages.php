@@ -16,12 +16,13 @@
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
 /* v 3.1                                                                */
 /************************************************************************/
-
+/*
 $PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['title']="[french]Galerie d'images[/french][english]Pictures galery[/english][spanish]galeria de imagenes[/spanish]+";
 $PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['js']=array($nuke_url.'/modules/npds_galerie/js/jquery.watermark.min.js');
 $PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['run']="yes";
-$PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['blocs']="-1";
+$PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['blocs']="0";
 $PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['TinyMce']=1;
 $PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['TinyMce-theme']="short";
-
+$PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['css']=array($nuke_url.'/modules/npds_galerie/css/galerie.css+');
+*/
 ?>

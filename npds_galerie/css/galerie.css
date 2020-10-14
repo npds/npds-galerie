@@ -1,0 +1,31 @@
+/*
+modules npds_galerie
+galerie.css
+*/
+
+a[href*="intent"] {
+   display:inline-block;
+   margin-top: 0.4em;
+}
+.rating a {
+   float:right;
+   color: var(--primary);
+   text-decoration: none;
+   -webkit-transition: color .4s;
+   -moz-transition: color .4s;
+   -o-transition: color .4s;
+   transition: color .4s;
+}
+.rating a:hover,
+.rating a:hover ~ a,
+.rating a:focus,
+.rating a:focus ~ a {
+   color: var(--success);
+   cursor: pointer;
+}
+.rating2 {
+   direction: rtl;
+}
+.rating2 a {
+   float:none
+}

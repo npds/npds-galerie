@@ -356,7 +356,6 @@ function ViewImg($galid, $pos, $interface) {
          echo '
       </ul>';
       }
-      
       $update = sql_query("UPDATE ".$NPDS_Prefix."tdgal_img SET view = view + 1 WHERE id='".$row[0]."'");
 
       if ($interface!='no') {
@@ -364,21 +363,16 @@ function ViewImg($galid, $pos, $interface) {
             // Notation de l'image
             if (isset($user) || $vote_anon) {
                echo '
-               <h4 class="card-title">'.gal_translate("Noter cette image").'</h4>
-               <div class="card-body">
-                  <div class="row">';
-               $i=0;$star='';
-               while ($i<=5) {
-                  $star .='<i class="fa fa-star" aria-hidden="true"></i>';
-                  echo '
-                     <div class="col-xs-2">
-                        <a class="btn btn-outline-primary btn-sm mr-1" href="'.$ThisFile.'&amp;op=vote&amp;value='.($i+1).'&amp;pic_id='.$row[0].'&amp;gal_id='.$galid.'&amp;pos='.$pos.'">'.$star.'</a>
-                     </div>';
+               <h4 class="card-title">'.gal_translate("Noter cette image").'
+                  <span class="h5 rating">';
+               $i=0;
+               while ($i<6) {
+                  echo '<a class="" href="'.$ThisFile.'&amp;op=vote&amp;value='.(6-$i).'&amp;pic_id='.$row[0].'&amp;gal_id='.$galid.'&amp;pos='.$pos.'" title="'.(6-$i).'/6" data-toggle="tooltip"><i class="far fa-star fa-lg"></i></a>';
                   $i++;
                }
             echo '
-               </div>
-            </div>';
+               </span>
+            </h4>';
             }
          }
       }
@@ -1103,7 +1097,7 @@ function PrintFormImgs() {
       redirect_url($ThisRedo);
    echo '
    <div class="card">
-      <div class="card-header lead"><a href="modules.php?ModPath='.$ModPath.'&ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a></div>
+      <div class="card-header lead"><a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a></div>
       <div class="card-body">
          <h5 class="card-title">'.gal_translate("Proposer des images").'</h5>
          <hr />
