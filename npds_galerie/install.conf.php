@@ -27,7 +27,7 @@ $name_module = 'npds_galerie';
 $path_adm_module = 'admin/adm';
 
 #autodoc $affich: pour l'affichage du nom du module dans l'admin
-$affich='Galerie photo';
+$affich='npds_galerie';
 
 #autodoc $icon: icon pour l'admin : c'est un nom de fichier(sans extension) !! #required SI admin avec interface
 $icon='npds_galerie';
@@ -75,7 +75,7 @@ $sql = array("CREATE TABLE ".$NPDS_Prefix."tdgal_cat (
   id int(11) NOT NULL auto_increment,
   pic_id int(11) NOT NULL default '0',
   user varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL default '',
-  rating tinyint(4) NOT NULL default '0',
+  rating tinyint(4) NOT NULL,
   ratinghostname varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL default '',
   ratingtimestamp varchar(14) COLLATE utf8mb4_unicode_ci default NULL,
   PRIMARY KEY (id)
