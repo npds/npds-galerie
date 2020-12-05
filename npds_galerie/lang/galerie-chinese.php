@@ -14,7 +14,7 @@
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
-/* v 3.1                                                                */
+/* v 3.2                                                                */
 /* Chinese Language File                                                */
 /************************************************************************/
 
@@ -75,7 +75,6 @@ function gal_translate($phrase) {
       case "des images les plus notées": $tmp = "of most noted pictures"; break;
       case "Des photos viennent d'être proposées dans la galerie photo du site ": $tmp = "Photos were submitted in the photo gallery of the site "; break;
       case "Description": $tmp = "Description"; break;
-      case "Description": $tmp = "Description"; break;
       case "Diaporama": $tmp = "Slideshow"; break;
       case "Dimension maximale de l'image en pixels": $tmp = "Maximal dimension of the picture in pixels"; break;
       case "Dimension maximale de l'image incorrecte": $tmp = "Incorrect maximal picture dimension"; break;
@@ -86,7 +85,7 @@ function gal_translate($phrase) {
       case "Effacer": $tmp = "Delete"; break;
       case "Enregistrement non supprimé": $tmp = "Record not deleted"; break;
       case "Enregistrement supprimé": $tmp = "Record deleted"; break;
-      case "Envoyer comme e-carte": $tmp = "Send an e-card"; break;
+      case "Envoyer une E-carte": $tmp = "Send an e-card"; break;
       case "Envoyer": $tmp = "Send"; break;
       case "Erreur lors de l'ajout de la catégorie": $tmp = "Error during the addition of the category"; break;
       case "Erreur lors de l'ajout de la galerie": $tmp = "Error during the addition of the gallery"; break;
@@ -94,11 +93,12 @@ function gal_translate($phrase) {
       case "Erreur": $tmp = "Error"; break;
       case "Export catégorie": $tmp = "Export category"; break;
       case "Exporter": $tmp = "Export"; break;
+      case "Filtrer les images": $tmp = "Filter images"; break;
       case "fois": $tmp = "times"; break;
       case "Galerie non supprimée": $tmp = "Gallery not deleted"; break;
       case "Galerie Privée, connectez vous": $tmp = " Private galery, connect you"; break;
       case "Galerie supprimée": $tmp = "Gallery deleted"; break;
-      case "Galerie temporaire": $tmp = "Temporary' gallery"; break;
+      case "Galerie temporaire": $tmp = "Temporary gallery"; break;
       case "Galerie": $tmp = "Gallery"; break;
       case "Galeries de photos": $tmp = "Photo Galleries"; break;
       case "Galeries": $tmp = "Galeries"; break;
@@ -107,6 +107,8 @@ function gal_translate($phrase) {
       case "Image supprimée": $tmp = "Picture deleted"; break;
       case "Image": $tmp = "Picture"; break;
       case "Images du dossier": $tmp = "Folder images"; break;
+      case "Images géoréférencées": $tmp = "Georeferenced images"; break;
+      case "Images géoréférencée": $tmp = "Georeferenced image"; break;
       case "Images vues": $tmp = "Viewed images"; break;
       case "IMAGES": $tmp = "PICTURES"; break;
       case "Import images": $tmp = "Import pictures"; break;
@@ -115,6 +117,8 @@ function gal_translate($phrase) {
       case "Informations sur l'image": $tmp = "File information"; break;
       case "Informations": $tmp = "Informations"; break;
       case "L'adresse mail du destinataire est incorrecte.": $tmp = "The mail address of recipient is incorrect."; break;
+      case "La modification du droit d'accès à cette catégorie entraine de facto la modification des droits d'accès à TOUTES les sous catégories et galeries qui en dépendent.": $tmp = "The modification of the right of access to this category entails de facto the modification of the rights of access to ALL the subcategories and galleries which depend on it."; break;
+      case "Latitude": $tmp = "Latitude"; break;
       case "Le message ne peut être vide.": $tmp = "Message cannot be empty."; break;
       case "Le nom du destinataire ne peut être vide.": $tmp = "Recipient name cannot be empty."; break;
       case "Le sujet ne peut être vide.": $tmp = "Subject cannot be empty."; break;
@@ -122,6 +126,7 @@ function gal_translate($phrase) {
       case "Les anonymes peuvent poster un commentaire ?": $tmp = "Anonymous can comments ?"; break;
       case "Les anonymes peuvent voter ?": $tmp = "Anonymous can rate ?"; break;
       case "Les images importées seront supprimées du dossier": $tmp = "Imported images will be deleted from the folder"; break;
+      case "Longitude": $tmp = "Longitude"; break;
       case "MAJ ordre": $tmp = "Update order"; break;
       case "Message": $tmp = "Message"; break;
       case "Miniature non supprimée": $tmp = "Thumb not deleted"; break;
@@ -134,7 +139,6 @@ function gal_translate($phrase) {
       case "Nom du destinataire": $tmp = "Recipient name"; break;
       case "Nombre d'images à afficher dans le top commentaires": $tmp = "Number of pictures to display in top comment"; break;
       case "Nombre d'images à afficher dans le top votes": $tmp = "Number of pictures to display in top vote"; break;
-      case "Nombre d'images par ligne": $tmp = "Images per line"; break;
       case "Nombre d'images par page": $tmp = "Images per page"; break;
       case "Nombre d'images": $tmp = "Number of pictures"; break;
       case "Nombre de catégories": $tmp = "Number of categories"; break;
@@ -149,7 +153,7 @@ function gal_translate($phrase) {
       case "Nouveau nom": $tmp = "New name"; break;
       case "Nouvelle soumission de Photos": $tmp = "New soumission of photo"; break;
       case "Photo envoyée avec succés, elle sera traitée par le webmaster": $tmp = "Photo sent successfully, it will be treated by the webmaster"; break;
-      case "Photos aléatoires": $tmp = "Random files"; break;
+      case "Photos aléatoires": $tmp = "Random images"; break;
       case "Posté le": $tmp = "Date post"; break;
       case "Pour toutes les images de cet import.": $tmp = "For all images of this import."; break;
       case "proposé par": $tmp = "proposed by"; break;
@@ -160,10 +164,12 @@ function gal_translate($phrase) {
       case "Sous-catégorie non supprimée": $tmp = "Subcategory not deleted"; break;
       case "Sous-catégorie supprimée": $tmp = "Subcategory deleted"; break;
       case "Sous-catégorie": $tmp = "Subcategory"; break;
+      case "Sous-catégories": $tmp = "Subcategories"; break;
       case "Sujet": $tmp = "Subject"; break;
       case "Suspendre le Diaporama": $tmp = "Stop Slideshow"; break;
       case "Tableau récapitulatif": $tmp = "Summary table"; break;
       case "Taille du fichier": $tmp = "File Size"; break;
+      case "Télécharger comme image.png": $tmp = "Download map as image.png"; break;
       case "Top-Commentaires": $tmp = "Top-Comments"; break;
       case "Top-Votes": $tmp = "Top-Vote"; break;
       case "Top": $tmp = "Top"; break;
@@ -184,7 +190,7 @@ function gal_translate($phrase) {
       case "Vous allez supprimer une image": $tmp = "You go to delete the picture"; break;
       case "Vous avez déjà commenté cette photo": $tmp = "Sorry but you have already commented this file"; break;
       case "Vous avez déjà noté cette photo": $tmp = "Sorry but you have already rated this file"; break;
-      case "Vous n'avez accés à aucune galerie": $tmp = "You do not have access to any galery"; break;
+      case "Vous n'avez accès à aucune galerie": $tmp = "You do not have access to any galery"; break;
       default: $tmp = "Translation error [** $phrase **]"; break;
    }
    return (htmlentities($tmp,ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset));
