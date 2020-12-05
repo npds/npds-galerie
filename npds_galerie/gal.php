@@ -14,7 +14,7 @@
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
-/* v 3.1                                                                */
+/* v 3.2                                                                */
 /************************************************************************/
 
 // For More security
@@ -28,7 +28,7 @@ include_once('functions.php');
 include_once("modules/$ModPath/gal_conf.php");
 include_once("modules/$ModPath/gal_func.php");
 include_once("modules/$ModPath/lang/galerie-$language.php");
-include ("modules/$ModPath/admin/pages.php");
+include_once("modules/$ModPath/admin/pages.php");
 
 // Paramètres utilisés par le script
 $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
@@ -116,7 +116,7 @@ switch($op) {
 
    case 'addimgs' :
       echo '<div class="card">';
-      AddImgs($imggal,$newcard1,$newdesc1,$newcard2,$newdesc2,$newcard3,$newdesc3,$newcard4,$newdesc4,$newcard5,$newdesc5,$user_connecte);
+      AddImgs($imggal, $newcard1,$newcard2,$newcard3,$newcard4,$newcard5, $newdesc, $imglat, $imglong, $user_connecte);
       echo '</div>';
    break;
 

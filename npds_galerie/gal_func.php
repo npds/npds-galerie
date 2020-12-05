@@ -14,7 +14,7 @@
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
-/* v 3.1                                                                */
+/* v 3.2                                                                */
 /************************************************************************/
 /************************************************************************/
 /* Fonctions du module                                                  */
@@ -82,7 +82,7 @@ function FabMenuCat($catid) {
       if($nbsc>0) { 
          echo '
       <div class="card-body">
-         <h4>'.gal_translate("Sous catégories").'<span class="float-right badge badge-secondary badge-pill">'.$nbsc.'</span></h4>
+         <h4>'.gal_translate("Sous-catégories").'<span class="float-right badge badge-secondary badge-pill">'.$nbsc.'</span></h4>
          <hr />
          <div class="row lead">';
          while ($row = sql_fetch_row($query)) {
@@ -186,7 +186,6 @@ function FabMenuImg($galid, $pos) {
       <div class="alert alert-danger">'.gal_translate("Aucune galerie trouvée").'</div>';
 }
 // les menus
-
 function ListGalCat($catid) {
    global $NPDS_Prefix, $ModPath;
    $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
@@ -220,7 +219,7 @@ function ListGalCat($catid) {
 }
 
 function ViewGal($galid, $page){
-   global $NPDS_Prefix, $ModPath, $imglign, $imgpage, $MaxSizeThumb, $aff_comm, $aff_vote, $galid, $pos,$pid;
+   global $NPDS_Prefix, $ModPath, $imgpage, $MaxSizeThumb, $aff_comm, $aff_vote, $galid, $pos,$pid;
    $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
    settype($galid,'integer');
    settype($page,'integer');
@@ -246,27 +245,35 @@ function ViewGal($galid, $page){
 
       echo '
       <div class="card-columns p-2 mt-2">';
+      $img_point='';
       while ($row = sql_fetch_row($query)) {
-        $nbcom = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='".$row[0]."'"));
-        $nbvote = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_vot WHERE pic_id='".$row[0]."'"));
-        if (@file_exists("modules/$ModPath/imgs/".$row[2])) {
-           list($width, $height, $type, $attr) = @getimagesize("modules/$ModPath/imgs/$row[2]");
-           $ibid = '<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-toggle="tooltip" data-placement="bottom" />';
-        } else
+         $img_geotag='';
+         $nbcom = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='".$row[0]."'"));
+         $nbvote = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_vot WHERE pic_id='".$row[0]."'"));
+         if (@file_exists("modules/$ModPath/imgs/".$row[2])) {
+            list($width, $height, $type, $attr) = @getimagesize("modules/$ModPath/imgs/$row[2]");
+            $ibid = '<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-toggle="tooltip" data-placement="bottom" />';
+         } else
            $ibid = ReducePic($row[2],stripslashes($row[3]),$MaxSizeThumb);
+      //==> geoloc
+      if (($row[7] != '') or ($row[8] != '')) {
+         $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($row[3]).'","'.$row[4].'"]);';
+         $img_geotag = '<img class="geotag" src="/modules/'.$ModPath.'/data/geotag_16.png" title="This image is georeferenced." alt="This image is georeferenced." />';
+      }
+      //<== geoloc
         echo '
             <div class="card">
                <a href="'.$ThisFile.'&amp;op=img&amp;galid='.$galid.'&amp;pos='.$pos.'">'.$ibid.'</a>
+               '.$img_geotag.'
                <div class="card-body">
-               <p class="card-text text-muted"><span class="badge badge-secondary mr-1">'.$row[4].'</span>'.gal_translate("affichage(s)");
+                  <p class="card-text text-muted"><span class="badge badge-secondary mr-1">'.$row[4].'</span>'.gal_translate("affichage(s)");
         if ($aff_comm and $nbcom>0)
            echo '<br /><span class="badge badge-secondary mr-1">'.$nbcom.'</span>'.gal_translate("commentaire(s)");
         if ($aff_vote and $nbvote>0)
            echo '<br /><span class="badge badge-secondary mr-1">'.$nbvote.'</span>'.gal_translate("vote(s)");
-        echo '
-               </p>
-            </div>
-         </div>';
+        echo '</p>
+               </div>
+            </div>';
         $pos++;
       }
       echo '
@@ -292,6 +299,9 @@ function ViewGal($galid, $page){
       <div class="mx-2">';
       echo meta_lang('comment_system(galerie,'.$galid.')');
       echo '</div>';
+
+      if($img_point !='')
+         Img_carte($img_point);
    }
 }
 
@@ -401,7 +411,6 @@ function ViewImg($galid, $pos, $interface) {
 
       if ($interface!="no") {
          if ($aff_comm) {
-         //   echo meta_lang('<p>comment_system(galerie,'.$pos.')</p>');
          // Commentaires sur l'image
             $qcomment = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='".$row[0]."' ORDER BY comtimestamp DESC LIMIT 0,10");
             $num_comm = sql_num_rows($qcomment);
@@ -534,7 +543,7 @@ function PrintFormEcard($galid, $pos, $pid) {
       <div class="card">
          <div class="card-header lead"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a></div>
          <div class="card-body">
-            <h4 class="">'.gal_translate("Envoyer une E-carte de la part de").' <span class="text-muted">'.$username.'</span></h4>
+            <h4 class="">'.gal_translate("Envoyer une E-carte").'. ' .gal_translate("De la part de").' <span class="text-muted">'.$username.'</span></h4>
             <hr />
             <div class="form-group row">
                <label class="col-form-label col-sm-4" for="from_name">'.gal_translate("Image").'</label>
@@ -579,12 +588,12 @@ function PrintFormEcard($galid, $pos, $pid) {
                </div>
                <div class="form-group">
                   <label class="col-form-label" for="card_msg">'.gal_translate("Message").'</label>
-                  <textarea class="form-control tin " name="card_msg" id="card_msg" rows="5" required="required"></textarea>
+                  <textarea class="form-control tin " name="card_msg" id="card_msg" rows="5" ></textarea>
                </div>';
       aff_editeur("card_msg","true");
       echo Q_spambot();
       echo '
-               <button class="btn btn-primary" type="submit">'.gal_translate("Envoyer comme e-carte").'</button>
+               <button class="btn btn-primary" type="submit">'.gal_translate("Envoyer une E-carte").'</button>
             </form>
          </div>
       </div>';
@@ -806,21 +815,29 @@ function ViewAlea() {
       if ($i < $count) $where2.= ' OR ';
    }
    $query = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE noaff='0' AND ($where2) ORDER BY RAND() LIMIT 0,$imgpage");
-
+   $img_point='';
    // Affichage
    echo '
    <h4 class="card-header">'.gal_translate("Photos aléatoires").'</h4>
    <div class="card-columns p-2 mt-2">';
    $pos='0';
    while ($row = sql_fetch_row($query)) {
+      $img_geotag='';
+      //==> geoloc
+      if (($row[7] != '') or ($row[8] != '')) {
+         $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($row[3]).'","'.$row[4].'"]);';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png"  title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" />';
+      }
+      //<== geoloc
       $nbcom = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='".$row[0]."'"));
       if (file_exists("modules/$ModPath/imgs/".$row[2])) {
          list($width, $height, $type, $attr) = @getimagesize("modules/$ModPath/imgs/$row[2]");
-         $ibid = '<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-toggle="tooltip" data-placement="bottom"/>';
+         $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-placement="bottom"/>';
       } else
          $ibid = ReducePic($row[2],stripslashes($row[3]),$MaxSizeThumb);
       echo '
          <div class="card">
+            '.$img_geotag.'
             <a href="'.$ThisFile.'&amp;op=img&amp;galid='.$row[1].'&amp;pos=-'.$row[0].'">'.$ibid.'</a>
             <div class="card-body">
                <p class="card-text text-muted"><span class="badge badge-secondary mr-1">'.$row[4].'</span>'.gal_translate("affichage(s)");
@@ -834,6 +851,10 @@ function ViewAlea() {
    }
    echo '
    </div>';
+   if($img_point !=''){
+      echo '<div class=""><i class="fa fa-globe"></i></div>';
+      Img_carte($img_point);
+   }
 }
 
 function ViewLastAdd() {
@@ -868,11 +889,21 @@ function ViewLastAdd() {
       $nbcom = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='".$row[0]."'"));
       if (file_exists("modules/$ModPath/imgs/".$row[2])) {
          list($width, $height, $type, $attr) = @getimagesize("modules/$ModPath/imgs/$row[2]");
-         $ibid = '<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/imgs/'.$row[2].'" alt="'.stripslashes($row[3]).' '.$attr.'" title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-toggle="tooltip" data-placement="bottom"/>';
+         $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/imgs/'.$row[2].'" alt="'.stripslashes($row[3]).' '.$attr.'" title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-placement="bottom"/>';
       } else
          $ibid = ReducePic($row[2],stripslashes($row[3]),$MaxSizeThumb);
+      $img_geotag='';
+      //==> geoloc
+      if (($row[7] != '') or ($row[8] != '')) {
+         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png"  title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" />';
+      }
+      //<== geoloc
+
+
+
       echo '
       <div class="card">
+         '.$img_geotag.'
          <a href="'.$ThisFile.'&amp;op=img&amp;galid='.$row[1].'&amp;pos=-'.$row[0].'">'.$ibid.'</a>
          <div class="card-body">
             <p class="card-text text-muted"><span class="badge badge-secondary mr-1">'.$row[4].'</span>'.gal_translate("affichage(s)");
@@ -934,10 +965,6 @@ function GetGalArbo($galid) {
    }
    return $retour;
 }
-
-/*******************************************************/
-//à voir
-/*******************************************************/
 
 //Fonction de reduction de la taille d'une image
 function ReducePic($image, $comment, $Max) {
@@ -1051,29 +1078,41 @@ function GetGalCat($galcid) {
 
 function select_arbo($sel) {
    global $NPDS_Prefix;
-
    $ibid='<option value="-1">'.gal_translate("Galerie temporaire").'</option>';
-   $sql_cat = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='0' ORDER BY nom ASC");
+   $sqlnoadm ='AND acces >= 0';
+   if(autorisation(-127)) $sqlnoadm ='';
+   $sql_cat = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='0' ".$sqlnoadm." ORDER BY nom ASC");
    $num_cat = sql_num_rows($sql_cat);
    if ($num_cat != 0) {
-      $sql_sscat = "SELECT * FROM ".$NPDS_Prefix."tdgal_cat WHERE cid!=0";
-      $sql_gal = "SELECT * FROM ".$NPDS_Prefix."tdgal_gal";
+      $sql_sscat = "SELECT * FROM ".$NPDS_Prefix."tdgal_cat WHERE cid!=0 ".$sqlnoadm."";
+      $sql_gal = "SELECT * FROM ".$NPDS_Prefix."tdgal_gal WHERE 1 ".$sqlnoadm."";
       // CATEGORIE
       while ($row_cat = sql_fetch_row($sql_cat)) {
+      
          $ibid.='<optgroup label="'.stripslashes($row_cat[2]).'">';
-         $queryX = sql_query("SELECT id, nom  FROM ".$NPDS_Prefix."tdgal_gal WHERE cid='".$row_cat[0]."' ORDER BY nom ASC");
+         $queryX = sql_query("SELECT id, nom, acces FROM ".$NPDS_Prefix."tdgal_gal WHERE cid='".$row_cat[0]."' ORDER BY nom ASC");
+
          while ($rowX_gal = sql_fetch_row($queryX)) {
-            if ($rowX_gal[0] == $sel) { $IsSelected = " selected"; } else { $IsSelected = ""; }
+            if ($rowX_gal[0] == $sel) $IsSelected = ' selected'; else $IsSelected = '';
+
+            switch ($rowX_gal[2]) {
+               //case -127: $af=true; break;
+              // case 1: $af=$icondroits[1]; break;
+               //case 0: $af=true; break;
+               case $rowX_gal[2]>1: $af=autorisation($rowX_gal[2]); break;
+            }
+            if($af)
             $ibid.='<option value="'.$rowX_gal[0].'" '.$IsSelected.'>'.stripslashes($rowX_gal[1]).'</option>';
          } // Fin Galerie Catégorie
 
          // SOUS-CATEGORIE
-         $query = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='".$row_cat[0]."' ORDER BY nom ASC");
+         $query = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='".$row_cat[0]."' ".$sqlnoadm." ORDER BY nom ASC");
          while ($row_sscat = sql_fetch_row($query)) {
             $ibid.='<optgroup label="  '.stripslashes($row_sscat[2]).'">';
-            $querx = sql_query("SELECT id, nom FROM ".$NPDS_Prefix."tdgal_gal WHERE cid='".$row_sscat[0]."' ORDER BY nom ASC");
+            $querx = sql_query("SELECT id, nom FROM ".$NPDS_Prefix."tdgal_gal WHERE cid='".$row_sscat[0]."' ".$sqlnoadm." ORDER BY nom ASC");
             while ($row_gal = sql_fetch_row($querx)) {
                if ($row_gal[0] == $sel) { $IsSelected = " selected"; } else { $IsSelected = ""; }
+               
                $ibid.='<option value="'.$row_gal[0].'"'.$IsSelected.'>'.stripslashes($row_gal[1]).' </option>';
             } // Fin Galerie Sous Catégorie
             $ibid.='</optgroup>';
@@ -1101,40 +1140,68 @@ function PrintFormImgs() {
       <div class="card-body">
          <h5 class="card-title">'.gal_translate("Proposer des images").'</h5>
          <hr />
-         <form enctype="multipart/form-data" method="post" action="'.$ThisFile.'" name="FormImgs" lang="'.language_iso(1,'','').'">
-            <input type="hidden" name="op" value="addimgs" />
-            <input type="hidden" name="user_connecte" value="'.$user_connecte.'" />
-            <div class="form-group">
-               <label class="col-form-label" for="imggal">'.gal_translate("Galerie").'</label>
-               <select class="custom-select" name="imggal" id="imggal" >';
+         <div class="row">
+            <div class="col-md-6">
+               <form enctype="multipart/form-data" method="post" action="'.$ThisFile.'" id="formimgs" name="FormImgs" lang="'.language_iso(1,'','').'">
+                  <input type="hidden" name="op" value="addimgs" />
+                  <input type="hidden" name="user_connecte" value="'.$user_connecte.'" />
+                  <div class="form-group">
+                     <label class="col-form-label" for="imggal">'.gal_translate("Galerie").'</label>
+                     <select class="custom-select" name="imggal" id="imggal" >';
    echo select_arbo('');
    echo '
-               </select>
-            </div>';
+                     </select>
+                  </div>';
       $i=1;
       do {
          echo '
-              <div class="form-group">
-               <label class="">'.gal_translate("Image").' '.$i.'</label>
-               <div class="input-group mb-2 mr-sm-2">
-                  <div class="input-group-prepend" onclick="reset2($(\'#newcard'.$i.'\'),'.$i.');">
-                     <div class="input-group-text"><i class="fas fa-sync"></i></div>
-                  </div>
-                  <div class="custom-file">
-                     <input type="file" class="custom-file-input" name="newcard'.$i.'" id="newcard'.$i.'" />
-                     <label id="lab'.$i.'" class="custom-file-label" for="newcard'.$i.'">'.gal_translate("Sélectionner votre image").'</label>
-                  </div>
-               </div>
-            </div>
-            <div class="form-group">
-               <input type="text" class="form-control" id="newdesc'.$i.'"  name="newdesc'.$i.'" placeholder="'.gal_translate("Description").'">
-            </div>';
-         $i++;
+                  <div class="form-group">
+                     <label class="">'.gal_translate("Image").' '.$i.'</label>
+                     <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend" onclick="reset2($(\'#newcard'.$i.'\'),'.$i.');">
+                           <div class="input-group-text"><i class="fas fa-sync"></i></div>
+                        </div>
+                        <div class="custom-file">
+                           <input type="file" class="custom-file-input" name="newcard'.$i.'" id="newcard'.$i.'" />
+                           <label id="lab'.$i.'" class="custom-file-label" for="newcard'.$i.'">'.gal_translate("Sélectionner votre image").'</label>
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="sr-only" for="newdesc'.$i.'">'.gal_translate("Description").'</label>
+                        <input type="text" class="form-control" id="newdesc'.$i.'"  name="newdesc[]" placeholder="'.gal_translate("Description").'" />
+                     </div>
+                     <div class="form-row">
+                        <div class="form-group col-md-6">
+                           <label for="imglat'.$i.'" class="sr-only">'.gal_translate("Latitude").'</label>
+                           <div class="input-group mb-2 mr-sm-2">
+                              <div class="input-group-prepend">
+                                 <div class="input-group-text"><i class="fa fa-globe fa-lg"></i></div>
+                              </div>
+                              <input type="text" class="form-control js-lat" name="imglat[]" id="imglat'.$i.'" placeholder="'.gal_translate("Latitude").'" />
+                           </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                           <div class="input-group mb-2 mr-sm-2">
+                              <div class="input-group-prepend">
+                                 <div class="input-group-text"><i class="fa fa-globe fa-lg"></i></div>
+                              </div>
+                              <label for="imglong'.$i.'" class="sr-only">'.gal_translate("Longitude").'</label>
+                              <input type="text" class="form-control js-long" name="imglong[]" id="imglong'.$i.'" placeholder="'.gal_translate("Longitude").'"/>
+                           </div>
+                        </div>
+                     </div>
+                  </div>';
+      $i++;
       }
-      while($i<=6);
+      while($i<=5);
    echo '
-            <button class="btn btn-primary" type="submit">'.gal_translate("Envoyer").'</button>
+            <div class="form-group">
+               <button class="btn btn-primary" type="submit">'.gal_translate("Envoyer").'</button>
+            </div>
          </form>
+      </div>
+      <div class="col-md-6 align-self-center">
+        '.img_geolocalisation('0','0','1').'
       </div>
    </div>
    <script type="text/javascript">
@@ -1150,19 +1217,55 @@ function PrintFormImgs() {
          };
       //]]>
    </script>';
+   $fv_parametres ='
+      "imglat[]" : {
+         selector: ".js-lat",
+         validators: {
+            regexp: {
+               regexp: /^[-]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/,
+               message: "La latitude doit être entre -90.0 et 90.0 avec un point en séparateur numérique"
+            },
+            numeric: {
+                thousandsSeparator: "",
+                decimalSeparator: "."
+            },
+            between: {
+               min: -90,
+               max: 90,
+               message: "La latitude doit être entre -90.0 et 90.0"
+            }
+         }
+      },
+      "imglong[]" : {
+         selector: ".js-long",
+         validators: {
+            regexp: {
+               regexp: /^[-]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/,
+               message: "La longitude doit être entre -180.0 et 180.0 avec un point en séparateur numérique"
+            },
+            numeric: {
+                thousandsSeparator: "",
+                decimalSeparator: "."
+            },
+            between: {
+               min: -180,
+               max: 180,
+               message: "La longitude doit être entre -180.0 et 180.0"
+            }
+         }
+      },
+   ';
+   $arg1 = '
+   var formulid = ["formimgs"]
+//   inpandfieldlen("newdesc",255);';
+   adminfoot('fv',$fv_parametres,$arg1,'1');
 }
 
 // Ajout de photos par les membres
-function AddImgs($imgscat,$newcard1,$newdesc1,$newcard2,$newdesc2,$newcard3,$newdesc3,$newcard4,$newdesc4,$newcard5,$newdesc5,$user_connecte) {
+function AddImgs($imggal,$newcard1,$newcard2,$newcard3,$newcard4,$newcard5,$newdesc,$imglat,$imglong,$user_connecte) {
    global $language, $MaxSizeImg, $MaxSizeThumb, $ModPath, $ModStart, $NPDS_Prefix, $ThisFile, $adminmail, $nuke_url, $notif_admin;
    include_once("modules/upload/lang/upload.lang-$language.php");
    include_once("modules/upload/clsUpload.php");
-
-   $newdesc1=$newdesc1.gal_translate(" proposé par ").$user_connecte;
-   $newdesc2=$newdesc2.gal_translate(" proposé par ").$user_connecte;
-   $newdesc3=$newdesc3.gal_translate(" proposé par ").$user_connecte;
-   $newdesc4=$newdesc4.gal_translate(" proposé par ").$user_connecte;
-   $newdesc5=$newdesc5.gal_translate(" proposé par ").$user_connecte;
 
    $year = date("Y"); $month = date("m"); $day = date("d");
    $hour = date("H"); $min = date("i"); $sec = date("s");
@@ -1175,12 +1278,14 @@ function AddImgs($imgscat,$newcard1,$newdesc1,$newcard2,$newdesc2,$newcard3,$new
    $soumission=false;
    $i=1;
    while($i <= 5) {
-      $img = 'newcard'.$i;
-      $tit = 'newdesc'.$i;
+      $img = "newcard$i";
+      $tit = $newdesc[$i-1].' '.gal_translate(" proposé par ").$user_connecte;
+      $lat = $imglat[$i-1];
+      $long = $imglong[$i-1];
       if (!empty($$img)) {
          $newimg = stripslashes(removeHack($$img));
-         if (!empty($$tit))
-            $newtit = addslashes(removeHack($$tit));
+         if (!empty($newdesc[$i-1]))
+            $newtit = addslashes(removeHack($newdesc[$i-1]));
          else
             $newtit = '';
          $upload = new Upload();
@@ -1195,7 +1300,7 @@ function AddImgs($imgscat,$newcard1,$newdesc1,$newcard2,$newdesc2,$newcard3,$new
                   @CreateThumb($newfilename, "modules/$ModPath/imgs/", "modules/$ModPath/imgs/", $MaxSizeImg, $filename_ext);
                   @CreateThumb($newfilename, "modules/$ModPath/imgs/", "modules/$ModPath/mini/", $MaxSizeThumb, $filename_ext);
                }
-               if (sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES ('','$imgscat','$newfilename','$newtit','','0','1')")) {
+               if (sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES ('','$imggal','$newfilename','$newtit','','0','1','$lat','$long')")) {
                   echo '<div class="alert alert-info" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Photo(s) envoyée(s) à la validation du webmaster").' : '.$origin_filename.'</div>';
                   $soumission=true;
                } else {
@@ -1272,4 +1377,605 @@ function CreateThumb($Image, $Source, $Destination, $Max, $ext) {
       @chmod($Dest.$Image,0766);
    }
 }
+// cette fonction ne peut etre utiliser qu'une fois par page ...
+
+#autodoc Img_carte($img_point) : $img_point est une ou plusieurs commande js (push) de construction du tableau "img_features", cette variable $img_point doit donc être remplie dans la boucle récupérant les données dans la bd. Cette fonction ne peut être utilisée qu'une fois par page généré. 
+function Img_carte($img_point){
+   include_once('modules/geoloc/geoloc_conf.php');
+   $cartyp='sat-google'; // choix manuel du provider ready4admin interface
+$source_fond=''; $max_r=''; $min_r='';$layer_id='';
+switch ($cartyp) {
+   case 'Road': case 'Aerial': case 'AerialWithLabels':
+      $source_fond='new ol.source.BingMaps({key: "'.$api_key_bing.'",imagerySet: "'.$cartyp.'"})';
+      $max_r='40000';
+      $min_r='0';
+      $layer_id= $cartyp;
+   break;
+   case 'natural-earth-hypso-bathy': case 'geography-class':
+      $source_fond=' new ol.source.TileJSON({url: "https://api.tiles.mapbox.com/v4/mapbox.'.$cartyp.'.json?access_token='.$api_key_mapbox.'"})';
+      $max_r='40000';
+      $min_r='2000';
+      $layer_id= $cartyp;
+   break;
+   case 'sat-google':
+      $source_fond=' new ol.source.XYZ({url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",crossOrigin: "Anonymous", attributions: " &middot; <a href=\"https://www.google.at/permissions/geoguidelines/attr-guide.html\">Map data ©2015 Google</a>"})';
+      $max_r='40000';
+      $min_r='0';
+      $layer_id= $cartyp;
+   break;
+   case 'terrain':case 'toner':case 'watercolor':
+      $source_fond='new ol.source.Stamen({layer:"'.$cartyp.'"})';
+      $max_r='40000';
+      $min_r='0';
+      $layer_id= $cartyp;
+   break;
+   case 'sat':
+      $source_fond='';
+      $max_r='';
+      $min_r='';
+      $layer_id= $cartyp;
+   break;
+   case 'modisterra':
+      $source_fond='new ol.source.XYZ({url: "https://gibs-{a-c}.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/2013-06-15/GoogleMapsCompatible_Level13/{z}/{y}/{x}.jpg"})';
+      $max_r='40000';
+      $min_r='0';
+      $layer_id= $cartyp;
+   break;
+   default:
+      $source_fond='new ol.source.OSM()';
+      $max_r='40000';
+      $min_r='0';
+      $layer_id= 'OSM';
+}
+   
+   echo '
+   <div class="my-3">
+      <div id="map-wrapper" class="ol-fullscreen my-3">
+         <div id="mapol" class="map" tabindex="20" lang="fr">
+            <div id="ol_popup" class="ol-popup small"></div>
+            <div id="ol_tooltip"></div>
+         </div>
+         <div id="sidebar" class= "sidebar collapse show col-sm-4 col-md-3 col-6 px-0"></div>
+      </div>
+   </div>
+   <a id="image-download" download="npds_galerie_map.png"></a>
+
+<script type="text/javascript">
+   //<![CDATA[
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
+   $(function () {
+      //==>  affichage des coordonnées à revoir pour réinverser ....
+         var mousePositionControl = new ol.control.MousePosition({
+           coordinateFormat: new ol.coordinate.createStringXY(4),
+           projection: "EPSG:4326",
+           className: "custom-mouse-position",
+           undefinedHTML: "&nbsp;"
+         });
+      //<==
+      
+      var 
+      iconimg = new ol.style.Style({
+        image: new ol.style.Icon({
+          src: "modules/npds_galerie/npds_galerie.png"
+        })
+      }),
+      popup = new ol.Overlay({
+        element: document.getElementById("ol_popup")
+      }),
+      popuptooltip = new ol.Overlay({
+        element: document.getElementById("ol_tooltip")
+      }),
+      img_features=[];
+      '.$img_point.'
+      var src_img = new ol.source.Vector({});
+      var src_img_length = img_features.length;
+      for (var i = 0; i < src_img_length; i++){
+         var iconFeature = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.transform(img_features[i][0], "EPSG:4326","EPSG:3857")),
+            imgId: img_features[i][1],
+            galId: img_features[i][2],
+            imgName: img_features[i][3],
+            imgCom: img_features[i][4],
+            imgView: img_features[i][5],
+         });
+            iconFeature.setId(("i"+i));
+            src_img.addFeature(iconFeature);
+      }
+      var img_markers = new ol.layer.Vector({
+         id: "imag",
+         source: src_img,
+         style: iconimg
+      });
+
+      var src_fond = '.$source_fond.',
+          minR='.$min_r.',
+          maxR='.$max_r.',
+          layer_id="'.$layer_id.'",
+          fond_carte = new ol.layer.Tile({
+            id:layer_id,
+            source: src_fond,
+            minResolution: minR,
+            maxResolution: maxR
+          }),
+         attribution = new ol.control.Attribution({collapsible: true}),
+         zoomslider = new ol.control.ZoomSlider(),
+         view = new ol.View({
+            center: ol.proj.fromLonLat([105, 36]),
+            zoom: 8,
+            minZoom:2
+         });
+
+      var map = new ol.Map({
+         interactions: new ol.interaction.defaults({
+            constrainResolution: true, onFocusOnly: true
+         }),
+         controls: new ol.control.defaults({attribution: false}).extend([attribution, new ol.control.FullScreen({source: "map-wrapper",}), mousePositionControl, new ol.control.ScaleLine, zoomslider]),
+         target: document.getElementById("mapol"),
+         layers: [
+            fond_carte,
+            img_markers
+         ],
+         view: view
+      });
+      map.addOverlay(popup);
+      map.addOverlay(popuptooltip);
+
+      var extimg = img_markers.getSource().getExtent();
+      if (src_img_length==1) {
+         view.setCenter(src_img.idIndex_["i0"].values_.geometry.flatCoordinates);
+         view.setZoom(4);
+      }
+      else
+         view.fit(extimg);
+
+      var button = document.createElement("button");
+      button.innerHTML = "&#xf0d7";
+      var sidebarSwitch = function(e) {
+         if($("#sidebar").hasClass("show")) {$("#sidebar").collapse("toggle")} else{$("#sidebar").collapse("show")}
+      };
+      button.addEventListener("click", sidebarSwitch, true);
+      var element = document.createElement("div");
+      element.className = "ol-sidebar ol-unselectable ol-control fa";
+      element.appendChild(button);
+      var sidebarControl = new ol.control.Control({
+          element: element
+      });
+      map.addControl(sidebarControl);
+
+      var button = document.createElement("button");
+      button.setAttribute("id","export-png");
+      button.setAttribute("title","'.html_entity_decode(gal_translate("Télécharger comme image.png"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'");
+      button.setAttribute("data-toggle","tooltip");
+      button.setAttribute("data-placement","left");
+      button.innerHTML = "&#xf019";
+      var element = document.createElement("div");
+      element.className = "ol-download ol-unselectable ol-control fa";
+      element.appendChild(button);
+      var downloadControl = new ol.control.Control({
+          element: element
+      });
+      map.addControl(downloadControl);
+
+
+//==> construction sidebar
+      var img_feat = src_img.getFeatures(),
+          ima_nb = img_feat.length,
+          sbimg=\'<div id="sb_img" class="list-group small"><div class="list-group-item bg-light text-dark font-weight-light px-1 lead"><img class="mr-1" src="modules/npds_galerie/npds_galerie.png" alt="" style="vertical-align:middle;" data-toggle="tooltip" title="'.html_entity_decode(gal_translate("Images géoréférencées"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'" /><span class="badge badge-secondary float-right">\'+ima_nb+\'</span></div><a class="sb_res list-group-item list-group-item-action py-1 px-1" ><input id="n_filtreimages" placeholder="'.html_entity_decode(gal_translate("Filtrer les images"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'" class="my-1 form-control form-control-sm" type="text" /></a>\';
+      for (var key in img_feat) {
+         if (img_feat.hasOwnProperty(key)) {
+            sbimg += \'<a id="\'+ img_feat[key].id_ +\'" href="#" onclick="centeronMe(\\\'\'+ img_feat[key].id_ +\'\\\');return false;" class="sb_img list-group-item list-group-item-action py-1 px-1" href="#"><img class="img-fluid n-ava-48" src="modules/npds_galerie/mini/\' + img_feat[key].values_.imgName + \'"/><span class="ml-1 nlfilt">\' + img_feat[key].values_.imgName + \'</span></a>\';
+         }
+      }
+      sbimg +=\'</div>\';
+      $("#sidebar").append(sbimg);
+
+//==> comportement sidebar et layers
+   $(document).ready(function () {
+      centeronMe = function(u) {
+         $(".sb_img").removeClass( "animated faa-horizontal faa-slow" );
+         if(u.substr(0,1) == "i") {
+            view.setCenter(src_img.idIndex_[u].values_.geometry.flatCoordinates);
+            $("#ol_popup").show();
+            container.innerHTML = \'<div class="text-center"><img class="" src="modules/npds_galerie/mini/\' + src_img.idIndex_[u].values_.imgName + \'"/></div>\';
+            popup.setPosition(src_img.idIndex_[u].values_.geometry.flatCoordinates);
+         }
+         $("#"+u).addClass("animated faa-horizontal faa-slow" );
+         map.getView().setZoom(16);
+      }
+   });
+
+//==> les fenetres popup pour les markers
+  var container = document.getElementById("ol_popup"),
+      OpenPopup = function (evt) {
+      $("#ol_popup").show();
+      popup.setPosition(undefined);
+      $(".sb_img").removeClass("animated faa-horizontal faa-slow" );
+      var feature = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+         if (feature) {
+            var coord = map.getCoordinateFromPixel(evt.pixel);
+            if (typeof feature.get("features") === "undefined") {
+               if(feature.getId().substr(0,1) == "i") {
+                   container.innerHTML = \'<div class="text-center"><img src="modules/npds_galerie/mini/\' + feature.get("imgName") + \'" /></div><div class="text-muted small mt-1">\' + feature.get("imgCom") + \'</div></div>\';
+               }
+            }
+            popup.setPosition(coord);
+         } else {
+            popup.setPosition(undefined);
+         }
+      });
+   };
+   map.on("click", OpenPopup);
+//<== les fenêtres popup pour les markers
+
+//==> les tooltip des markers
+var containertooltip = $("#ol_tooltip");
+containertooltip.tooltip({
+   animation: false,
+   container: "#mapol",
+   trigger: "manual",
+   placement:"bottom",
+   offset:"40,20",
+});
+var displayFeatureInfo = function(evt) {
+   containertooltip.tooltip("hide");
+   popuptooltip.setPosition(undefined);
+   var feature = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+      if (feature) {
+         var coord = map.getCoordinateFromPixel(evt.pixel);
+         if (typeof feature.get("features") === "undefined") {
+            if(feature.getId().substr(0,1) == "i") {
+                containertooltip.attr("data-original-title", feature.get("imgName")).tooltip("show");
+            }
+         }
+         popuptooltip.setPosition(coord);
+      } else {
+         popuptooltip.setPosition(undefined);
+         containertooltip.tooltip("hide");
+      }
+   });
+}
+map.on("pointermove", displayFeatureInfo);
+//<== les tooltip des markers
+
+//==> changement etat pointeur sur les markers
+   map.on("pointermove", function(e) {
+        if (e.dragging) {
+          $(".popover").popover("dispose");
+          return;
+        }
+        var pixel = map.getEventPixel(e.originalEvent);
+        var hit = map.hasFeatureAtPixel(pixel);
+        map.getTarget().style.cursor = hit ? "pointer" : "";
+//        centeronMe;
+      });
+//<== changement etat pointeur sur les markers
+
+//==> filtrage des markers dans sidebar
+      $(\'.sb_img span\').each(function(){
+         $(this).attr(\'data-search-term\', $(this).text().toLowerCase());
+      });
+      $(\'#n_filtreimages\').on(\'keyup\', function(){
+         var searchTerm = $(this).val().toLowerCase();
+         $(\'.nlfilt\').each(function(){
+            if ($(this).filter(\'[data-search-term *= \' + searchTerm + \']\').length > 0 || searchTerm.length < 1) {
+               var ce = $(this).parents("a");
+               ce.show();
+               if(ce.attr("id").substr(0,1) == "i")
+                  src_img.getFeatureById(ce.attr("id")).setStyle(null);
+            }
+            else {
+               var ce = $(this).parents("a");
+               ce.hide();
+               if(ce.attr("id").substr(0,1) == "i")
+                  src_img.getFeatureById(ce.attr("id")).setStyle(new ol.style.Style({}));
+            }
+          });
+      });
+//<== filtrage des markers dans sidebar
+
+//==> download carte.png
+document.getElementById("export-png").addEventListener("click", function () {
+  map.once("rendercomplete", function () {
+    var mapCanvas = document.createElement("canvas");
+    var size = map.getSize();
+    mapCanvas.width = size[0];
+    mapCanvas.height = size[1];
+    var mapContext = mapCanvas.getContext("2d");
+    Array.prototype.forEach.call(
+      document.querySelectorAll(".ol-layer canvas"),
+      function (canvas) {
+        if (canvas.width > 0) {
+          var opacity = canvas.parentNode.style.opacity;
+          mapContext.globalAlpha = opacity === "" ? 1 : Number(opacity);
+          var transform = canvas.style.transform;
+          // Get the transform parameters from the style\'s transform matrix
+          var matrix = transform
+            .match(/^matrix\(([^\(]*)\)$/)[1]
+            .split(",")
+            .map(Number);
+          // Apply the transform to the export map context
+          CanvasRenderingContext2D.prototype.setTransform.apply(
+            mapContext,
+            matrix
+          );
+          mapContext.drawImage(canvas, 0, 0);
+        }
+      }
+    );
+    if (navigator.msSaveBlob) {
+      // link download attribute does not work on MS browsers
+      navigator.msSaveBlob(mapCanvas.msToBlob(), "npds_galerie_map.png");
+    } else {
+      var link = document.getElementById("image-download");
+      link.href = mapCanvas.toDataURL();
+      link.click();
+    }
+  });
+  map.renderSync();
+});
+//<== download carte.png
+
+   $(\'[data-toggle="tooltip"]\').tooltip({container:"#mapol"});
+   $("#ol_tooltip").tooltip({container:"#mapol"});
+   $(".ol-zoom-in, .ol-zoom-out").tooltip({placement: "right", container:"#mapol"});
+   $(".ol-full-screen-false, .ol-rotate-reset, .ol-attribution button[title]").tooltip({placement: "left", container:"#mapol"});
+
+   });
+   //]]>
+</script>
+<script type="text/javascript" src="lib/ol/ol.js"></script>';
+}
+
+function img_geolocalisation($lat,$long,$multi){
+   include_once('modules/geoloc/geoloc_conf.php');
+   $img_point='';
+   $affi='';
+   if (($lat != '') or ($long != ''))
+      $img_point .= 'img_features.push([['.$long.','.$lat.']]);';
+
+   $cartyp='sat-google'; // choix manuel du provider ready4admin interface
+   $source_fond=''; $max_r=''; $min_r='';$layer_id='';
+   switch ($cartyp) {
+      case 'Road': case 'Aerial': case 'AerialWithLabels':
+         $source_fond='new ol.source.BingMaps({key: "'.$api_key_bing.'",imagerySet: "'.$cartyp.'"})';
+         $max_r='40000';
+         $min_r='0';
+         $layer_id= $cartyp;
+      break;
+      case 'natural-earth-hypso-bathy': case 'geography-class':
+         $source_fond=' new ol.source.TileJSON({url: "https://api.tiles.mapbox.com/v4/mapbox.'.$cartyp.'.json?access_token='.$api_key_mapbox.'"})';
+         $max_r='40000';
+         $min_r='2000';
+         $layer_id= $cartyp;
+      break;
+      case 'sat-google':
+         $source_fond=' new ol.source.XYZ({url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",crossOrigin: "Anonymous", attributions: " &middot; <a href=\"https://www.google.at/permissions/geoguidelines/attr-guide.html\">Map data ©2015 Google</a>"})';
+         $max_r='40000';
+         $min_r='0';
+         $layer_id= $cartyp;
+      break;
+      case 'terrain':case 'toner':case 'watercolor':
+         $source_fond='new ol.source.Stamen({layer:"'.$cartyp.'"})';
+         $max_r='40000';
+         $min_r='0';
+         $layer_id= $cartyp;
+      break;
+      default:
+         $source_fond='new ol.source.OSM()';
+         $max_r='40000';
+         $min_r='0';
+         $layer_id= 'OSM';
+   }
+   if($multi!='')
+      $affi .= '
+   <div class="my-3">
+      <div id="map-wrapper"  style="height:950px;" class=" my-3">
+         <div id="mapol" class="map" tabindex="20" lang="fr"></div>
+      </div>
+   </div>';
+   else
+      $affi .= '
+   <div class="my-3">
+      <div id="map-wrapper" class="ol-fullscreen my-3">
+         <div id="mapol" class="map" tabindex="20" lang="fr"></div>
+      </div>
+   </div>';
+   $affi .=  '
+<script type="text/javascript">
+   //<![CDATA[
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
+   $(function () {
+      //==>  affichage des coordonnées à revoir pour réinverser ....
+         var mousePositionControl = new ol.control.MousePosition({
+           coordinateFormat: new ol.coordinate.createStringXY(4),
+           projection: "EPSG:4326",
+           className: "custom-mouse-position",
+           undefinedHTML: "&nbsp;"
+         });
+      //<==
+      var 
+      iconimg = new ol.style.Style({
+        image: new ol.style.Icon({
+          src: "modules/npds_galerie/npds_galerie.png"
+        })
+      }),
+      iconimgs = new ol.style.Style({
+        image: new ol.style.Icon({
+          src: "modules/npds_galerie/npds_galerie.png"
+        }),
+        text: new ol.style.Text({
+          text: "Image",
+          font: "18px sans-serif",
+          fill: new ol.style.Fill({color: "white"}),
+          stroke: new ol.style.Stroke({color: "rgba(0, 0, 0, 0)", width: 0.1}),
+          offsetY:20
+        })
+      }),
+      popup = new ol.Overlay({
+        element: document.getElementById("ol_popup")
+      }),
+      popuptooltip = new ol.Overlay({
+        element: document.getElementById("ol_tooltip")
+      }),
+      img_features=[];
+      '.$img_point.'
+      var src_img = new ol.source.Vector({});
+      var src_img_length = img_features.length;
+      for (var i = 0; i < src_img_length; i++){
+         var iconFeature = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.transform(img_features[i][0], "EPSG:4326","EPSG:3857"))
+         });
+            iconFeature.setId(("i"+i));
+            src_img.addFeature(iconFeature);
+      }
+      var img_markers = new ol.layer.Vector({
+         id: "imag",
+         source: src_img,
+         style: iconimgs
+      });
+      var src_georef = new ol.source.Vector({});';
+   if($multi!='')
+      $affi .= '
+      var pointGeoref1 = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([30, 60])),
+      });
+      pointGeoref1.setId(("pg1"));
+      var pointGeoref2 = new ol.Feature({
+         geometry: new ol.geom.Point(ol.proj.fromLonLat([10, 30])),
+      });
+      pointGeoref2.setId(("pg2"));
+      var pointGeoref3 = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([0, 0])),
+      });
+      pointGeoref3.setId(("pg3"));
+      var pointGeoref4 = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([-10, -30])),
+      });
+      pointGeoref4.setId(("pg4"));
+      var pointGeoref5 = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([-30, -60])),
+      });
+      pointGeoref5.setId(("pg5"));
+      src_georef.addFeatures([pointGeoref1,pointGeoref2,pointGeoref3,pointGeoref4,pointGeoref5]);
+      
+      console.log(src_georef.getFeatures());
+      src_georef.getFeatures().forEach(feat => {feat.setStyle(
+         new ol.style.Style({
+            image: new ol.style.Icon({
+               src: "modules/npds_galerie/npds_galerie.png"
+            }),
+            text:new ol.style.Text({
+               text: "Image"+feat.id_.substr(2),
+               font: "18px sans-serif",
+               fill: new ol.style.Fill({color: "white"}),
+               stroke: new ol.style.Stroke({color: "rgba(0, 0, 0, 0)", width: 0.1}),
+               offsetY:20
+            })
+         })
+      )})
+      ';
+   else
+      $affi .= '
+      var pointGeoref = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.transform([0, 0], "EPSG:4326","EPSG:3857")) 
+      });
+      src_georef.addFeature(pointGeoref);';
+   $affi .= '
+      var georef_marker = new ol.layer.Vector({
+        source: src_georef,
+         style: iconimgs
+      });
+
+      var src_fond = '.$source_fond.',
+          minR='.$min_r.',
+          maxR='.$max_r.',
+          layer_id="'.$layer_id.'",
+          fond_carte = new ol.layer.Tile({
+            id:layer_id,
+            source: src_fond,
+            minResolution: minR,
+            maxResolution: maxR
+          }),
+         attribution = new ol.control.Attribution({collapsible: true}),
+         zoomslider = new ol.control.ZoomSlider(),
+         view = new ol.View({';
+   if($multi=='')
+      $affi .= '
+            center: ol.proj.fromLonLat(['.$long.', '.$lat.']),
+            zoom: 5,';
+   else
+      $affi .= '
+            center: ol.proj.fromLonLat([0, 0]),
+            zoom: 2,';
+   $affi .= '
+            minZoom:2
+         });
+
+         var select = new ol.interaction.Select({style:null});
+         var translate = new ol.interaction.Translate({
+           features: select.getFeatures(),
+         });
+
+      var map = new ol.Map({
+         interactions: new ol.interaction.defaults({
+            constrainResolution: true, onFocusOnly: true
+         }).extend([select,translate]),
+         controls: new ol.control.defaults({attribution: false}).extend([attribution, new ol.control.FullScreen({source: "map-wrapper",}), mousePositionControl, new ol.control.ScaleLine, zoomslider]),
+         target: document.getElementById("mapol"),
+         layers: [
+            fond_carte,';
+   if($multi=='')
+      $affi .= '
+            img_markers,';
+   $affi .= '
+            georef_marker
+         ],
+         view: view
+      });';
+   if($multi !=='')
+      $affi .= '
+      translate.on("translateend", function(evt) {
+         var idim = (evt.features.array_[0].id_).substr(2),
+             coordinate = evt.coordinate,
+             coordWgs = ol.proj.transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
+         $("#imglat"+idim).val(coordWgs[1].toFixed(6));
+         $("#imglong"+idim).val(coordWgs[0].toFixed(6));
+      });';
+   if($multi=='')
+      $affi .= '
+      map.on("click", function(evt) {
+         pointGeoref.getGeometry().setCoordinates(evt.coordinate);
+             var coordinate = evt.coordinate,
+             coordWgs = ol.proj.transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
+             $("#imglat").val(coordWgs[1].toFixed(6));
+             $("#imglong").val(coordWgs[0].toFixed(6));
+//         georef_popup.setPosition(coordinate);
+         iconFeature.getGeometry().setCoordinates(evt.coordinate);
+      });';
+   $affi .= '
+//==> changement etat pointeur sur les markers
+   map.on("pointermove", function(e) {
+        if (e.dragging) {
+          $(".popover").popover("dispose");
+          return;
+        }
+        var pixel = map.getEventPixel(e.originalEvent);
+        var hit = map.hasFeatureAtPixel(pixel);
+        map.getTarget().style.cursor = hit ? "pointer" : "";
+      });
+//<== changement etat pointeur sur les markers
+
+   $(\'[data-toggle="tooltip"]\').tooltip({container:"#mapol"});
+   $("#ol_tooltip").tooltip({container:"#mapol"});
+   $(".ol-zoom-in, .ol-zoom-out").tooltip({placement: "right", container:"#mapol"});
+   $(".ol-full-screen-false, .ol-rotate-reset, .ol-attribution button[title]").tooltip({placement: "left", container:"#mapol"});
+   });
+   //]]>
+</script>
+<script type="text/javascript" src="lib/ol/ol.js"></script>';
+return $affi;
+}
+
 ?>

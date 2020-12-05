@@ -14,7 +14,7 @@
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
-/* v 3.1                                                                */
+/* v 3.2                                                                */
 /************************************************************************/
 
 // For More security
@@ -23,26 +23,10 @@ if (strstr($ModPath,'..') || strstr($ModStart,'..') || stristr($ModPath, 'script
    die();
 // For More security
 
-
 $f_meta_nom ='npds_galerie';
 //==> controle droit
 admindroits($aid,$f_meta_nom);
 //<== controle droit
-/*
-global $NPDS_Prefix;
-$reqalerte = sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='-1' and noaff=1");
-if ($reqalerte){
-
-    $alert_modules=sql_query("SELECT * FROM fonctions f LEFT JOIN modules m ON m.mnom = f.fnom WHERE m.minstall=1" and f.fnom="$f_meta_nom");// and fcategorie=9
-
-
-on efface ...et on rerempli ?
-//   sql_query("UPDATE ".$NPDS_Prefix."fonctions SET fetat='1',fretour='".$reqalerte."', fretour_h='".adm_translate("Liens rompus à valider.")."' WHERE fid='42'"); 
-
-else sql_query("UPDATE ".$NPDS_Prefix."fonctions SET fetat='0',fretour='0' WHERE fid='42'");
-
-}
-*/
 
 /**************************************************************************************************/
 /* Administration du MODULE                                                                       */
@@ -107,13 +91,13 @@ if ($admin) {
      PrintFormCat();
      break;
    case 'addcat' :
-     AddACat($newcat,$acces);
+     AddACat($newcat,$accescat);
      break;
    case 'formsscat' :
      PrintFormSSCat();
      break;
    case 'addsscat' :
-     AddSsCat($cat,$newsscat,$acces);
+     AddSsCat($cat,$newsscat,$accesscat);
      break;
    case 'formcregal' :
      PrintCreerGalery();
@@ -125,7 +109,7 @@ if ($admin) {
      PrintFormImgs();
      break;
    case 'addimgs' :
-     AddImgs($imggal,$newcard1,$newdesc1,$newcard2,$newdesc2,$newcard3,$newdesc3,$newcard4,$newdesc4,$newcard5,$newdesc5);
+     AddImgs($imggal,$newcard1,$newdesc,$imglat,$imglong,$newcard2,$newcard3,$newcard4,$newcard5);
      break;
    case 'viewarbo' :
      PrintArbo();
@@ -149,7 +133,7 @@ if ($admin) {
      EditImg($imgid);
      break;
    case 'doeditimg' :
-     DoEditImg($imgid,$imggal,$newdesc);
+     DoEditImg($imgid,$imggal,$newdesc,$imglat,$imglong);
      break;
    case 'delimg' :
      DelImg($imgid,$go);
@@ -171,7 +155,7 @@ if ($admin) {
      PrintFormConfig();
      break;
    case 'wrtconfig' :
-     WriteConfig($maxszimg,$maxszthb,$nbimlg,$nbimpg,$nbimcomment,$nbimvote,$viewalea,$viewlast,$votegal,$commgal,$votano,$comano,$postano,$notifadmin);
+     WriteConfig($maxszimg,$maxszthb,$nbimpg,$nbimcomment,$nbimvote,$viewalea,$viewlast,$votegal,$commgal,$votano,$comano,$postano,$notifadmin);
      break;
    case 'import' :
      import();
@@ -201,13 +185,13 @@ if ($admin) {
    echo '
    <h3 class="my-3">'.gal_translate("Tableau récapitulatif").'</h3>
    <ul class="list-group">
-      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Nombre de catégories").'<span class="badge badge-secondary">'.$ncateg[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Nombre de sous-catégories").'<span class="badge badge-secondary">'.$nsscat[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Nombre de galeries").'<span class="badge badge-secondary">'.$numgal[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Nombre d'images").'<span class="badge badge-secondary">'.$ncards[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Nombre de commentaires").'<span class="badge badge-secondary">'.$ncomms[0].'</span></li> 
-      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Nombre de votes").'<span class="badge badge-secondary">'.$nvotes[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center h4 lead">'.gal_translate("Images vues").'<span class="badge badge-secondary">'.$nviews[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de catégories").'<span class="badge badge-pill badge-ligth">'.$ncateg[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de sous-catégories").'<span class="badge badge-pill badge-dark">'.$nsscat[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de galeries").'<span class="badge badge-pill badge-secondary">'.$numgal[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre d'images").'<span class="badge badge-pill badge-success">'.$ncards[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de commentaires").'<span class="badge badge-pill badge-secondary">'.$ncomms[0].'</span></li> 
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de votes").'<span class="badge badge-pill badge-secondary">'.$nvotes[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Images vues").'<span class="badge badge-pill badge-secondary">'.$nviews[0].'</span></li>
    </ul>';
      break;
    }
