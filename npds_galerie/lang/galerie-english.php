@@ -53,7 +53,7 @@ function gal_translate($phrase) {
       case "Catégorie supprimée": $tmp = "Category deleted"; break;
       case "Catégorie": $tmp = "Category"; break;
       case "Catégories": $tmp = "Categories"; break;
-      case "Ce fichier n'est pas un fichier jpg ou gif": $tmp = "This file is not a jpg or gif file"; break;
+      case "Ce fichier n'est pas un fichier jpg, gif ou png": $tmp = "This file is not a jpg, gif or png file"; break;
       case "Cette catégorie existe déjà": $tmp = "This category already exists"; break;
       case "Cette galerie existe déjà": $tmp = "This gallery already exists"; break;
       case "Cette sous-catégorie existe déjà": $tmp = "This subcategory already exists"; break;
@@ -81,6 +81,7 @@ function gal_translate($phrase) {
       case "Dimension maximale de la miniature en pixels": $tmp = "Maximal dimension of the miniature in pixels"; break;
       case "Dimension maximale de la miniature incorrecte": $tmp = "Incorrect maximal miniature dimension"; break;
       case "Dimensions": $tmp = "Dimensions"; break;
+      case "Editer": $tmp = "Edit"; break;
       case "E-carte": $tmp = "E-card"; break;
       case "Effacer": $tmp = "Delete"; break;
       case "Enregistrement non supprimé": $tmp = "Record not deleted"; break;
@@ -110,7 +111,7 @@ function gal_translate($phrase) {
       case "Images géoréférencées": $tmp = "Georeferenced images"; break;
       case "Images géoréférencée": $tmp = "Georeferenced image"; break;
       case "Images vues": $tmp = "Viewed images"; break;
-      case "IMAGES": $tmp = "PICTURES"; break;
+      case "Images": $tmp = "Pictures"; break;
       case "Import images": $tmp = "Import pictures"; break;
       case "Importer": $tmp = "Import"; break;
       case "Impossible d'ajouter l'image en BDD": $tmp = "Impossible to add the image in DB"; break;
@@ -139,6 +140,7 @@ function gal_translate($phrase) {
       case "Nom du destinataire": $tmp = "Recipient name"; break;
       case "Nombre d'images à afficher dans le top commentaires": $tmp = "Number of pictures to display in top comment"; break;
       case "Nombre d'images à afficher dans le top votes": $tmp = "Number of pictures to display in top vote"; break;
+      case "Nombre d'images à valider": $tmp = "Number of pictures to validate"; break;
       case "Nombre d'images par page": $tmp = "Images per page"; break;
       case "Nombre d'images": $tmp = "Number of pictures"; break;
       case "Nombre de catégories": $tmp = "Number of categories"; break;
