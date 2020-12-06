@@ -318,7 +318,7 @@ function PrintFormImgs() {
          <form enctype="multipart/form-data" method="post" action="'.$ThisFile.'" id="formimgs" name="FormImgs" lang="'.language_iso(1,'','').'">
             <input type="hidden" name="subop" value="addimgs">
             <div class="form-group">
-               <label class="w-100 font-weight-bolder" for="imggal">'.gal_translate("Affectation").'</label>
+               <label class="w-100 font-weight-bolder" for="imggal">'.gal_translate("Affectation vers la galerie choisie.").'</label>
                <div class="">
                   <select name="imggal" id="imggal" class="custom-select">';
    echo select_arbo('');
@@ -485,7 +485,7 @@ function AddImgs($imggal,$newcard1,$newdesc,$imglat,$imglong,$newcard2,$newcard3
             }
          } else {
             if ($filename_ext!="")
-               echo '<li class="list-group-item list-group-item-danger"><i class="fa fa-info-circle mr-2"></i>'.gal_translate("Ce fichier n'est pas un fichier jpg ou gif").'</li>';
+               echo '<li class="list-group-item list-group-item-danger"><i class="fa fa-info-circle mr-2"></i>'.gal_translate("Ce fichier n'est pas un fichier jpg, gif ou png").'</li>';
          }
          echo '</ul>';
       }
@@ -844,12 +844,12 @@ function PrintArbo() {
                <div class="text-center mt-3">';
          if ($rowZ_img[6]==1)
             $affgaltemp.= '
-                  <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=validimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-check fa-2x align-middle" title="Valider" data-toggle="tooltip"></i></a>';
+                  <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=validimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-check fa-2x align-middle" title="'.gal_translate("Valider").'" data-toggle="tooltip"></i></a>';
          else
             $affgaltemp.= '
-                  <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=editimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-edit fa-2x align-middle" title="Editer" data-toggle="tooltip"></i></a>';
+                  <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=editimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-edit fa-2x align-middle" title="'.gal_translate("Editer").'" data-toggle="tooltip"></i></a>';
          $affgaltemp.= '
-                  <a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$rowZ_img[0].'"><i class="fas fa-trash fa-2x text-danger align-middle" title="Effacer" data-toggle="tooltip"></i></a>
+                  <a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$rowZ_img[0].'"><i class="fas fa-trash fa-2x text-danger align-middle" title="'.gal_translate("Effacer").'" data-toggle="tooltip"></i></a>
                </div>
             </div>';
      }
@@ -868,7 +868,7 @@ function PrintArbo() {
          <h5 class="mb-0">
             <a data-toggle="collapse" href="#gt" aria-expanded="false" aria-checks="gt">
             <i class="toggle-icon fa fa-caret-down fa-lg mr-2" data-toggle="tooltip" data-placement="top" title="'.gal_translate("Cliquer pour déplier").'"></i></a>Galerie temporaire
-            <span class="float-right"><span class="badge badge-success badge-pill" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="left">'.$nb_img.'</span>
+            <span class="float-right"><span class="badge badge-success badge-pill" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="left">'.($nb_img-$j).'</span>
             <a href="#gt" data-toggle="collapse" class="badge badge-danger badge-pill ml-2 tooltipbyclass" title="'.gal_translate("Nombre d'images à valider").'" data-placement="left">'.$j.'</a>
          </h5>
       </div>
@@ -889,9 +889,9 @@ function PrintArbo() {
       //==> CATEGORIE
       $icondroits=array(
       '<i class="ml-2 fa fa-user-cog fa-lg tooltipbyclass" data-html="true" title="'.gal_translate("Accès pour").'<br />'.gal_translate("Administrateurs").'"></i>',
-      '<i class="ml-2 fa fa-user-check fa-lg tooltipbyclass" data-html="true" title="'.gal_translate("Accès pour").'<br />'.gal_translate("Utilisateur enregistré").'"></i>',
-      '<i class="ml-2 fa fa-user fa-lg tooltipbyclass" data-html="true" title="'.gal_translate("Accès pour").'<br />'.gal_translate("Public").'"></i>',
-      '<i class="ml-2 fa fa-users fa-lg tooltipbyclass" data-html="true" title="'.gal_translate("Accès pour").'<br />'.gal_translate("Groupe").'"></i>');
+      '<i class="ml-2 fa fa-user-check fa-lg tooltipbyclass" data-html="true" title="'.gal_translate("Accès pour").'<br />'.adm_translate("Utilisateur enregistré").'"></i>',
+      '<i class="ml-2 fa fa-user fa-lg tooltipbyclass" data-html="true" title="'.gal_translate("Accès pour").'<br />'.adm_translate("Public").'"></i>',
+      '<i class="ml-2 fa fa-users fa-lg tooltipbyclass" data-html="true" title="'.gal_translate("Accès pour").'<br />'.adm_translate("Groupe").'"></i>');
       while ($row_cat = sql_fetch_row($sql_cat)) {
          $queryX = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_gal WHERE cid='".$row_cat[0]."' ORDER BY nom ASC");
          $n_gc = sql_num_rows($queryX);
@@ -927,7 +927,7 @@ function PrintArbo() {
                $affcatgal .= '<span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.($n_ig-$n_ivgc).'</span>';
             if($n_ivgc)
                $affcatgal .='
-               <a href="#galcat'.$rowX_gal[0].'" data-toggle="collapse" class="badge badge-danger badge-pill ml-2 tooltipbyclass" title="'.gal_translate("Nombre d'images à valider.").'" data-toggle="tooltip" data-placement="right">'.$n_ivgc.'</a>';
+               <a href="#galcat'.$rowX_gal[0].'" data-toggle="collapse" class="badge badge-danger badge-pill ml-2 tooltipbyclass" title="'.gal_translate("Nombre d'images à valider").'" data-toggle="tooltip" data-placement="right">'.$n_ivgc.'</a>';
             $affcatgal .='
                <span class="float-right mr-3">
                   <a href="'.$ThisFile.'&amp;subop=editgal&amp;galid='.$rowX_gal[0].'"><i class="fa fa-edit align-middle" title="'.gal_translate("Editer").' '.gal_translate("Galerie").'" data-toggle="tooltip"></i></a>
@@ -971,15 +971,14 @@ function PrintArbo() {
                      </div>
                      <input type="hidden" name="img_id['.$i.']" value="'.$rowZ_img[0].'" />
                      <div class="d-flex justify-content-center">';
-
                if ($rowZ_img[6]==1)
                   $affcatgalimg .= '
-                        <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=validimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-check fa-2x align-middle" title="Valider" data-toggle="tooltip"></i></a>';
+                        <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=validimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-check fa-2x align-middle" title="'.gal_translate("Valider").'" data-toggle="tooltip"></i></a>';
                else
                   $affcatgalimg .= '
-                        <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=editimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-edit fa-2x align-middle" title="Editer" data-toggle="tooltip"></i></a>';
+                        <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=editimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-edit fa-2x align-middle" title="'.gal_translate("Editer").'" data-toggle="tooltip"></i></a>';
                $affcatgalimg .= '
-                        <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$rowZ_img[0].'"><i class="fas fa-trash fa-2x text-danger" title="Effacer" data-toggle="tooltip"></i></a>';
+                        <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$rowZ_img[0].'"><i class="fas fa-trash fa-2x text-danger" title="'.gal_translate("Effacer").'" data-toggle="tooltip"></i></a>';
                $i++;
                $affcatgalimg .= '
                      </div>
@@ -1037,7 +1036,7 @@ function PrintArbo() {
                   $affsoucatgal .= '<span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.($n_igsc-$n_ivgsc).'</span>';
                if($n_ivgsc)
                   $affsoucatgal .= '
-                     <a href="#galscat'.$row_gal[0].'" data-toggle="collapse" class="badge badge-danger badge-pill ml-2 tooltipbyclass" title="'.gal_translate("Nombre d'images à valider.").'" data-placement="right">'.$n_ivgsc.'</a>';
+                     <a href="#galscat'.$row_gal[0].'" data-toggle="collapse" class="badge badge-danger badge-pill ml-2 tooltipbyclass" title="'.gal_translate("Nombre d'images à valider").'" data-placement="right">'.$n_ivgsc.'</a>';
                $affsoucatgal .= '
                      <span class="float-right mr-3">
                         <a class="" href="'.$ThisFile.'&amp;subop=editgal&amp;galid='.$row_gal[0].'"><i class="fa fa-edit" title="'.gal_translate("Editer").' '.gal_translate("Galerie").'" data-toggle="tooltip"></i></a>
@@ -1085,10 +1084,10 @@ function PrintArbo() {
                   $i++;
                   if ($row_img[6]==1)
                      $affsoucatgalimg .= '
-                              <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=validimg&amp;imgid='.$row_img[0].'"><i class="fa fa-check fa-2x align-middle" title="Valider" data-toggle="tooltip"></i></a>';
+                              <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=validimg&amp;imgid='.$row_img[0].'"><i class="fa fa-check fa-2x align-middle" title="'.gal_translate("Valider").'" data-toggle="tooltip"></i></a>';
                   else
-                     $affsoucatgalimg .= '<a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=editimg&amp;imgid='.$row_img[0].'"><i class="fa fa-edit fa-2x align-middle" title="Editer" data-toggle="tooltip"></i></a>';
-                  $affsoucatgalimg .= '<a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$row_img[0].'"><i class="fa fa-trash fa-2x text-danger" title="Effacer" data-toggle="tooltip"></i></a>
+                     $affsoucatgalimg .= '<a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=editimg&amp;imgid='.$row_img[0].'"><i class="fa fa-edit fa-2x align-middle" title="'.gal_translate("Editer").'" data-toggle="tooltip"></i></a>';
+                  $affsoucatgalimg .= '<a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$row_img[0].'"><i class="fa fa-trash fa-2x text-danger" title="'.gal_translate("Effacer").'" data-toggle="tooltip"></i></a>
                            </div>
                         </div>';
                }
@@ -1129,7 +1128,7 @@ function PrintArbo() {
                $affsoucat .= '<span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.$tn_igsc.'</span>';
             if($tn_ivgsc)
                $affsoucat .='
-                  <a href="#scat'.$row_sscat[0].'" class="badge badge-danger badge-pill ml-2 tooltipbyclass" data-toggle="collapse" title="'.gal_translate("Nombre d'images à valider.").'" data-placement="right">'.$tn_ivgsc.'</a>'; 
+                  <a href="#scat'.$row_sscat[0].'" class="badge badge-danger badge-pill ml-2 tooltipbyclass" data-toggle="collapse" title="'.gal_translate("Nombre d'images à valider").'" data-placement="right">'.$tn_ivgsc.'</a>'; 
             $affsoucat .= '
                   <span class="float-right mr-3"><a href="'.$ThisFile.'&amp;subop=editcat&amp;catid='.$row_sscat[0].'"><i class="fa fa-edit" title="'.gal_translate("Editer").' '.gal_translate("Sous-catégorie").'" data-toggle="tooltip"></i></a><a class="" href="'.$ThisFile.'&amp;subop=delsscat&amp;sscatid='.$row_sscat[0].'"><i class="fas fa-trash text-danger ml-3" data-original-title="'.gal_translate("Effacer").' '.gal_translate("Sous-catégorie").'" data-toggle="tooltip"></i></a></span>
                </h5>
@@ -1388,7 +1387,7 @@ function EditImg($id) {
    $queryA = sql_query("SELECT name,comment,gal_id,img_lat,img_long FROM ".$NPDS_Prefix."tdgal_img WHERE id='$id'");
    $rowA = sql_fetch_row($queryA);
    echo '
-   <h4>'.gal_translate("Edition").'</h4>
+   <h4>'.gal_translate("Editer").' '.gal_translate("Image").'</h4>
    <hr />
    <div class="row">
       <div class="col-sm-5 d-flex align-items-center py-0 mx-auto">
@@ -1627,7 +1626,7 @@ function Edit($type,$id) {
       <input type="hidden" name="subop" value="rename" />
       <input type="hidden" name="type" value="'.$type.'" />
       <input type="hidden" name="gcid" value="'.$id.'" />
-      <h5 class="my-3">'.gal_translate("Edition").' ';
+      <h5 class="my-3">'.gal_translate("Editer").' ';
       if ($type=="Gal")
          echo strtolower(gal_translate("Galerie"));
       else
@@ -1691,7 +1690,6 @@ function ChangeName($type,$id,$valeur,$galcat,$acces) {
     if ($type=="Cat") {
       $query = "UPDATE ".$NPDS_Prefix."tdgal_gal SET acces=$acces WHERE cid=$id";
       sql_query($query);
-
       $scquery ="SELECT * FROM ".$NPDS_Prefix."tdgal_cat WHERE cid=$id";
       $rowsc = sql_query($scquery);
       while($d = sql_fetch_row($rowsc)) {

@@ -252,13 +252,13 @@ function ViewGal($galid, $page){
          $nbvote = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_vot WHERE pic_id='".$row[0]."'"));
          if (@file_exists("modules/$ModPath/imgs/".$row[2])) {
             list($width, $height, $type, $attr) = @getimagesize("modules/$ModPath/imgs/$row[2]");
-            $ibid = '<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-toggle="tooltip" data-placement="bottom" />';
+            $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-placement="bottom" />';
          } else
            $ibid = ReducePic($row[2],stripslashes($row[3]),$MaxSizeThumb);
       //==> geoloc
       if (($row[7] != '') or ($row[8] != '')) {
          $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($row[3]).'","'.$row[4].'"]);';
-         $img_geotag = '<img class="geotag" src="/modules/'.$ModPath.'/data/geotag_16.png" title="This image is georeferenced." alt="This image is georeferenced." />';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="This image is georeferenced." alt="This image is georeferenced." />';
       }
       //<== geoloc
         echo '
@@ -826,7 +826,7 @@ function ViewAlea() {
       //==> geoloc
       if (($row[7] != '') or ($row[8] != '')) {
          $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($row[3]).'","'.$row[4].'"]);';
-         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png"  title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" />';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" />';
       }
       //<== geoloc
       $nbcom = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='".$row[0]."'"));
@@ -1867,7 +1867,7 @@ function img_geolocalisation($lat,$long,$multi){
                src: "modules/npds_galerie/npds_galerie.png"
             }),
             text:new ol.style.Text({
-               text: "Image"+feat.id_.substr(2),
+               text: "'.gal_translate("Image").' "+feat.id_.substr(2),
                font: "18px sans-serif",
                fill: new ol.style.Fill({color: "white"}),
                stroke: new ol.style.Stroke({color: "rgba(0, 0, 0, 0)", width: 0.1}),
