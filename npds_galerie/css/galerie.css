@@ -29,3 +29,216 @@ a[href*="intent"] {
 .rating2 a {
    float:none
 }
+
+/* for geoloc */
+#mapol {
+   position: relative;
+   width:100%;
+}
+#map-wrapper {
+   position: relative;
+   width: 100%;
+}
+#maplocation {
+   position: relative;
+   height: 340px;
+}
+#maplocation-wrapper {
+   position: relative;
+   height: 340px;
+   width: 100%;
+}
+
+
+#mapol :-webkit-full-screen {
+   height: 100%;
+   margin: 0;
+}
+#mapol :-ms-fullscreen {
+   height: 100%;
+}
+#mapol :fullscreen {
+   height: 100%;
+}
+#map-wrapper :-webkit-full-screen {
+   height: 100%;
+   margin: 0;
+}
+#map-wrapper :-ms-fullscreen {
+   height: 100%;
+}
+#map-wrapper :fullscreen {
+   height: 100%;
+}
+
+#maplocation :-webkit-full-screen {
+   height: 100%;
+   margin: 0;
+}
+#maplocation :-ms-fullscreen {
+   height: 100%;
+}
+#maplocation :fullscreen {
+   height: 100%;
+}
+#maplocation-wrapper :-webkit-full-screen {
+   height: 100%;
+   margin: 0;
+}
+#maplocation-wrapper :-ms-fullscreen {
+   height: 100%;
+}
+#maplocation-wrapper :fullscreen {
+   height: 100%;
+}
+
+
+      .map {
+        width: 100%;
+        height:540px;
+      }
+      .ol-fullscreen:-webkit-full-screen {
+        height: 100%;
+        margin: 0;
+      }
+      .ol-fullscreen:-ms-fullscreen {
+        height: 100%;
+      }
+      .ol-fullscreen:fullscreen {
+        height: 100%;
+      }
+      .ol-fullscreen {
+        margin-bottom: 10px;
+        width: 100%;
+        height: 540px;
+      }
+
+      .map {
+        height: 100%;
+      }
+
+      .sidebar {
+/*
+        background: #1F6B75;
+        height: 100%;
+        position:absolute;
+        top:200px;
+        right:25px;
+*/
+      }
+      
+      
+   #sidebar {
+      filter : alpha(opacity=90);
+      -moz-opacity : 0.9;
+      opacity : 0.9;
+      /* 
+      background: white;
+      */
+      position: absolute;
+      top: 46px;
+      right: 8px;
+      min-width: 250px;
+      height: 85%;
+      overflow: auto;
+}
+      
+       #sidebar: fullscreen {
+        position : absolute;
+        top: 46px;
+      }
+       #sidebar:-webkit-full-screen {
+        position : absolute;
+        top: 46px;
+      }
+        #sidebar:-ms-fullscreen {
+        position : absolute;
+        top: 46px;
+      }
+   .ol-popup {
+      position: absolute;
+      background-color: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      border: 1px solid #fff;
+      bottom: 12px;
+      left: -50px;
+      min-width: 300px;
+   }
+.ol-popup:after, .ol-popup:before {
+   top: 100%;
+   border: solid transparent;
+   content: " ";
+   height: 0;
+   width: 0;
+   position: absolute;
+   pointer-events: none;
+}
+.ol-popup:after {
+   border-top-color: white;
+   border-width: 10px;
+   left: 48px;
+   margin-left: -10px;
+}
+.ol-popup:before {
+   border-top-color: #cccccc;
+   border-width: 11px;
+   left: 48px;
+   margin-left: -11px;
+}
+.ol-popup-closer {
+   text-decoration: none;
+   position: absolute;
+   top: 2px;
+   right: 8px;
+}
+.ol-popup-closer:after {
+   content: "✖";
+}
+#mapol .ol-zoomslider {
+    background-color: transparent;
+    top: 2.3em;
+}
+#mapol .ol-zoom .ol-zoom-out {
+   margin-top: 204px;
+}
+
+.ol-control button, .ol-scale-line {
+   background-color: var(--primary);
+   opacity: 0.8;
+}
+.ol-full-screen {
+   right: 3em;
+}
+.ol-rotate {
+   right: 8em;
+   top: .5em;
+}
+.ol-sidebar {
+  top: .5em;
+  right: .5em;
+}
+.ol-download {
+  top: .5em;
+  right: 5.5em;
+}
+
+.custom-mouse-position {
+   font-family: "Courier New", Lucida, console, Monaco, monospace;
+   font-size: 0.8rem;
+   color: whitesmoke;
+   bottom: 35px;
+   position: absolute;
+   left: 8px;
+/*   text-shadow: 2px 2px #000000;*/
+   text-shadow: black 0.1em 0.1em 0.2em;
+   font-weight: 700;
+}
+
+.geotag {
+   position:absolute;
+   top:8px;
+   right:8px;
+}
+
