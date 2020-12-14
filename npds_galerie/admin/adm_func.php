@@ -805,8 +805,11 @@ function PrintArbo() {
          }
       }
       $(document).ready(function(){ 
-         $("#ckball").change(function(){
-            $(".ckgt").prop("checked", $(this).prop("checked"));
+         $("#ckballd").change(function(){
+            $(".ckd").prop("checked", $(this).prop("checked"));
+         });
+         $("#ckballv").change(function(){
+            $(".ckv").prop("checked", $(this).prop("checked"));
          });
       });
    //]]>
@@ -814,26 +817,39 @@ function PrintArbo() {
 
    $queryZ = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='-1' ORDER BY id");
    $nb_img = sql_num_rows($queryZ);
-   $j=0; $affgaltemp='';
+   $j=0;$i=0; $affgaltemp='';
    if ($nb_img == 0)
       $affgaltemp.= '<p class="card-text"><i class="fa fa-info-circle mr-2"></i>'.gal_translate("Vide").'</p>';
    else {
       $affgaltemp.= '
-      <label class="custom-check custom-checkbox">
-         <span class="custom-check-description"></span>
-         <input type="checkbox" class="custom-check-input" id="ckball" />
-         <span class="custom-check-indicator bg-danger"></span>
-      </label>
+      <div class="custom-control custom-checkbox d-inline">
+         <input type="checkbox" class="custom-control-input is-invalid" id="ckballd" />
+         <label class="custom-control-label" for="ckballd"><i class="fas fa-trash fa-lg text-danger align-middle"></i></label>
+      </div>';
+//      if($j!=0)
+         $affgaltemp.= '
+      <div class="custom-control custom-checkbox d-inline ml-3">
+         <input type="checkbox" class="custom-control-input" id="ckballv" />
+         <label class="custom-control-label" for="ckballv"><i class="fas fa-check fa-lg text-primary align-middle"></i></label>
+      </div>';
+      $affgaltemp.= '
+      <hr class="my-2" />
       <div class="row px-3">';
       while ($rowZ_img = sql_fetch_row($queryZ)) {
          if ($rowZ_img[6]==1)  {$cla=' alert-danger '; $j++;} else $cla='alert-secondary';
          $affgaltemp.= '
             <div class="col-lg-3 col-sm-4 border rounded p-1 my-2 '.$cla.'">
-               <label class="custom-check custom-checkbox">
-                  <span class="custom-check-description"></span>
-                  <input form="delbatch-1" type="checkbox" class="custom-check-input ckgt" name="imgids[]" value="'.$rowZ_img[0].'" />
-                  <span class="custom-check-indicator bg-danger"></span>
-               </label>
+               <div class="custom-control custom-checkbox d-inline">
+                  <input form="delbatch-1" type="checkbox" class="custom-control-input is-invalid ckd" id="del_'.$i.'" name="imgids[]" value="'.$rowZ_img[0].'" />
+                  <label class="custom-control-label" for="del_'.$i.'"></label>
+               </div>';
+         if ($rowZ_img[6]==1)
+            $affgaltemp.= '
+               <div class="custom-control custom-checkbox d-inline">
+                  <input form="valbatch-1" type="checkbox" class="custom-control-input ckv" id="val_'.$i.'" name="imgidsv[]" value="'.$rowZ_img[0].'" />
+                  <label class="custom-control-label" for="val_'.$i.'"><i class="fas fa-check text-primary align-middle"></i></label>
+               </div>';
+         $affgaltemp.= '
                <div class="text-center">
                   <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=one-img&amp;galid=-1&amp;pos='.$rowZ_img[0].'" target="_blank"><img class="img-fluid rounded mb-1" src="modules/'.$ModPath.'/mini/'.$rowZ_img[2].'" alt="'.$rowZ_img[3].'" data-toggle="tooltip" data-placement="top"  title="'.$rowZ_img[3].'" /></a><br />
                   <small>ID : '.$rowZ_img[2].'</small>
@@ -852,9 +868,19 @@ function PrintArbo() {
                   <a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$rowZ_img[0].'"><i class="fas fa-trash fa-2x text-danger align-middle" title="'.gal_translate("Effacer").'" data-toggle="tooltip"></i></a>
                </div>
             </div>';
+         $i++;
      }
      $affgaltemp.= '
-         </div>';
+         </div>
+         <hr class="my-2" />
+         <form class="d-inline" action="'.$ThisFile.'&amp;subop=delimgbatch" method="post" id="delbatch-1">
+            <button class="btn btn-danger form-check btn-sm mt-2" type="submit"><i class="fa fa-check-square mr-1"></i><i class="fas fa-trash mr-2"></i>'.gal_translate("Effacer").'</button>
+         </form>';
+      if($j>0) 
+         $affgaltemp.= '
+         <form class="d-inline ml-2" action="'.$ThisFile.'&amp;subop=valimgbatch" method="post" id="valbatch-1">
+            <button class="btn btn-primary form-check btn-sm mt-2" type="submit"><i class="fa fa-check-square mr-1"></i><i class="fa fa-check mr-2"></i>'.gal_translate("Valider").'</button>
+         </form>';
    }
    echo '
    <div class="blockquote lead">
@@ -867,16 +893,18 @@ function PrintArbo() {
       <div class="card-body">
          <h5 class="mb-0">
             <a data-toggle="collapse" href="#gt" aria-expanded="false" aria-checks="gt">
-            <i class="toggle-icon fa fa-caret-down fa-lg mr-2" data-toggle="tooltip" data-placement="top" title="'.gal_translate("Cliquer pour déplier").'"></i></a>Galerie temporaire
-            <span class="float-right"><span class="badge badge-success badge-pill" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="left">'.($nb_img-$j).'</span>
-            <a href="#gt" data-toggle="collapse" class="badge badge-danger badge-pill ml-2 tooltipbyclass" title="'.gal_translate("Nombre d'images à valider").'" data-placement="left">'.$j.'</a>
+            <i class="toggle-icon fa fa-caret-down fa-lg mr-2" data-toggle="tooltip" data-placement="top" title="'.gal_translate("Cliquer pour déplier").'"></i></a>Galerie temporaire';
+   if(($nb_img-$j)>0)
+      echo '
+            <span class="float-right"><span class="badge badge-success badge-pill" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="left">'.($nb_img-$j).'</span>';
+   if($j>0)
+      echo '
+            <a href="#gt" data-toggle="collapse" class="badge badge-danger badge-pill ml-2 tooltipbyclass" title="'.gal_translate("Nombre d'images à valider").'" data-placement="left">'.$j.'</a>';
+   echo '
          </h5>
       </div>
       <div class="card-body pt-0 collapse" id="gt">
          '.$affgaltemp.'
-         <form action="'.$ThisFile.'&amp;subop=delimgbatch" method="post" id="delbatch-1">
-            <button class="btn btn-outline-danger form-check btn-sm mt-2" type="submit"><i class="fa fa-check-square fa-lg mr-1"></i>'.gal_translate("Effacer").'</button>
-         </form>
       </div>
    </div>';
    // <== galerie temporaire
@@ -898,7 +926,7 @@ function PrintArbo() {
          $queryS = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='".$row_cat[0]."' ORDER BY nom ASC");
          $n_sc = sql_num_rows($queryS);
          $affcatgal=''; $affsoucat='';
-         $tn_ig=0; $tn_ivgc=0;
+         $tn_ig=0; $tn_ivgc=0; $tn_igscs=0;
          while ($rowX_gal = sql_fetch_row($queryX)) {
             $queryZ = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='".$rowX_gal[0]."' ORDER BY ordre,id,noaff");
             $n_ivgc= sql_num_rows(sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='".$rowX_gal[0]."' AND noaff=1"));
@@ -935,29 +963,82 @@ function PrintArbo() {
                </span>
             </h5>
             <div class="card-body collapse" id="galcat'.$rowX_gal[0].'">
-               <form action="'.$ThisFile.'&amp;subop=ordre" method="post" name="FormArbo'.$rowX_gal[0].'">
+               <form action="'.$ThisFile.'&amp;subop=ordre" method="post" id="FormArbo'.$rowX_gal[0].'" name="FormArbo'.$rowX_gal[0].'">
                   <input type="hidden" name="subop" value="ordre" />';
             $i=1;
+            $affcatgal.= '
+                  <script type="text/javascript">
+                  //<![CDATA[
+                     $(document).ready(function() { 
+                        $("#ckballg_'.$rowX_gal[0].'").change(function(){
+                           $(".ckcgid_'.$rowX_gal[0].'").prop("checked", $(this).prop("checked"));
+                           if(!$("#delbatch'.$rowX_gal[0].' button").hasClass("show")){
+                              $("#delbatch'.$rowX_gal[0].' button").collapse("toggle")
+                           }
+                           else if($("#delbatch'.$rowX_gal[0].' button").hasClass("show")){
+                              $("#delbatch'.$rowX_gal[0].' button").collapse("toggle")
+                           }
+                        });
+                        $("#ckballgv_'.$rowX_gal[0].'").change(function(){
+                           $(".ckcgiv_'.$rowX_gal[0].'").prop("checked", $(this).prop("checked"));
+                        });
+                        
+                        //==> not finish
+                        $(".ckcgid_'.$rowX_gal[0].'").each(function(id,v){
+                        if($(this).prop("checked") == false) console.log(v)});
+                        $(".ckcgid_'.$rowX_gal[0].'").click(function(){
+                           if($(this).prop("checked") == true && !$("#delbatch'.$rowX_gal[0].' button").hasClass("show")) {
+                              $("#delbatch'.$rowX_gal[0].' button").collapse("show")
+                           }
+                           else if ($(this).prop("checked") == false && $("#delbatch'.$rowX_gal[0].' button").hasClass("show")) {
+                              $("#delbatch'.$rowX_gal[0].' button").collapse("hide")
+                           }
+                        });
+                        //<== not finish
+                     });
+                  //]]>
+                  </script>';
+            if($n_ivgc>1)
+               $affcatgal.= '
+                  <div class="custom-control custom-checkbox d-inline mr-2">
+                     <input type="checkbox" class="custom-control-input is-valid" id="ckballgv_'.$rowX_gal[0].'" />
+                     <label class="custom-control-label" for="ckballgv_'.$rowX_gal[0].'"><i class="fas fa-check fa-lg text-success align-middle"></i></label>
+                  </div>';
+            if($n_ig>1)
+               $affcatgal.= '
+                  <div class="custom-control custom-checkbox d-inline">
+                     <input type="checkbox" class="custom-control-input is-invalid" id="ckballg_'.$rowX_gal[0].'" />
+                     <label class="custom-control-label" for="ckballg_'.$rowX_gal[0].'"><i class="fas fa-trash fa-lg text-danger align-middle"></i></label>
+                  </div>';
             $affcatgal .= '
+                  <hr class="my-2" />
                   <div class="row px-3">';
             $affcatgalimg='';
             while ($rowZ_img = sql_fetch_row($queryZ)) {
                if ($rowZ_img[6]==1) $cla=' alert-danger '; else $cla='alert-secondary';
                $affcatgalimg .= '
-                  <div class="col-md-3 col-sm-4 border rounded p-1 my-2 '.$cla.'">
-                     <label class="custom-check custom-checkbox">
-                        <span class="custom-check-description"></span>
-                        <input form="delbatch'.$rowX_gal[0].'" type="checkbox" class="custom-check-input" name="imgids[]" value="'.$rowZ_img[0].'" />
-                        <span class="custom-check-indicator bg-danger"></span>
-                     </label>';
+                  <div class="col-md-3 col-sm-4 border rounded p-1 my-2 '.$cla.'">';
+               if($n_ivgc>1)
+                  if ($rowZ_img[6]==1)
+                     $affcatgalimg .= '
+                     <div class="custom-control custom-checkbox d-inline mr-2">
+                        <input form="valbatch'.$rowX_gal[0].'" type="checkbox" class="custom-control-input ckcgiv_'.$rowX_gal[0].' is-valid" id="valigc_'.$rowZ_img[0].'" name="imgidsv[]" value="'.$rowZ_img[0].'" />
+                        <label class="custom-control-label" for="valigc_'.$rowZ_img[0].'"><i class="fas fa-check text-success align-middle"></i></label>
+                     </div>';
+               if($n_ig>1)
+                  $affcatgalimg .= '
+                     <div class="custom-control custom-checkbox d-inline">
+                        <input form="delbatch'.$rowX_gal[0].'" type="checkbox" class="custom-control-input is-invalid ckcgid_'.$rowX_gal[0].'" id="deligc_'.$rowZ_img[0].'" name="imgids[]" value="'.$rowZ_img[0].'" />
+                        <label class="custom-control-label" for="deligc_'.$rowZ_img[0].'"><i class="fas fa-trash text-danger"></i></label>
+                     </div>';
                if ($rowZ_img[6]==1)
                   $affcatgalimg .= '
-                     <div class="text-center form-group mb-1">
+                     <div class="text-center form-group mt-2 mb-1">
                         <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=one-img&amp;galid='.$rowX_gal[0].'&amp;pos='.$rowZ_img[0].'" target="_blank"><img class="img-fluid mb-1" src="modules/'.$ModPath.'/mini/'.$rowZ_img[2].'"  alt="mini/'.$rowZ_img[2].'" data-toggle="tooltip" data-placement="top"  title="mini/'.$rowZ_img[2].'" /></a>
                      </div>';
                else
                   $affcatgalimg .= '
-                     <div class="text-center form-group mb-1">
+                     <div class="text-center form-group mt-2 mb-1">
                         <a href="javascript: void(0);" onMouseDown="aff_image(\'image'.$rowX_gal[0].'_'.$i.'\',\'modules/'.$ModPath.'/mini/'.$rowZ_img[2].'\');">
                            <img class="img-fluid mb-1" src="modules/'.$ModPath.'/data/img.png" id="image'.$rowX_gal[0].'_'.$i.'" alt="mini/'.$rowZ_img[2].'" data-toggle="tooltip" data-placement="right" title="mini/'.$rowZ_img[2].'" />
                         </a>
@@ -973,7 +1054,7 @@ function PrintArbo() {
                      <div class="d-flex justify-content-center">';
                if ($rowZ_img[6]==1)
                   $affcatgalimg .= '
-                        <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=validimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-check fa-2x align-middle" title="'.gal_translate("Valider").'" data-toggle="tooltip"></i></a>';
+                        <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=validimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-check fa-2x align-middle text-success" title="'.gal_translate("Valider").'" data-toggle="tooltip"></i></a>';
                else
                   $affcatgalimg .= '
                         <a class="btn btn-sm btn-link" href="'.$ThisFile.'&amp;subop=editimg&amp;imgid='.$rowZ_img[0].'"><i class="fa fa-edit fa-2x align-middle" title="'.gal_translate("Editer").'" data-toggle="tooltip"></i></a>';
@@ -985,35 +1066,42 @@ function PrintArbo() {
                   </div>';
             }
             $affcatgal .= $affcatgalimg;
-            if ($i!=1)
-               $affcatgal .= '
-                  <div class="form-group w-100">
-                     <button class="btn btn-primary form-check btn-sm mt-2" type="submit">'.gal_translate("Valider").'</button>
-                  </div>';
             $affcatgal .= '
                   </div>
+               </form>
+               <hr class="my-2" />';
+            if ($i!=1)
+               $affcatgal .= '
+                  <div class="form-group d-inline mr-2">
+                     <button class="btn btn-primary form-check btn-sm mt-2" type="submit" form="FormArbo'.$rowX_gal[0].'"><i class="fa fa-edit mr-2"></i>'.gal_translate("Valider").'</button>
+                  </div>';
+            if($n_ivgc>1)
+               $affcatgal .= '
+               <form class="d-inline mr-2" action="'.$ThisFile.'&amp;subop=valimgbatch" method="post" id="valbatch'.$rowX_gal[0].'">
+                  <button class="btn btn-success form-check btn-sm mt-2" type="submit"><i class="fa fa-check-square mr-1"></i><i class="fa fa-check mr-2"></i>'.gal_translate("Valider").'</button>
                </form>';
             if ($i!=1) 
                $affcatgal .= '
-               <form action="'.$ThisFile.'&amp;subop=delimgbatch" method="post" id="delbatch'.$rowX_gal[0].'">
-                  <button class="btn btn-outline-danger form-check btn-sm mt-2" type="submit"><i class="fa fa-check-square fa-lg mr-1"></i>'.gal_translate("Effacer").'</button>
+               <form class="d-inline " action="'.$ThisFile.'&amp;subop=delimgbatch" method="post" id="delbatch'.$rowX_gal[0].'">
+                  <button class="collapse btn btn-danger form-check btn-sm mt-2" type="submit"><i class="fa fa-check-square mr-1"></i><i class="fas fa-trash mr-2"></i>'.gal_translate("Effacer").'</button>
                </form>';
             $affcatgal .= '
             </div>';
          }
         //==> SOUS-CATEGORIE
-        $tn_gsc=0; $tn_igsc=0;
+        $tn_gsc=0;
          while ($row_sscat = sql_fetch_row($queryS)) {
             $querx = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_gal WHERE cid='".$row_sscat[0]."' ORDER BY nom ASC");
             $n_gsc = sql_num_rows($querx);
-            $affsoucatgal=''; 
-            $tn_ivgsc=0; $n_igsc=0;
+            $affsoucatgal='';
+             
+            $tn_ivgsc=0; $n_igsc=0; $tn_igsc=0;
             while ($row_gal = sql_fetch_row($querx)) {
                $querz = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='".$row_gal[0]."' ORDER BY ordre,id,noaff");
                $n_igsc = sql_num_rows($querz);
                $n_ivgsc = sql_num_rows(sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='".$row_gal[0]."' AND noaff=1"));
                $tn_ivgsc += $n_ivgsc;
-               $tn_igsc += ($n_igsc-$n_ivgsc);
+               $tn_igsc += $n_igsc;
                $icondroit='';
                switch ($row_gal[4]) {
                   case -127: $icondroit=$icondroits[0]; break;
@@ -1033,7 +1121,7 @@ function PrintArbo() {
                      <a class="ml-3"><i class=" mr-2 "></i></a>';
                $affsoucatgal .= stripslashes($row_gal[2]).' <small>( '.gal_translate("Galerie").' '.$icondroit.' )</small>';
                if(($n_igsc-$n_ivgsc)>0)
-                  $affsoucatgal .= '<span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.($n_igsc-$n_ivgsc).'</span>';
+                  $affsoucatgal .= '<span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.$n_igsc.'</span>';
                if($n_ivgsc)
                   $affsoucatgal .= '
                      <a href="#galscat'.$row_gal[0].'" data-toggle="collapse" class="badge badge-danger badge-pill ml-2 tooltipbyclass" title="'.gal_translate("Nombre d'images à valider").'" data-placement="right">'.$n_ivgsc.'</a>';
@@ -1124,8 +1212,8 @@ function PrintArbo() {
             $affsoucat .= stripslashes($row_sscat[2]).' <small>( '.gal_translate("Sous-catégorie").' '.$icondroit.' )</small>';
             if($n_gsc>0)
                $affsoucat .= '<span class="badge badge-secondary badge-pill ml-2" title="'.gal_translate("Nombre de galeries").'" data-toggle="tooltip" data-placement="right">'.$n_gsc.'</span>';
-            if($tn_igsc>0)
-               $affsoucat .= '<span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.$tn_igsc.'</span>';
+            if($n_igsc>0)
+               $affsoucat .= '<span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.($tn_igsc).'</span>';
             if($tn_ivgsc)
                $affsoucat .='
                   <a href="#scat'.$row_sscat[0].'" class="badge badge-danger badge-pill ml-2 tooltipbyclass" data-toggle="collapse" title="'.gal_translate("Nombre d'images à valider").'" data-placement="right">'.$tn_ivgsc.'</a>'; 
@@ -1139,6 +1227,7 @@ function PrintArbo() {
             $affsoucat .= '
             </div>';
             $tn_gsc += $n_gsc;
+            $tn_igscs += $tn_igsc;
          }
          $icondroit='';
          switch ($row_cat[3]) {
@@ -1159,8 +1248,8 @@ function PrintArbo() {
             echo '<span class="badge badge-dark badge-pill ml-2" title="'.gal_translate("Nombre de sous-catégories").'" data-toggle="tooltip" data-placement="right">'.$n_sc.'</span>';
          if(($n_gc+$tn_gsc)>0)
             echo '<span class="badge badge-secondary badge-pill ml-2" title="'.gal_translate("Nombre de galeries").'" data-toggle="tooltip" data-placement="right">'.($n_gc+$tn_gsc).'</span>';
-         if(($tn_ig+$tn_igsc)>0)
-            echo '<span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.($tn_ig+$tn_igsc).'</span>';
+         if(($tn_ig+$tn_igscs)>0)
+            echo '<span class="badge badge-success badge-pill ml-2" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.($tn_ig+$tn_igscs).'</span>';
          if($tn_ivgc>0 or $tn_ivgsc>0)
             echo '
             <a href="#cat'.$row_cat[0].'" data-toggle="collapse" class="badge badge-danger badge-pill ml-2 tooltipbyclass" title="'.gal_translate("Nombre d'images à valider").'" data-placement="right">'.($tn_ivgc+$tn_ivgsc).'</a>';
@@ -1391,7 +1480,7 @@ function EditImg($id) {
    <hr />
    <div class="row">
       <div class="col-sm-5 d-flex align-items-center py-0 mx-auto">
-         <img class="img-fluid img-thumbnail" src="modules/'.$ModPath.'/mini/'.$rowA[0].'" alt="'.$rowA[0].'" data-toggle="tooltip" data-placement="bottom" title="'.$rowA[0].'" />
+         <img class="img-fluid img-thumbnail tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$rowA[0].'" alt="'.$rowA[0].'" data-toggle="modal" data-target="#modaleditphoto" data-placement="bottom" title="'.$rowA[0].'" />
       </div>
       <div class="col-sm-7">
          <form id="formmodifimg" action="'.$ThisFile.'" method="post" name="FormModifImg">
@@ -1411,26 +1500,33 @@ function EditImg($id) {
             </div>
             <div class="form-row">
                <div class="form-group col-md-6">
+                  <label for="imglat" class="">'.gal_translate("Latitude").'</label>
                   <div class="input-group mb-2 mr-sm-2">
                      <div class="input-group-prepend">
                         <div class="input-group-text"><i class="fa fa-globe fa-lg"></i></div>
                      </div>
-                     <label for="imglat" class="sr-only">'.gal_translate("Latitude").'</label>
                      <input type="text" class="form-control" name="imglat" id="imglat" placeholder="'.gal_translate("Latitude").'" value="'.$rowA[3].'"/>
                   </div>
                </div>
                <div class="form-group col-md-6">
+                  <label for="imglong" class="">'.gal_translate("Longitude").'</label>
                   <div class="input-group mb-2 mr-sm-2">
                      <div class="input-group-prepend">
                         <div class="input-group-text"><i class="fa fa-globe fa-lg"></i></div>
                      </div>
-                     <label for="imglong" class="sr-only">'.gal_translate("Longitude").'</label>
                      <input type="text" class="form-control" name="imglong" id="imglong" placeholder="'.gal_translate("Longitude").'" value="'.$rowA[4].'"/>
                   </div>
                 </div>
             </div>
             <input class="btn btn-primary" type="submit" value="'.gal_translate("Modifier").'">
          </form>
+      </div>
+   </div>
+   <div class="modal fade" id="modaleditphoto" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <img class="img-fluid" src="modules/'.$ModPath.'/imgs/'.$rowA[0].'" alt="'.$rowA[0].'" />
+         </div>
       </div>
    </div>';
    echo img_geolocalisation($rowA[3],$rowA[4],'');
@@ -1480,7 +1576,7 @@ function EditImg($id) {
       <ul class="list-group mt-4">';
    while ($rowC = sql_fetch_row($qcomment)) {
       echo '
-         <li class="d-flex list-group-item list-group-item-light justify-content-between align-items-left">'.userpopover($rowC[2],40).' '.$rowC[2].' '.gal_translate("a posté le").' '.date(translate("dateinternal"),$rowC[5]).'<span class="ml-auto"><a href="'.$ThisFile.'&amp;subop=delcomimg&amp;id='.$rowC[0].'&amp;picid='.$rowC[1].'"><i class="fas fa-trash fa-lg text-danger" title="Effacer" data-toggle="tooltip"></i></a></span></li>
+         <li class="d-flex list-group-item list-group-item-light justify-content-between align-items-left">'.userpopover($rowC[2],40).' '.$rowC[2].'<br />'.gal_translate("Posté le").' '.date(translate("dateinternal"),$rowC[5]).'<span class="ml-auto"><a href="'.$ThisFile.'&amp;subop=delcomimg&amp;id='.$rowC[0].'&amp;picid='.$rowC[1].'"><i class="fas fa-trash fa-lg text-danger" title="'.gal_translate("Effacer").'" data-toggle="tooltip"></i></a></span></li>
          <li class="list-group-item">'.stripslashes($rowC[3]).'</li>';
    }
    echo '
@@ -1595,6 +1691,24 @@ function DoValidImg($id) {
    global $ThisRedo, $NPDS_Prefix;
    if (sql_query("UPDATE ".$NPDS_Prefix."tdgal_img SET noaff='0' WHERE id='$id'"))
       redirect_url($ThisRedo."&subop=viewarbo");
+}
+
+function ValidImgBatch($imgidsv,$go) {
+   global $ThisFile, $NPDS_Prefix, $ModPath, $ThisRedo, $imgidsv;
+   $nbval=count($imgidsv);
+   $imgtoval='';
+   foreach ($imgidsv as $v_id) {
+      $imgtoval .= 'imgidsv[]='.$v_id.'&';
+   }
+   if (empty($go))
+      echo '
+      <div class="alert alert-success lead">'.gal_translate("Vous allez valider").' '.$nbval.' '.gal_translate("image(s)").'</div>
+      <a class="btn btn-outline-success btn-sm mr-2" href="'.$ThisFile.'&amp;subop=valimgbatch&amp;'.$imgtoval.'go=true">'.gal_translate("Confirmer").'</a>
+      <a class="btn btn-outline-secondary btn-sm" href="'.$ThisFile.'">'.gal_translate("Annuler").'</a>';
+   else
+      foreach ($imgidsv as $v_id) {
+         sql_query("UPDATE ".$NPDS_Prefix."tdgal_img SET noaff='0' WHERE id='$v_id'");
+      }
 }
 
 function Edit($type,$id) {
@@ -2147,7 +2261,7 @@ function img_geolocalisation($lat,$long,$multi){
           src: "modules/npds_galerie/npds_galerie.png"
         }),
         text: new ol.style.Text({
-          text: "Image",
+          text: "'.gal_translate("Image").'",
           font: "18px sans-serif",
           fill: new ol.style.Fill({color: "white"}),
           stroke: new ol.style.Stroke({color: "rgba(0, 0, 0, 0)", width: 0.1}),

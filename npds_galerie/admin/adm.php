@@ -141,6 +141,9 @@ if ($admin) {
    case 'delimgbatch' :
      DelImgBatch($imgids,$go);
      break;
+   case 'valimgbatch' :
+     ValidImgBatch($imgidsv,$go);
+     break;
    case 'validimg' :
      DoValidImg($imgid);
      break;
