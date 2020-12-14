@@ -1088,13 +1088,10 @@ function select_arbo($sel) {
       $sql_gal = "SELECT * FROM ".$NPDS_Prefix."tdgal_gal WHERE 1 ".$sqlnoadm."";
       // CATEGORIE
       while ($row_cat = sql_fetch_row($sql_cat)) {
-      
          $ibid.='<optgroup label="'.stripslashes($row_cat[2]).'">';
          $queryX = sql_query("SELECT id, nom, acces FROM ".$NPDS_Prefix."tdgal_gal WHERE cid='".$row_cat[0]."' ORDER BY nom ASC");
-
          while ($rowX_gal = sql_fetch_row($queryX)) {
             if ($rowX_gal[0] == $sel) $IsSelected = ' selected'; else $IsSelected = '';
-
             switch ($rowX_gal[2]) {
                //case -127: $af=true; break;
               // case 1: $af=$icondroits[1]; break;
@@ -1195,13 +1192,15 @@ function PrintFormImgs() {
       }
       while($i<=5);
    echo '
-            <div class="form-group">
-               <button class="btn btn-primary" type="submit">'.gal_translate("Envoyer").'</button>
+                  <div class="form-group">
+                     <button class="btn btn-primary" type="submit">'.gal_translate("Envoyer").'</button>
+                  </div>
+               </form>
             </div>
-         </form>
-      </div>
-      <div class="col-md-6 align-self-center">
-        '.img_geolocalisation('0','0','1').'
+            <div class="col-md-6 align-self-center">
+              '.img_geolocalisation('0','0','1').'
+            </div>
+         </div>
       </div>
    </div>
    <script type="text/javascript">
@@ -1301,7 +1300,7 @@ function AddImgs($imggal,$newcard1,$newcard2,$newcard3,$newcard4,$newcard5,$newd
                   @CreateThumb($newfilename, "modules/$ModPath/imgs/", "modules/$ModPath/mini/", $MaxSizeThumb, $filename_ext);
                }
                if (sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES ('','$imggal','$newfilename','$newtit','','0','1','$lat','$long')")) {
-                  echo '<div class="alert alert-info" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Photo(s) envoyée(s) à la validation du webmaster").' : '.$origin_filename.'</div>';
+                  echo '<div class="alert alert-info" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Image").' '.gal_translate("envoyée à la validation du webmaster").' : '.$origin_filename.'</div>';
                   $soumission=true;
                } else {
                   echo '<div class="alert alert-danger" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Impossible d'ajouter l'image à la BDD").' : '.$origin_filename.'</span></div>';
