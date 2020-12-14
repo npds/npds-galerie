@@ -88,6 +88,7 @@ function gal_translate($phrase) {
       case "Enregistrement supprimé": $tmp = "Datensatz gelöscht"; break;
       case "Envoyer une E-carte": $tmp = "Als E-Card senden"; break;
       case "Envoyer": $tmp = "Senden"; break;
+      case "envoyée à la validation du webmaster": $tmp = "für Webmaster Validierung gesendet"; break;
       case "Erreur lors de l'ajout de la catégorie": $tmp = "Fehler beim Hinzufügen der Kategorie"; break;
       case "Erreur lors de l'ajout de la galerie": $tmp = "Fehler beim Hinzufügen der Galerie"; break;
       case "Erreur lors de l'ajout de la sous-catégorie": $tmp = "Fehler beim Hinzufügen der Unterkategorie"; break;
@@ -112,6 +113,7 @@ function gal_translate($phrase) {
       case "Image géoréférencée": $tmp = "Georeferenzierte Bild"; break;
       case "Images vues": $tmp = "Angezeigte Bilder"; break;
       case "Images": $tmp = "Bilder"; break;
+      case "image(s)": $tmp = "bild(er)"; break;
       case "Import images": $tmp = "Bilder importieren"; break;
       case "Importer": $tmp = "Importieren"; break;
       case "Impossible d'ajouter l'image en BDD": $tmp = "Das Bild kann nicht in die Datenbank eingefügt werden"; break;
@@ -186,6 +188,7 @@ function gal_translate($phrase) {
       case "Votre E-carte a été envoyée": $tmp = "Ihre E-Card wurde gesendet"; break;
       case "Votre E-carte n'a pas été envoyée": $tmp = "Ihre E-Card wurde nicht gesendet."; break;
       case "Votre nom": $tmp = "Ihr Name"; break;
+      case "Vous allez supprimer": $tmp = "Sie gehen zu löschen"; break;
       case "Vous allez supprimer la catégorie": $tmp = "Sie werden die Kategorie löschen"; break;
       case "Vous allez supprimer la galerie": $tmp = "Sie werden die Galerie löschen"; break;
       case "Vous allez supprimer la sous-catégorie": $tmp = "Sie werden die Unterkategorie löschen"; break;
