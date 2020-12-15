@@ -1443,6 +1443,8 @@ switch ($cartyp) {
    //<![CDATA[
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
+   if (typeof ol=="undefined")
+      $("head").append($("<script />").attr({"type":"text/javascript","src":"/lib/ol/ol.js"}));
    $(function () {
       //==>  affichage des coordonnées à revoir pour réinverser ....
          var mousePositionControl = new ol.control.MousePosition({
@@ -1452,7 +1454,6 @@ switch ($cartyp) {
            undefinedHTML: "&nbsp;"
          });
       //<==
-      
       var 
       iconimg = new ol.style.Style({
         image: new ol.style.Icon({
@@ -1722,8 +1723,7 @@ document.getElementById("export-png").addEventListener("click", function () {
 
    });
    //]]>
-</script>
-<script type="text/javascript" src="lib/ol/ol.js"></script>';
+</script>';
 }
 
 function img_geolocalisation($lat,$long,$multi){
@@ -1785,6 +1785,8 @@ function img_geolocalisation($lat,$long,$multi){
    //<![CDATA[
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
+   if (typeof ol=="undefined")
+      $("head").append($("<script />").attr({"type":"text/javascript","src":"/lib/ol/ol.js"}));
    $(function () {
       //==>  affichage des coordonnées à revoir pour réinverser ....
          var mousePositionControl = new ol.control.MousePosition({
@@ -1972,8 +1974,7 @@ function img_geolocalisation($lat,$long,$multi){
    $(".ol-full-screen-false, .ol-rotate-reset, .ol-attribution button[title]").tooltip({placement: "left", container:"#mapol"});
    });
    //]]>
-</script>
-<script type="text/javascript" src="lib/ol/ol.js"></script>';
+</script>';
 return $affi;
 }
 

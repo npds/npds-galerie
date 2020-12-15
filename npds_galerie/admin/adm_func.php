@@ -371,7 +371,7 @@ function PrintFormImgs() {
    while($i<=5);
    echo '
             <div class="form-group">
-               <button class="btn btn-outline-primary" type="submit">'.gal_translate("Ajouter").'</button>
+               <button class="btn btn-primary" type="submit">'.gal_translate("Ajouter").'</button>
             </div>
          </form>
       </div>
@@ -2241,6 +2241,8 @@ function img_geolocalisation($lat,$long,$multi){
    //<![CDATA[
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
+   if (typeof ol=="undefined")
+      $("head").append($("<script />").attr({"type":"text/javascript","src":"/lib/ol/ol.js"}));
    $(function () {
       //==>  affichage des coordonnées à revoir pour réinverser ....
          var mousePositionControl = new ol.control.MousePosition({
@@ -2327,8 +2329,7 @@ function img_geolocalisation($lat,$long,$multi){
                offsetY:20
             })
          })
-      )})
-      ';
+      )})';
    else
       $affi .= '
       var pointGeoref = new ol.Feature({
@@ -2429,8 +2430,7 @@ function img_geolocalisation($lat,$long,$multi){
    $(".ol-full-screen-false, .ol-rotate-reset, .ol-attribution button[title]").tooltip({placement: "left", container:"#mapol"});
    });
    //]]>
-</script>
-<script type="text/javascript" src="lib/ol/ol.js"></script>';
+</script>';
 return $affi;
 }
 
