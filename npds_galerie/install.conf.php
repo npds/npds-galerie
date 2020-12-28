@@ -69,6 +69,8 @@ $sql = array("CREATE TABLE ".$NPDS_Prefix."tdgal_cat (
   view int(11) NOT NULL default '0',
   ordre int(11) NOT NULL default '0',
   noaff int(1) unsigned default '0',
+  img_lat varchar(11) DEFAULT NULL,
+  img_long varchar(11) DEFAULT NULL,
   PRIMARY KEY (id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
 "CREATE TABLE ".$NPDS_Prefix."tdgal_vot (
