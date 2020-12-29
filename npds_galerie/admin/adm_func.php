@@ -850,10 +850,12 @@ function PrintArbo() {
                   <label class="custom-control-label" for="val_'.$i.'"><i class="fas fa-check text-primary align-middle"></i></label>
                </div>';
          $affgaltemp.= '
-               <div class="text-center">
-                  <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=one-img&amp;galid=-1&amp;pos='.$rowZ_img[0].'" target="_blank"><img class="img-fluid rounded mb-1" src="modules/'.$ModPath.'/mini/'.$rowZ_img[2].'" alt="'.$rowZ_img[3].'" data-toggle="tooltip" data-placement="top"  title="'.$rowZ_img[3].'" /></a><br />
-                  <small>ID : '.$rowZ_img[2].'</small>
-               </div>
+               <button class="btn" type="button" data-toggle="modal" data-target="#modal_'.$i.'">
+                  <div class="text-center">
+                     <img class="img-fluid rounded mb-1 tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$rowZ_img[2].'" alt="'.$rowZ_img[3].'" data-placement="top" title="'.$rowZ_img[3].'" /><br />
+                     <small>ID : '.$rowZ_img[2].'</small>
+                  </div>
+               </button>
                <div class="mt-2">
                   '.stripslashes($rowZ_img[3]).'
                </div>
@@ -867,7 +869,18 @@ function PrintArbo() {
          $affgaltemp.= '
                   <a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$rowZ_img[0].'"><i class="fas fa-trash fa-2x text-danger align-middle" title="'.gal_translate("Effacer").'" data-toggle="tooltip"></i></a>
                </div>
-            </div>';
+            </div>
+            
+               <div class="modal fade" id="modal_'.$i.'" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal_'.$i.'">
+                  <div class="modal-dialog" role="document">
+                     <div class="modal-content">
+                        <img class="img-fluid card-img-top" src="modules/'.$ModPath.'/imgs/'.$rowZ_img[2].'" alt="'.$rowZ_img[3].'" />
+                     </div>
+                  </div>
+               </div>
+
+            
+            ';
          $i++;
      }
      $affgaltemp.= '
@@ -2068,7 +2081,7 @@ function massimport($imggal, $descri) {
             @CreateThumb($newfilename, "modules/$ModPath/import/", "modules/$ModPath/mini/", $MaxSizeThumb, $filename_ext);
          }
       echo '<ul class="list-group">';
-         if (sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES ('','$imggal','$newfilename','$descri','','0','0')")) {
+         if (sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES ('','$imggal','$newfilename','$descri','','0','0','','')")) {
             echo '<li class="list-group-item list-group-item-success mb-1">'.gal_translate("Image ajoutée avec succès").' : '.$file.'</li>';
             $i++;
          } else {
@@ -2136,7 +2149,7 @@ function MassExportCat($cat) {
             while ($rowZ_img = sql_fetch_row($queryZ)) {
                copy("modules/$ModPath/mini/$rowZ_img[2]","modules/$ModPath/export/mini/$rowZ_img[2]");
                copy("modules/$ModPath/imgs/$rowZ_img[2]","modules/$ModPath/export/imgs/$rowZ_img[2]");
-               $ibid.="INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES (NULL, $rowX_gal[0], '".htmlentities($rowZ_img[2])."', '".htmlentities($rowZ_img[3])."', 0, $rowZ_img[5], 0);\n";
+               $ibid.="INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES (NULL, $rowX_gal[0], '".htmlentities($rowZ_img[2])."', '".htmlentities($rowZ_img[3])."', 0, $rowZ_img[5], 0,$rowZ_img[7],$rowZ_img[8]);\n";
                $nb_img++;
             }
          }
@@ -2154,7 +2167,7 @@ function MassExportCat($cat) {
                while ($rowZ_img = sql_fetch_row($queryZ)) {
                   copy("modules/$ModPath/mini/$rowZ_img[2]","modules/$ModPath/export/mini/$rowZ_img[2]");
                   copy("modules/$ModPath/imgs/$rowZ_img[2]","modules/$ModPath/export/imgs/$rowZ_img[2]");
-                  $ibid.="INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES (NULL, $row_gal[0], '".htmlentities($rowZ_img[2])."', '".htmlentities($rowZ_img[3])."', 0, $rowZ_img[5], 0);\n";
+                  $ibid.="INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES (NULL, $row_gal[0], '".htmlentities($rowZ_img[2])."', '".htmlentities($rowZ_img[3])."', 0, $rowZ_img[5], 0,$rowZ_img[7],$rowZ_img[8]);\n";
                   $nb_img++;
                }
             }
@@ -2189,7 +2202,7 @@ function img_geolocalisation($lat,$long,$multi){
    if (($lat != '') and ($long != ''))
       $img_point .= 'img_features.push([['.$long.','.$lat.']]);';
 
-   $cartyp='sat-google'; // choix manuel du provider ready4admin interface
+   $cartyp=''; // choix manuel du provider ready4admin interface
    $source_fond=''; $max_r=''; $min_r='';$layer_id='';
    switch ($cartyp) {
       case 'Road': case 'Aerial': case 'AerialWithLabels':
@@ -2239,7 +2252,8 @@ function img_geolocalisation($lat,$long,$multi){
    $affi .=  '
 <script type="text/javascript">
    //<![CDATA[
-   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
+   if (!$("link[href=\'/lib/ol/ol.css\']").length)
+      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
    if (typeof ol=="undefined")
       $("head").append($("<script />").attr({"type":"text/javascript","src":"/lib/ol/ol.js"}));
@@ -2266,8 +2280,8 @@ function img_geolocalisation($lat,$long,$multi){
           text: "'.gal_translate("Image").'",
           font: "18px sans-serif",
           fill: new ol.style.Fill({color: "white"}),
-          stroke: new ol.style.Stroke({color: "rgba(0, 0, 0, 0)", width: 0.1}),
-          offsetY:20
+          stroke: new ol.style.Stroke({color: "rgba(0, 0, 0, 1)", width: 1.5}),
+          offsetY:22
         })
       }),
       popup = new ol.Overlay({
@@ -2325,8 +2339,8 @@ function img_geolocalisation($lat,$long,$multi){
                text: "Image"+feat.id_.substr(2),
                font: "18px sans-serif",
                fill: new ol.style.Fill({color: "white"}),
-               stroke: new ol.style.Stroke({color: "rgba(0, 0, 0, 0)", width: 0.1}),
-               offsetY:20
+               stroke: new ol.style.Stroke({color: "rgba(0, 0, 0, 1)", width: 1.5}),
+               offsetY:22
             })
          })
       )})';
@@ -2338,20 +2352,28 @@ function img_geolocalisation($lat,$long,$multi){
       src_georef.addFeature(pointGeoref);';
    $affi .= '
       var georef_marker = new ol.layer.Vector({
-        source: src_georef,
+         source: src_georef,
          style: iconimgs
       });
+      var source = new ol.source.Stamen({layer:"toner"});
+      var overviewMapControl = new ol.control.OverviewMap({
+        layers: [
+          new ol.layer.Tile({
+            source: source,
+          }) ],
+      });
 
-      var src_fond = '.$source_fond.',
-          minR='.$min_r.',
-          maxR='.$max_r.',
-          layer_id="'.$layer_id.'",
-          fond_carte = new ol.layer.Tile({
+      var
+         src_fond = '.$source_fond.',
+         minR='.$min_r.',
+         maxR='.$max_r.',
+         layer_id="'.$layer_id.'",
+         fond_carte = new ol.layer.Tile({
             id:layer_id,
             source: src_fond,
             minResolution: minR,
             maxResolution: maxR
-          }),
+         }),
          attribution = new ol.control.Attribution({collapsible: true}),
          zoomslider = new ol.control.ZoomSlider(),
          view = new ol.View({';
@@ -2374,7 +2396,7 @@ function img_geolocalisation($lat,$long,$multi){
          interactions: new ol.interaction.defaults({
             constrainResolution: true, onFocusOnly: true
          }).extend([select,translate]),
-         controls: new ol.control.defaults({attribution: false}).extend([attribution, new ol.control.FullScreen({source: "map-wrapper",}), mousePositionControl, new ol.control.ScaleLine, zoomslider]),
+         controls: new ol.control.defaults({attribution: false}).extend([attribution, new ol.control.FullScreen({source: "map-wrapper",}), mousePositionControl, new ol.control.ScaleLine, zoomslider, overviewMapControl]),
          target: document.getElementById("mapol"),
          layers: [
             fond_carte,';
@@ -2423,11 +2445,22 @@ function img_geolocalisation($lat,$long,$multi){
         map.getTarget().style.cursor = hit ? "pointer" : "";
       });
 //<== changement etat pointeur sur les markers
+';
+
+   $affi .= file_get_contents('modules/geoloc/include/ol-dico.js');
+   $affi .='
+      const targ = map.getTarget();
+      const lang = targ.lang;
+      for (var i in dic) {
+         if (dic.hasOwnProperty(i)) {
+            $("#mapol "+dic[i].cla).prop("title", dic[i][lang]);
+         }
+      }
 
    $(\'[data-toggle="tooltip"]\').tooltip({container:"#mapol"});
    $("#ol_tooltip").tooltip({container:"#mapol"});
-   $(".ol-zoom-in, .ol-zoom-out").tooltip({placement: "right", container:"#mapol"});
-   $(".ol-full-screen-false, .ol-rotate-reset, .ol-attribution button[title]").tooltip({placement: "left", container:"#mapol"});
+   $("#mapol .ol-zoom-in, #mapol .ol-zoom-out, #mapol .ol-overviewmap ").tooltip({placement: "right", container:"#mapol"});
+   $("#mapol .ol-full-screen-false, #mapol .ol-rotate-reset, #mapol .ol-attribution button[title]").tooltip({placement: "left", container:"#mapol"});
    });
    //]]>
 </script>';

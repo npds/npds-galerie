@@ -257,8 +257,9 @@ function ViewGal($galid, $page){
            $ibid = ReducePic($row[2],stripslashes($row[3]),$MaxSizeThumb);
       //==> geoloc
       if (($row[7] != '') or ($row[8] != '')) {
-         $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($row[3]).'","'.$row[4].'"]);';
-         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="This image is georeferenced." alt="This image is georeferenced." />';
+         $desc = trim(preg_replace('/\s\s+/', ' ', $row[3]));
+         $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($desc).'","'.$row[4].'"]);';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" />';
       }
       //<== geoloc
         echo '
@@ -825,7 +826,8 @@ function ViewAlea() {
       $img_geotag='';
       //==> geoloc
       if (($row[7] != '') or ($row[8] != '')) {
-         $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($row[3]).'","'.$row[4].'"]);';
+         $desc = trim(preg_replace('/\s\s+/', ' ', $row[3]));
+         $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($desc[3]).'","'.$row[4].'"]);';
          $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" />';
       }
       //<== geoloc
