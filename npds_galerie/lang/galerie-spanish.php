@@ -96,6 +96,7 @@ function gal_translate($phrase) {
       case "Export catégorie": $tmp = "Exportar categoría"; break;
       case "Exporter": $tmp = "Exportar"; break;
       case "Filtrer les images": $tmp = "Filtrar imágenes"; break;
+      case "Fonctions": $tmp = "Funciones"; break;
       case "fois": $tmp = "vez(ces)"; break;
       case "Galerie non supprimée": $tmp = "Galería no eliminada"; break;
       case "Galerie Privée, connectez vous": $tmp = " Galeria privado, Conectarle"; break;
