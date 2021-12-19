@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2020 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2021 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -59,8 +59,8 @@ $image=$row[2];
 $comment=$row[3];
 list($gallery)=sql_fetch_row(sql_query("SELECT nom FROM ".$NPDS_Prefix."tdgal_gal WHERE id='$row[1]'"));
 
-$ibid ='<img class="img-thumbnail n-irl" src="modules/'.$ModPath.'/imgs/'.$image.'" data-toggle="tooltip" data-placement="bottom" title="'.gal_translate("Cliquer sur image").'" />';
-$ibidg ='<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/imgs/'.$image.'" />';
+$ibid ='<img class="img-thumbnail n-irl" src="modules/'.$ModPath.'/imgs/'.$image.'" data-toggle="tooltip" data-placement="bottom" title="'.gal_translate("Cliquer sur image").'" loading="lazy" />';
+$ibidg ='<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/imgs/'.$image.'" loading="lazy" />';
 $content ='';
 if ($image!='') {
    $content .= '
@@ -78,4 +78,7 @@ if ($image!='') {
    }
 else
    $content .= '<p class="card-text"><i class="fa fa-info-circle mr-2"></i>'.gal_translate("Aucune galerie").'</p>';
+if($admin)
+   $content .= '<div class="text-right"><a class="tooltipbyclass" href="admin.php?op=Extend-Admin-SubModule&amp;ModPath=npds_galerie&amp;ModStart=admin/adm" title="[french]Administration[/french][english]Administration[/english][chinese]&#34892;&#25919;[/chinese][spanish]Administraci&oacute;n[/spanish][german]Verwaltung[/german]" data-placement="left"><i class="fa fa-cogs fa-lg ml-1"></i></a></div>';
+$content = aff_langue($content);
 ?>
