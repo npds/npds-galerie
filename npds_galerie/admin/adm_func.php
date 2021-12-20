@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2020 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2021 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -16,6 +16,7 @@
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
 /* v 3.2                                                                */
 /************************************************************************/
+include 'modules/geoloc/geoloc_conf.php';
 
 function PrintFormCat() {
    global $ModPath, $ModStart, $NPDS_Prefix, $ThisFile;
@@ -200,38 +201,67 @@ function AddNewGal($galcat,$newgal,$acces) {
          $regdate = time()+((integer)$gmt*3600);
          if ($add = sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_gal VALUES ('0','$galcat','$newgal','$regdate','$acces')")) {
             $new_gal_id = sql_last_id();
-//   echo '<h4><i class="fa fa-plus"></i> '.gal_translate("Ajouter des photos à cette nouvelle galerie").'</h4>';
    echo '
-   <form enctype="multipart/form-data" method="post" action="'.$ThisFile.'" name="FormImgs" lang="'.language_iso(1,'','').'">
-      <input type="hidden" name="subop" value="addimgs" />
-      <input type="hidden" name="imggal" value="'.$new_gal_id.'" />';
-
+      <h3 class="my-3">'.gal_translate("Images").'</h3>
+      <h4>'.gal_translate("Ajouter des photos à cette nouvelle galerie").'</h4>
+      <hr />
+      <div class="row">
+         <div class="col-md-6">
+            <form enctype="multipart/form-data" method="post" action="'.$ThisFile.'" id="formimgs" name="FormImgs" lang="'.language_iso(1,'','').'">
+            <input type="hidden" name="subop" value="addimgs" />
+            <input type="hidden" name="imggal" value="'.$new_gal_id.'" />';
    $i=1;
    do {
       echo '
-      <div class="form-group">
-         <label class="">'.gal_translate("Image").' '.$i.'</label>
-         <div class="input-group mb-2 mr-sm-2">
-            <div class="input-group-prepend" onclick="reset2($(\'#newcard'.$i.'\'),'.$i.');">
-               <div class="input-group-text"><i class="fas fa-sync"></i></div>
+            <div class="form-group mb-0">
+               <label class="font-weight-bolder">'.gal_translate("Image").' '.$i.'</label>
+               <div class="input-group mb-2 mr-sm-2">
+                  <div class="input-group-prepend" onclick="reset2($(\'#newcard'.$i.'\'),'.$i.');">
+                     <div class="input-group-text"><i class="fas fa-redo-alt"></i></div>
+                  </div>
+               <div class="custom-file">
+                  <input type="file" class="custom-file-input" name="newcard'.$i.'" id="newcard'.$i.'" />
+                  <label id="lab'.$i.'" class="custom-file-label" for="newcard'.$i.'">'.gal_translate("Sélectionner votre image").'</label>
+               </div>
             </div>
-            <div class="custom-file">
-               <input type="file" class="custom-file-input" name="newcard'.$i.'" id="newcard'.$i.'" />
-               <label id="lab'.$i.'" class="custom-file-label" for="newcard'.$i.'">'.gal_translate("Sélectionner votre image").'</label>
+         <div class="form-group mb-2">
+            <label class="sr-only" for="newdesc'.$i.'">'.gal_translate("Description").'</label>
+            <input type="text" class="form-control" id="newdesc'.$i.'" name="newdesc[]" placeholder="'.gal_translate("Description").'">
+         </div>
+         <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+               <label for="imglat'.$i.'" class="sr-only">'.gal_translate("Latitude").'</label>
+               <div class="input-group mb-2 mr-sm-2">
+                  <div class="input-group-prepend">
+                     <div class="input-group-text jsgeo'.$i.' jsgeolat" title="'.gal_translate("Latitude").'" data-toggle="tooltip"><i class="fa fa-globe fa-lg"></i></div>
+                  </div>
+                  <input type="text" class="form-control js-lat" name="imglat[]" id="imglat'.$i.'" placeholder="'.gal_translate("Latitude").'" />
+               </div>
+            </div>
+             <div class="form-group col-md-6 mb-0">
+               <label for="imglong'.$i.'" class="sr-only">'.gal_translate("Longitude").'</label>
+               <div class="input-group mb-2 mr-sm-2">
+                  <div class="input-group-prepend">
+                     <div class="input-group-text jsgeo'.$i.' jsgeolon" title="'.gal_translate("Longitude").'" data-toggle="tooltip"><i class="fa fa-globe fa-lg"></i></div>
+                  </div>
+                  <input type="text" class="form-control js-long" name="imglong[]" id="imglong'.$i.'" placeholder="'.gal_translate("Longitude").'"/>
+               </div>
             </div>
          </div>
-      </div>
-      <div class="form-group">
-         <input type="text" class="form-control" id="newdesc'.$i.'"  name="newdesc'.$i.'" placeholder="'.gal_translate("Description").'">
       </div>';
       $i++;
    }
    while($i<=5);
    echo '
-      <div class="form-group">
-         <button class="btn btn-outline-primary" type="submit">'.gal_translate("Ajouter").'</button>
+      <div class="form-group mt-2">
+         <button class="btn btn-primary" type="submit">'.gal_translate("Ajouter").'</button>
       </div>
    </form>
+   </div>
+   <div class="col-md-6 align-self-center">
+        '.img_geolocalisation('0','0','1').'
+      </div>
+   </div>
    <script type="text/javascript">
       //<![CDATA[
          $(".custom-file-input").on("change",function(){
@@ -245,6 +275,50 @@ function AddNewGal($galcat,$newgal,$acces) {
          };
       //]]>
    </script>';
+      $fv_parametres ='
+      "imglat[]" : {
+         selector: ".js-lat",
+         validators: {
+            regexp: {
+               regexp: /^[-]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/,
+               message: "La latitude doit être entre -90.0 et 90.0 avec un point en séparateur numérique"
+            },
+            numeric: {
+                thousandsSeparator: "",
+                decimalSeparator: "."
+            },
+            between: {
+               min: -90,
+               max: 90,
+               message: "La latitude doit être entre -90.0 et 90.0"
+            }
+         }
+      },
+      "imglong[]" : {
+         selector: ".js-long",
+         validators: {
+            regexp: {
+               regexp: /^[-]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/,
+               message: "La longitude doit être entre -180.0 et 180.0 avec un point en séparateur numérique"
+            },
+            numeric: {
+                thousandsSeparator: "",
+                decimalSeparator: "."
+            },
+            between: {
+               min: -180,
+               max: 180,
+               message: "La longitude doit être entre -180.0 et 180.0"
+            }
+         }
+      },
+   ';
+   $arg1 = '
+   var formulid = ["formimgs"]
+//   inpandfieldlen("newdesc",255);';
+   adminfoot('fv',$fv_parametres,$arg1,'1');
+   
+   
          } else
             echo '<div class="alert alert-danger">'.gal_translate("Erreur lors de l'ajout de la galerie").'</div>';
       }
@@ -330,36 +404,36 @@ function PrintFormImgs() {
    $i=1;
    do {
       echo '
-            <div class="form-group">
+            <div class="form-group mb-0">
                <label class="font-weight-bolder">'.gal_translate("Image").' '.$i.'</label>
-               <div class="input-group mb-3 mr-sm-2">
+               <div class="input-group mb-2 mr-sm-2">
                   <div class="input-group-prepend" onclick="reset2($(\'#newcard'.$i.'\'),'.$i.');">
-                     <div class="input-group-text"><i class="fas fa-sync"></i></div>
+                     <div class="input-group-text"><i class="fas fa-redo-alt"></i></div>
                   </div>
                   <div class="custom-file">
                      <input type="file" class="custom-file-input" name="newcard'.$i.'" id="newcard'.$i.'" />
                      <label id="lab'.$i.'" class="custom-file-label" for="newcard'.$i.'">'.gal_translate("Sélectionner votre image").'</label>
                   </div>
                </div>
-               <div class="form-group">
+               <div class="form-group mb-2">
                   <label class="sr-only" for="newdesc'.$i.'">'.gal_translate("Description").'</label>
-                  <input type="text" class="form-control" id="newdesc'.$i.'"  name="newdesc[]" placeholder="'.gal_translate("Description").'">
+                  <input type="text" class="form-control" id="newdesc'.$i.'" name="newdesc[]" placeholder="'.gal_translate("Description").'">
                </div>
                <div class="form-row">
-                  <div class="form-group col-md-6">
+                  <div class="form-group col-md-6 mb-0">
                      <label for="imglat'.$i.'" class="sr-only">'.gal_translate("Latitude").'</label>
                      <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend">
-                           <div class="input-group-text"><i class="fa fa-globe fa-lg"></i></div>
+                           <div class="input-group-text jsgeo'.$i.' jsgeolat" title="'.gal_translate("Latitude").'" data-toggle="tooltip"><i class="fa fa-globe fa-lg"></i></div>
                         </div>
                         <input type="text" class="form-control js-lat" name="imglat[]" id="imglat'.$i.'" placeholder="'.gal_translate("Latitude").'" />
                      </div>
                   </div>
-                   <div class="form-group col-md-6">
+                   <div class="form-group col-md-6 mb-0">
                      <label for="imglong'.$i.'" class="sr-only">'.gal_translate("Longitude").'</label>
                      <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend">
-                           <div class="input-group-text"><i class="fa fa-globe fa-lg"></i></div>
+                           <div class="input-group-text jsgeo'.$i.' jsgeolon" title="'.gal_translate("Longitude").'" data-toggle="tooltip"><i class="fa fa-globe fa-lg"></i></div>
                         </div>
                         <input type="text" class="form-control js-long" name="imglong[]" id="imglong'.$i.'" placeholder="'.gal_translate("Longitude").'"/>
                      </div>
@@ -370,7 +444,7 @@ function PrintFormImgs() {
    }
    while($i<=5);
    echo '
-            <div class="form-group">
+            <div class="form-group mt-2">
                <button class="btn btn-primary" type="submit">'.gal_translate("Ajouter").'</button>
             </div>
          </form>
@@ -817,7 +891,7 @@ function PrintArbo() {
 
    $queryZ = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='-1' ORDER BY id");
    $nb_img = sql_num_rows($queryZ);
-   $j=0;$i=0; $affgaltemp='';
+   $j=0;$i=0; $affgaltemp=''; $img_geotag='';
    if ($nb_img == 0)
       $affgaltemp.= '<p class="card-text"><i class="fa fa-info-circle mr-2"></i>'.gal_translate("Vide").'</p>';
    else {
@@ -837,6 +911,10 @@ function PrintArbo() {
       <div class="row px-3">';
       while ($rowZ_img = sql_fetch_row($queryZ)) {
          if ($rowZ_img[6]==1)  {$cla=' alert-danger '; $j++;} else $cla='alert-secondary';
+         if (($rowZ_img[7] != '') and ($rowZ_img[8] != ''))
+            $img_geotag = '<img class="geotag tooltipbyclass float-left mt-1" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
+         else
+            $img_geotag ='';
          $affgaltemp.= '
             <div class="col-lg-3 col-sm-4 border rounded p-1 my-2 '.$cla.'">
                <div class="custom-control custom-checkbox d-inline">
@@ -852,8 +930,8 @@ function PrintArbo() {
          $affgaltemp.= '
                <button class="btn" type="button" data-toggle="modal" data-target="#modal_'.$i.'">
                   <div class="text-center">
-                     <img class="img-fluid rounded mb-1 tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$rowZ_img[2].'" alt="'.$rowZ_img[3].'" data-placement="top" title="'.$rowZ_img[3].'" /><br />
-                     <small>ID : '.$rowZ_img[2].'</small>
+                     <img class="img-fluid rounded mb-1 tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$rowZ_img[2].'" alt="'.$rowZ_img[3].'" data-placement="top" title="'.$rowZ_img[3].'" loading="lazy" /><br />
+                     '.$img_geotag.'<small class="small">'.$rowZ_img[2].'</small>
                   </div>
                </button>
                <div class="mt-2">
@@ -870,17 +948,13 @@ function PrintArbo() {
                   <a class="btn btn-sm" href="'.$ThisFile.'&amp;subop=delimg&amp;imgid='.$rowZ_img[0].'"><i class="fas fa-trash fa-2x text-danger align-middle" title="'.gal_translate("Effacer").'" data-toggle="tooltip"></i></a>
                </div>
             </div>
-            
-               <div class="modal fade" id="modal_'.$i.'" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal_'.$i.'">
-                  <div class="modal-dialog" role="document">
-                     <div class="modal-content">
-                        <img class="img-fluid card-img-top" src="modules/'.$ModPath.'/imgs/'.$rowZ_img[2].'" alt="'.$rowZ_img[3].'" />
-                     </div>
+            <div class="modal fade" id="modal_'.$i.'" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal_'.$i.'">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <img class="img-fluid card-img-top" src="modules/'.$ModPath.'/imgs/'.$rowZ_img[2].'" alt="'.$rowZ_img[3].'" loading="lazy" />
                   </div>
                </div>
-
-            
-            ';
+            </div>';
          $i++;
      }
      $affgaltemp.= '
@@ -1028,7 +1102,11 @@ function PrintArbo() {
                   <div class="row px-3">';
             $affcatgalimg='';
             while ($rowZ_img = sql_fetch_row($queryZ)) {
-               if ($rowZ_img[6]==1) $cla=' alert-danger '; else $cla='alert-secondary';
+               $cla = $rowZ_img[6]==1 ? ' alert-danger ' : 'alert-secondary';
+               if (($rowZ_img[7] != '') and ($rowZ_img[8] != ''))
+                  $img_geotag = '<img class="geotag tooltipbyclass float-right mt-1" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
+               else
+                  $img_geotag ='';
                $affcatgalimg .= '
                   <div class="col-md-3 col-sm-4 border rounded p-1 my-2 '.$cla.'">';
                if($n_ivgc>1)
@@ -1044,16 +1122,17 @@ function PrintArbo() {
                         <input form="delbatch'.$rowX_gal[0].'" type="checkbox" class="custom-control-input is-invalid ckcgid_'.$rowX_gal[0].'" id="deligc_'.$rowZ_img[0].'" name="imgids[]" value="'.$rowZ_img[0].'" />
                         <label class="custom-control-label" for="deligc_'.$rowZ_img[0].'"><i class="fas fa-trash text-danger"></i></label>
                      </div>';
+               $affcatgalimg .=$img_geotag;
                if ($rowZ_img[6]==1)
                   $affcatgalimg .= '
                      <div class="text-center form-group mt-2 mb-1">
-                        <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=one-img&amp;galid='.$rowX_gal[0].'&amp;pos='.$rowZ_img[0].'" target="_blank"><img class="img-fluid mb-1" src="modules/'.$ModPath.'/mini/'.$rowZ_img[2].'"  alt="mini/'.$rowZ_img[2].'" data-toggle="tooltip" data-placement="top"  title="mini/'.$rowZ_img[2].'" /></a>
+                        <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=one-img&amp;galid='.$rowX_gal[0].'&amp;pos='.$rowZ_img[0].'" target="_blank"><img class="img-fluid mb-1" src="modules/'.$ModPath.'/mini/'.$rowZ_img[2].'"  alt="mini/'.$rowZ_img[2].'" data-toggle="tooltip" data-placement="top"  title="mini/'.$rowZ_img[2].'" loading="lazy" /></a>
                      </div>';
                else
                   $affcatgalimg .= '
                      <div class="text-center form-group mt-2 mb-1">
                         <a href="javascript: void(0);" onMouseDown="aff_image(\'image'.$rowX_gal[0].'_'.$i.'\',\'modules/'.$ModPath.'/mini/'.$rowZ_img[2].'\');">
-                           <img class="img-fluid mb-1" src="modules/'.$ModPath.'/data/img.png" id="image'.$rowX_gal[0].'_'.$i.'" alt="mini/'.$rowZ_img[2].'" data-toggle="tooltip" data-placement="right" title="mini/'.$rowZ_img[2].'" />
+                           <img class="img-fluid mb-1" src="modules/'.$ModPath.'/data/img.png" id="image'.$rowX_gal[0].'_'.$i.'" alt="mini/'.$rowZ_img[2].'" data-toggle="tooltip" data-placement="right" title="mini/'.$rowZ_img[2].'" loading="lazy" />
                         </a>
                      </div>';
                $affcatgalimg .= '
@@ -1153,7 +1232,11 @@ function PrintArbo() {
                      <div class="row px-3">';
                $affsoucatgalimg='';
                while($row_img = sql_fetch_row($querz)) {
-                  if ($row_img[6]==1) $cla=' alert-danger '; else $cla='alert-secondary';
+                  $cla = $row_img[6]==1 ? ' alert-danger ' : 'alert-secondary';
+                  if (($row_img[7] != '') and ($row_img[8] != ''))
+                     $img_geotag = '<img class="geotag tooltipbyclass float-right mt-1" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
+                  else
+                  $img_geotag ='';
                   $affsoucatgalimg .= '
                         <div class="col-lg-3 col-sm-4 border rounded p-1 my-2 '.$cla.'">
                            <label class="custom-check custom-checkbox">
@@ -1161,16 +1244,18 @@ function PrintArbo() {
                               <input form="delbatch'.$row_gal[0].'" type="checkbox" class="custom-check-input" name="imgids[]" value="'.$row_img[0].'" />
                               <span class="custom-check-indicator bg-danger"></span>
                            </label>';
+                                          $affsoucatgalimg .= $img_geotag;
+
                   if ($row_img[6]==1)
                      $affsoucatgalimg .= '
                            <div class="text-center form-group mb-1">
-                              <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=one-img&amp;galid='.$row_gal[0].'&amp;pos='.$row_img[0].'" target="_blank"><img class="img-fluid mb-1" src="modules/'.$ModPath.'/mini/'.$row_img[2].'" alt="mini/'.$row_img[2].'" data-toggle="tooltip" data-placement="top"  title="mini/'.$row_img[2].'" /></a>
+                              <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=one-img&amp;galid='.$row_gal[0].'&amp;pos='.$row_img[0].'" target="_blank"><img class="img-fluid mb-1" src="modules/'.$ModPath.'/mini/'.$row_img[2].'" alt="mini/'.$row_img[2].'" data-toggle="tooltip" data-placement="top"  title="mini/'.$row_img[2].'" loading="lazy" /></a>
                            </div>';
                   else
                      $affsoucatgalimg .= '
                            <div class="text-center form-group mb-1">
                               <a href="javascript: void(0);" onMouseDown="aff_image(\'image'.$row_gal[0].'_'.$i.'\',\'modules/'.$ModPath.'/mini/'.$row_img[2].'\');">
-                                 <img class="img-fluid mb-1" src="modules/'.$ModPath.'/data/img.png" id="image'.$row_gal[0].'_'.$i.'" alt="mini/'.$row_img[2].'" data-toggle="tooltip" data-placement="right" title="mini/'.$row_img[2].'" />
+                                 <img class="img-fluid mb-1" src="modules/'.$ModPath.'/data/img.png" id="image'.$row_gal[0].'_'.$i.'" alt="mini/'.$row_img[2].'" data-toggle="tooltip" data-placement="right" title="mini/'.$row_img[2].'" loading="lazy" />
                               </a>
                            </div>';
                   $affsoucatgalimg .= '
@@ -1516,7 +1601,7 @@ function EditImg($id) {
                   <label for="imglat" class="">'.gal_translate("Latitude").'</label>
                   <div class="input-group mb-2 mr-sm-2">
                      <div class="input-group-prepend">
-                        <div class="input-group-text"><i class="fa fa-globe fa-lg"></i></div>
+                        <div class="input-group-text jsgeo"><i class="fa fa-globe fa-lg"></i></div>
                      </div>
                      <input type="text" class="form-control" name="imglat" id="imglat" placeholder="'.gal_translate("Latitude").'" value="'.$rowA[3].'"/>
                   </div>
@@ -1525,7 +1610,7 @@ function EditImg($id) {
                   <label for="imglong" class="">'.gal_translate("Longitude").'</label>
                   <div class="input-group mb-2 mr-sm-2">
                      <div class="input-group-prepend">
-                        <div class="input-group-text"><i class="fa fa-globe fa-lg"></i></div>
+                        <div class="input-group-text jsgeo"><i class="fa fa-globe fa-lg"></i></div>
                      </div>
                      <input type="text" class="form-control" name="imglong" id="imglong" placeholder="'.gal_translate("Longitude").'" value="'.$rowA[4].'"/>
                   </div>
@@ -2194,37 +2279,69 @@ function MassExportCat($cat) {
 }
 
 function img_geolocalisation($lat,$long,$multi){
-   include_once('modules/geoloc/geoloc_conf.php');
-   $img_point='';
+   global $nuke_url, $language, $api_key_bing, $api_key_mapbox;
+   include('modules/geoloc/lang/geoloc.lang-'.$language.'.php');
+
    $affi='';
    if($lat=='') $lat=0;
    if($long=='') $long=0;
-   if (($lat != '') and ($long != ''))
-      $img_point .= 'img_features.push([['.$long.','.$lat.']]);';
+   $img_point = 'img_features.push([['.$long.','.$lat.']]);';
+   $date_jour = date('Y-m-d');
+   $fond_provider=array(
+   ['OSM', geoloc_translate("Plan").' (OpenStreetMap)'],
+   ['sat-google', geoloc_translate("Satellite").' (Google maps)'],
+   ['toner', geoloc_translate("Noir et blanc").' (Stamen)'],
+   ['watercolor', geoloc_translate("Dessin").' (Stamen)'],
+   ['terrain', geoloc_translate("Relief").' (Stamen)'],
+   ['modisterra', geoloc_translate("Satellite").' (NASA)'],
+   ['natural-earth-hypso-bathy', geoloc_translate("Relief").' (mapbox)'],
+   ['geography-class', geoloc_translate("Carte").' (mapbox)'],
+   ['Road', geoloc_translate("Plan").' (Bing maps)'],
+   ['Aerial', geoloc_translate("Satellite").' (Bing maps)'],
+   ['AerialWithLabels', geoloc_translate("Satellite").' et label (Bing maps)']
+   );
+   if($api_key_bing=='' and $api_key_mapbox=='') unset($fond_provider[6],$fond_provider[7],$fond_provider[8],$fond_provider[9],$fond_provider[10]);
+   elseif($api_key_bing=='') unset($fond_provider[8],$fond_provider[9],$fond_provider[10]);
+   elseif($api_key_mapbox=='') unset($fond_provider[6],$fond_provider[7]);
 
-   $cartyp=''; // choix manuel du provider ready4admin interface
+   $cartyp=''; // choix manuel du provider
    $source_fond=''; $max_r=''; $min_r='';$layer_id='';
    switch ($cartyp) {
       case 'Road': case 'Aerial': case 'AerialWithLabels':
-         $source_fond='new ol.source.BingMaps({key: "'.$api_key_bing.'",imagerySet: "'.$cartyp.'"})';
+         $source_fond='
+         new ol.source.BingMaps({
+            key: "'.$api_key_bing.'",imagerySet: "'.$cartyp.'"
+         })';
          $max_r='40000';
          $min_r='0';
          $layer_id= $cartyp;
       break;
       case 'natural-earth-hypso-bathy': case 'geography-class':
-         $source_fond=' new ol.source.TileJSON({url: "https://api.tiles.mapbox.com/v4/mapbox.'.$cartyp.'.json?access_token='.$api_key_mapbox.'"})';
+         $source_fond='
+         new ol.source.TileJSON({
+            url: "https://api.tiles.mapbox.com/v4/mapbox.'.$cartyp.'.json?access_token='.$api_key_mapbox.'",
+            attributions: "© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>"
+         })';
          $max_r='40000';
          $min_r='2000';
          $layer_id= $cartyp;
       break;
       case 'sat-google':
-         $source_fond=' new ol.source.XYZ({url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",crossOrigin: "Anonymous", attributions: " &middot; <a href=\"https://www.google.at/permissions/geoguidelines/attr-guide.html\">Map data ©2015 Google</a>"})';
+         $source_fond='
+         new ol.source.XYZ({
+            url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+            crossOrigin: "Anonymous",
+            attributions: " &middot; <a href=\"https://www.google.at/permissions/geoguidelines/attr-guide.html\">Map data ©2015 Google</a>"
+         })';
          $max_r='40000';
          $min_r='0';
          $layer_id= $cartyp;
       break;
       case 'terrain':case 'toner':case 'watercolor':
-         $source_fond='new ol.source.Stamen({layer:"'.$cartyp.'"})';
+         $source_fond='
+         new ol.source.Stamen({
+            layer:"'.$cartyp.'"
+         })';
          $max_r='40000';
          $min_r='0';
          $layer_id= $cartyp;
@@ -2235,82 +2352,154 @@ function img_geolocalisation($lat,$long,$multi){
          $min_r='0';
          $layer_id= 'OSM';
    }
+   $affi .= '
+   <div class="my-3">';
    if($multi!='')
       $affi .= '
-   <div class="my-3">
-      <div id="map-wrapper"  style="height:950px;" class=" my-3">
-         <div id="mapol" class="map" tabindex="20" lang="fr"></div>
-      </div>
-   </div>';
+      <div id="map-wrapper" style="height:950px;" class=" my-3">';
    else
       $affi .= '
-   <div class="my-3">
-      <div id="map-wrapper" class="ol-fullscreen my-3">
-         <div id="mapol" class="map" tabindex="20" lang="fr"></div>
+      <div id="map-wrapper" class="ol-fullscreen my-3">';
+      $affi .= '
+         <div id="mapol" class="map" tabindex="20" lang="'.language_iso(1,0,0).'"></div>
+         <div id="sidebar_loca" class= "collapse show col-sm-4 col-md-3 col-6 px-0">
+            <div id="sb_tools" class="list-group mb-3">
+               <div class="" id="l_sb_tools">
+                  <div class="list-group-item list-group-item-action py-1 px-1">
+                     <div class="form-group row mb-0">
+                        <label class="col-form-label col-sm-12 font-weight-bolder" for="cartyp">Type de carte</label>
+                        <div class="col-sm-12">
+                           <select class="custom-select form-control-sm" name="cartyp" id="cartyp">';
+   $j=0;
+   foreach ($fond_provider as $v) {
+      if($v[0]==$cartyp) $sel='selected="selected"'; else $sel='';
+      switch($j){
+         case '0': $affi .= '
+                              <optgroup label="OpenStreetMap">';break;
+         case '1': $affi .= '
+                              <optgroup label="Google">';break;
+         case '2': $affi .= '
+                              <optgroup label="Stamen">';break;
+         case '5': $affi .= '
+                              <optgroup label="NASA">';break;
+         case '6': if($api_key_mapbox==!'') 
+                     $affi .= '
+                              <optgroup label="Mapbox">';
+                   elseif($api_key_bing==!'')
+                     $affi .= '
+                              <optgroup label="Bing maps">'; break;
+         case '8': if($api_key_bing==!'' and $api_key_mapbox!=='') 
+                     $affi .= '
+                              <optgroup label="Bing maps">'; break;
+      }
+      $affi .= '
+                                 <option '.$sel.' value="'.$v[0].'">'.$v[1].'</option>';
+      switch($j){
+         case '0': case '1': case '4': case '10': $affi .= '
+                              </optgroup>'; break;
+         case '7': if($api_key_mapbox==!'') $affi .= '
+                              </optgroup>'; break;
+         case '8': if($api_key_mapbox=='' and $api_key_bing==!'') $affi .= '
+                              </optgroup>'; break;
+      }
+      $j++;
+   }
+$affi .= '
+                           </select>
+                           <input type="range" value="1" class="custom-range mt-1" min="0" max="1" step="0.1" id="baselayeropacity" />
+                           <label class="mt-0 float-right small" for="baselayeropacity">Opacity</label>
+                           <div id="dayslider" class="collapse">
+                              <input type="range" value="1" class="custom-range mt-1" min="-6" max="0" value="0" id="nasaday" />
+                              <label id="dateimages" class="mt-0 float-right small" for="nasaday">'.$date_jour.'</label>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
       </div>
    </div>';
-   $affi .=  '
+   $affi .= '
 <script type="text/javascript">
    //<![CDATA[
    if (!$("link[href=\'/lib/ol/ol.css\']").length)
       $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/geoloc/include/ol-geocoder.css\' type=\'text/css\' media=\'screen\'>");
+
    if (typeof ol=="undefined")
-      $("head").append($("<script />").attr({"type":"text/javascript","src":"/lib/ol/ol.js"}));
+      $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/lib/ol/ol.js"}));
+   $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/modules/geoloc/include/ol-geocoder.js"}));
    $(function () {
-      //==>  affichage des coordonnées à revoir pour réinverser ....
+      //==>  affichage des coordonnées...
          var mousePositionControl = new ol.control.MousePosition({
-           coordinateFormat: new ol.coordinate.createStringXY(4),
+          coordinateFormat: function(coord) {return ol.coordinate.format(coord, "Lat. {y}, Long. {x}", 4);},
            projection: "EPSG:4326",
            className: "custom-mouse-position",
            undefinedHTML: "&nbsp;"
          });
       //<==
-      var 
-      iconimg = new ol.style.Style({
-        image: new ol.style.Icon({
-          src: "modules/npds_galerie/npds_galerie.png"
-        })
-      }),
-      iconimgs = new ol.style.Style({
-        image: new ol.style.Icon({
-          src: "modules/npds_galerie/npds_galerie.png"
-        }),
-        text: new ol.style.Text({
-          text: "'.gal_translate("Image").'",
-          font: "18px sans-serif",
-          fill: new ol.style.Fill({color: "white"}),
-          stroke: new ol.style.Stroke({color: "rgba(0, 0, 0, 1)", width: 1.5}),
-          offsetY:22
-        })
-      }),
-      popup = new ol.Overlay({
-        element: document.getElementById("ol_popup")
-      }),
-      popuptooltip = new ol.Overlay({
-        element: document.getElementById("ol_tooltip")
-      }),
+      var
+         geocodestyle= new ol.style.Style({
+            image: new ol.style.Circle({
+               radius: 6,
+               fill: new ol.style.Fill({color: "rgba(255, 0, 0, 0.4)"}),
+               stroke: new ol.style.Stroke({color: "red", width: 1})
+            })
+         }),
+         locatedstyle = new ol.style.Style({
+            text: new ol.style.Text({
+               text: "\uf030",
+               font: "900 18px \'Font Awesome 5 Free\'",
+               bottom: "Bottom",
+               scale: [1.5, 1.5],
+               fill: new ol.style.Fill({color: "rgba(0, 104, 255, 0.4)"}),
+               stroke: new ol.style.Stroke({color: "rgba(255, 255, 255, 1)", width: 1})
+            })
+         }),
+         nolocatedstyle = new ol.style.Style({
+            text: new ol.style.Text({
+               text: "\uf030",
+               font: "900 18px \'Font Awesome 5 Free\'",
+               bottom: "Bottom",
+               scale: [1.5, 1.5],
+               fill: new ol.style.Fill({color: "rgba(0, 0, 0, 0.4)"}),
+               stroke: new ol.style.Stroke({color: "rgba(255, 255, 255, 1)", width: 1})
+            })
+         }),
+         popuptooltip = new ol.Overlay({
+           element: document.getElementById("ol_tooltip")
+         }),
       img_features=[];
       '.$img_point.'
-      var src_img = new ol.source.Vector({});
-      var src_img_length = img_features.length;
+      var
+         src_img = new ol.source.Vector({}),
+         src_img_length = img_features.length;
+
       for (var i = 0; i < src_img_length; i++){
          var iconFeature = new ol.Feature({
             geometry: new ol.geom.Point(ol.proj.transform(img_features[i][0], "EPSG:4326","EPSG:3857"))
          });
-            iconFeature.setId(("i"+i));
-            src_img.addFeature(iconFeature);
+         iconFeature.setId(("pg"+i));
+         src_img.addFeature(iconFeature);
       }
+
       var img_markers = new ol.layer.Vector({
          id: "imag",
-         source: src_img,
-         style: iconimgs
-      });
+         source: src_img,';
+         if (($lat == '0') and ($long == '0'))
+            $affi .= '
+         style: nolocatedstyle';
+         else 
+            $affi .= '
+         style: locatedstyle';
+   $affi .= '});
       var src_georef = new ol.source.Vector({});';
    if($multi!='')
       $affi .= '
       var pointGeoref1 = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.fromLonLat([30, 60])),
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([25, 60])),
       });
       pointGeoref1.setId(("pg1"));
       var pointGeoref2 = new ol.Feature({
@@ -2326,44 +2515,33 @@ function img_geolocalisation($lat,$long,$multi){
       });
       pointGeoref4.setId(("pg4"));
       var pointGeoref5 = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.fromLonLat([-30, -60])),
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([-25, -60])),
       });
       pointGeoref5.setId(("pg5"));
       src_georef.addFeatures([pointGeoref1,pointGeoref2,pointGeoref3,pointGeoref4,pointGeoref5]);
       src_georef.getFeatures().forEach(feat => {feat.setStyle(
          new ol.style.Style({
-            image: new ol.style.Icon({
-               src: "modules/npds_galerie/npds_galerie.png"
-            }),
-            text:new ol.style.Text({
-               text: "Image"+feat.id_.substr(2),
-               font: "18px sans-serif",
-               fill: new ol.style.Fill({color: "white"}),
-               stroke: new ol.style.Stroke({color: "rgba(0, 0, 0, 1)", width: 1.5}),
-               offsetY:22
+            text: new ol.style.Text({
+               text: "\uf030 "+feat.W.substr(2),
+               font: "900 18px \'Font Awesome 5 Free\'",
+               bottom: "Bottom",
+               scale: [1.5, 1.5],
+               fill: new ol.style.Fill({color: "rgba(0, 0, 0, 0.4)"}),
+               stroke: new ol.style.Stroke({color: "rgba(255, 255, 255, 1)", width: 1})
             })
          })
       )})';
-   else
-      $affi .= '
-      var pointGeoref = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.transform([0, 0], "EPSG:4326","EPSG:3857")) 
-      });
-      src_georef.addFeature(pointGeoref);';
    $affi .= '
-      var georef_marker = new ol.layer.Vector({
-         source: src_georef,
-         style: iconimgs
-      });
-      var source = new ol.source.Stamen({layer:"toner"});
-      var overviewMapControl = new ol.control.OverviewMap({
-        layers: [
-          new ol.layer.Tile({
-            source: source,
-          }) ],
-      });
-
       var
+         georef_marker = new ol.layer.Vector({
+            id:"georef",
+            source: src_georef,
+            style: nolocatedstyle
+         }),
+         source = new ol.source.Stamen({layer:"toner"}),
+         overviewMapControl = new ol.control.OverviewMap({
+            layers: [new ol.layer.Tile({source: source,})],
+         }),
          src_fond = '.$source_fond.',
          minR='.$min_r.',
          maxR='.$max_r.',
@@ -2376,6 +2554,8 @@ function img_geolocalisation($lat,$long,$multi){
          }),
          attribution = new ol.control.Attribution({collapsible: true}),
          zoomslider = new ol.control.ZoomSlider(),
+         fullscreen = new ol.control.FullScreen({source: "map-wrapper"}),
+         scaleline = new ol.control.ScaleLine(),
          view = new ol.View({';
    if($multi=='')
       $affi .= 'center: ol.proj.fromLonLat(['.$long.', '.$lat.']),
@@ -2386,17 +2566,17 @@ function img_geolocalisation($lat,$long,$multi){
    $affi .= '
             minZoom:2
          });
-
-         var select = new ol.interaction.Select({style:null});
-         var translate = new ol.interaction.Translate({
-           features: select.getFeatures(),
-         });
+         var
+            select = new ol.interaction.Select({style:null}),
+            translate = new ol.interaction.Translate({
+               features: select.getFeatures(),
+            });
 
       var map = new ol.Map({
          interactions: new ol.interaction.defaults({
             constrainResolution: true, onFocusOnly: true
          }).extend([select,translate]),
-         controls: new ol.control.defaults({attribution: false}).extend([attribution, new ol.control.FullScreen({source: "map-wrapper",}), mousePositionControl, new ol.control.ScaleLine, zoomslider, overviewMapControl]),
+         controls: new ol.control.defaults({attribution: false}).extend([attribution, fullscreen, mousePositionControl, scaleline, zoomslider, overviewMapControl]),
          target: document.getElementById("mapol"),
          layers: [
             fond_carte,';
@@ -2411,41 +2591,96 @@ function img_geolocalisation($lat,$long,$multi){
    if($multi !=='')
       $affi .= '
       translate.on("translateend", function(evt) {
-         var idim = (evt.features.array_[0].id_).substr(2),
+         var idim = (evt.features.R[0].W).substr(2),
              coordinate = evt.coordinate,
-             coordWgs = ol.proj.transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
+             coordWgs = ol.proj.toLonLat(coordinate);
          $("#imglat"+idim).val(coordWgs[1].toFixed(6));
          $("#imglong"+idim).val(coordWgs[0].toFixed(6));
+         if((evt.features.R[0].W).substr(0, 2) ==="pg") {
+            evt.features.R[0].setStyle(new ol.style.Style({
+               text: new ol.style.Text({
+                  text: "\uf030 "+idim,
+                  font: "900 18px \'Font Awesome 5 Free\'",
+                  bottom: "Bottom",
+                  scale: [1.5, 1.5],
+                  fill: new ol.style.Fill({color: "rgba(0, 104, 255, 0.4)"}),
+                  stroke: new ol.style.Stroke({color: "rgba(255, 255, 255, 1)", width: 1})
+               })
+            }));
+            $(".jsgeo"+idim).click(function () {
+               view.setCenter(coordinate);
+            }).addClass("text-primary")
+         }
       });';
    if($multi=='')
       $affi .= '
-      map.on("click", function(evt) {
-         pointGeoref.getGeometry().setCoordinates(evt.coordinate);
-             var coordinate = evt.coordinate,
-             coordWgs = ol.proj.transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
-             $("#imglat").val(coordWgs[1].toFixed(6));
-             $("#imglong").val(coordWgs[0].toFixed(6));
-//         iconFeature.getGeometry().setCoordinates(evt.coordinate);
-      });
+      $("#imglat").val().length ? $(".jsgeo").addClass("text-primary"):"";
       translate.on("translateend", function(evt) {
-         coordinate = evt.coordinate,
-         coordWgs = ol.proj.transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
+         var coordinate = evt.coordinate,
+         coordWgs = ol.proj.toLonLat(coordinate);
          $("#imglat").val(coordWgs[1].toFixed(6));
          $("#imglong").val(coordWgs[0].toFixed(6));
+         if((evt.features.R[0].W).substr(0, 2) ==="pg") {
+            evt.features.R[0].setStyle(new ol.style.Style({
+               text: new ol.style.Text({
+                  text: "\uf030",
+                  font: "900 18px \'Font Awesome 5 Free\'",
+                  bottom: "Bottom",
+                  scale: [1.5, 1.5],
+                  fill: new ol.style.Fill({color: "rgba(0, 104, 255, 0.5)"}),
+                  stroke: new ol.style.Stroke({color: "rgba(255, 255, 255, 1)", width: 1})
+               })
+            }));
+            $(".jsgeo").click(function () {
+               view.setCenter(coordinate);
+            }).addClass("text-primary")
+         }
       });';
    $affi .= '
-//==> changement etat pointeur sur les markers
-   map.on("pointermove", function(e) {
-        if (e.dragging) {
-          $(".popover").popover("dispose");
-          return;
-        }
-        var pixel = map.getEventPixel(e.originalEvent);
-        var hit = map.hasFeatureAtPixel(pixel);
-        map.getTarget().style.cursor = hit ? "pointer" : "";
+      //==> changement etat pointeur sur les markers
+      map.on("pointermove", function(e) {
+         var
+            pixel = map.getEventPixel(e.originalEvent),
+            hit = map.hasFeatureAtPixel(pixel);
+         map.getTarget().style.cursor = hit ? "pointer" : "";
       });
-//<== changement etat pointeur sur les markers
-';
+      //<== changement etat pointeur sur les markers';
+   $source ='';
+   if($multi=='') $source ='src_img';
+   else if($multi!=='') $source ='src_georef';
+   $affi .= '
+      var
+         geocoder = new Geocoder("nominatim", {
+            featureStyle : geocodestyle,
+            provider: "osm",
+            lang: "'.language_iso(1,0,0).'",
+            placeholder: "Chercher un lieu",
+            limit: 5,
+            debug: false,
+            autoComplete: true,
+            keepOpen: false
+         });
+      map.addControl(geocoder);
+      geocoder.on("addresschosen", function (evt) {
+         var x=500;
+         geocoder.getSource().clear();
+         geocoder.getSource().addFeature(evt.feature);
+         '.$source.'.getFeatures().forEach(feat=>{';
+   if($multi=='')
+      $affi .='
+            var idf = 1;
+            if ($("#imglat").val()=="" && $("#imglong").val()=="") {';
+   if($multi!=='')
+      $affi .='
+            var idf = feat.W.substr(2);
+            if ($("#imglat"+idf).val()=="" && $("#imglong"+idf).val()=="") {';
+   $affi .='
+               window.setTimeout(function () {
+                  feat.getGeometry().setCoordinates([(evt.coordinate[0]+(x*idf)),evt.coordinate[1]+(x*idf)]);
+               }, 600*idf);
+            }
+         });
+      });';
 
    $affi .= file_get_contents('modules/geoloc/include/ol-dico.js');
    $affi .='
@@ -2456,15 +2691,89 @@ function img_geolocalisation($lat,$long,$multi){
             $("#mapol "+dic[i].cla).prop("title", dic[i][lang]);
          }
       }
+      fullscreen.on("enterfullscreen",function(){
+         $(dic.olfullscreentrue.cla).attr("data-original-title", dic["olfullscreentrue"][lang]);
+      })
+      fullscreen.on("leavefullscreen",function(){
+         $(dic.olfullscreenfalse.cla).attr("data-original-title", dic["olfullscreenfalse"][lang]);
+      })
 
-   $(\'[data-toggle="tooltip"]\').tooltip({container:"#mapol"});
-   $("#ol_tooltip").tooltip({container:"#mapol"});
-   $("#mapol .ol-zoom-in, #mapol .ol-zoom-out, #mapol .ol-overviewmap ").tooltip({placement: "right", container:"#mapol"});
-   $("#mapol .ol-full-screen-false, #mapol .ol-rotate-reset, #mapol .ol-attribution button[title]").tooltip({placement: "left", container:"#mapol"});
+   $("#cartyp").on("change", function() {
+      cartyp = $( "#cartyp option:selected" ).val();
+      $("#dayslider").removeClass("show");
+      switch (cartyp) {
+         case "OSM":
+            fond_carte.setSource(new ol.source.OSM());
+            map.getLayers().R[0].setProperties({"id":cartyp});
+            fond_carte.setMinResolution(1);
+         break;
+         case "sat-google":
+            fond_carte.setSource(new ol.source.XYZ({
+               url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+               crossOrigin: "Anonymous",
+               attributions: " &middot; <a href=\"https://www.google.at/permissions/geoguidelines/attr-guide.html\">Map data ©2015 Google</a>"
+            }));
+            map.getLayers().R[0].setProperties({"id":cartyp});
+         break;
+         case "Road":case "Aerial":case "AerialWithLabels":
+            fond_carte.setSource(new ol.source.BingMaps({
+               key: "'.$api_key_bing.'",
+               imagerySet: cartyp 
+            }));
+            map.getLayers().R[0].setProperties({"id":cartyp});
+            fond_carte.setMinResolution(1);
+         break;
+         case "natural-earth-hypso-bathy": case "geography-class":
+            fond_carte.setSource(new ol.source.TileJSON({
+               url: "https://api.tiles.mapbox.com/v4/mapbox."+cartyp+".json?access_token='.$api_key_mapbox.'",
+               attributions: "© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>"
+            }));
+            fond_carte.setMinResolution(2000);
+            fond_carte.setMaxResolution(40000);
+            map.getLayers().R[0].setProperties({"id":cartyp});
+         break;
+         case "terrain": case "toner": case "watercolor":
+            fond_carte.setSource(new ol.source.Stamen({layer:cartyp}));
+            fond_carte.setMinResolution(0);
+            fond_carte.setMaxResolution(40000);
+            map.getLayers().R[0].setProperties({"id":cartyp});
+         break;
+         case "modisterra":
+            $("#dayslider").addClass("show");
+            var datejour="'.$date_jour.'";
+            var today = new Date();
+            fond_carte.setSource(new ol.source.XYZ({
+               url: "https://gibs-{a-c}.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_SNPP_CorrectedReflectance_TrueColor/default/"+datejour+"/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg"
+            }));
+            $("#nasaday").on("input change", function(event) {
+               var newDay = new Date(today.getTime());
+               newDay.setUTCDate(today.getUTCDate() + Number.parseInt(event.target.value));
+               datejour = newDay.toISOString().split("T")[0];
+               var datejourFr = datejour.split("-");
+               $("#dateimages").html(datejourFr[2]+"/"+datejourFr[1]+"/"+datejourFr[0]);
+               fond_carte.setSource(new ol.source.XYZ({
+                  url: "https://gibs-{a-c}.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_SNPP_CorrectedReflectance_TrueColor/default/"+datejour+"/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg"
+               }));
+            });
+            fond_carte.setMinResolution(2);
+            fond_carte.setMaxResolution(40000);
+            map.getLayers().array_[0].setProperties({"id":cartyp});
+         break;
+      }
+   });
+
+   // ==> opacité sur couche de base
+      $("#baselayeropacity").on("input change", function() {
+         map.getLayers().R[0].setOpacity(parseFloat(this.value));
+      });
+   // <== opacité sur couche de base
+
+      $("#ol_tooltip").tooltip({container:"#mapol"});
+      $("#mapol .ol-zoom-in, #mapol .ol-zoom-out, #mapol .ol-overviewmap ").tooltip({placement: "right", container:"#mapol"});
+      $("#mapol .ol-full-screen-false, #mapol .ol-rotate-reset, #mapol .ol-attribution button[title]").tooltip({placement: "left", container:"#mapol"});
    });
    //]]>
 </script>';
 return $affi;
 }
-
 ?>

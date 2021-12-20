@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2020 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2021 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -21,6 +21,7 @@
 /************************************************************************/
 // les menus
 /*******************************************************/
+include 'modules/geoloc/geoloc_conf.php';
 
 function FabMenu() {
    global $NPDS_Prefix, $ThisFile, $aff_comm, $aff_vote, $ModPath, $user;
@@ -49,7 +50,7 @@ function FabMenu() {
             echo '
                <a class="nav-link" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=formimgs">'.gal_translate("Proposer des images").'</a>';
          echo '
-            </ul>
+               <a class="nav-link" href=""><i class="fa fa-question fa-lg align-middle mr-2"></i></a>
          </nav>
          <div class="card-body">
             <div class="row lead">';
@@ -242,7 +243,10 @@ function ViewGal($galid, $page){
          $current=1;
       else
          $current = $nbPages;
-
+/*
+      echo '
+      <div class="row row-cols-1 row-cols-sm-3 m-0">';
+*/
       echo '
       <div class="card-columns p-2 mt-2">';
       $img_point='';
@@ -252,18 +256,19 @@ function ViewGal($galid, $page){
          $nbvote = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_vot WHERE pic_id='".$row[0]."'"));
          if (@file_exists("modules/$ModPath/imgs/".$row[2])) {
             list($width, $height, $type, $attr) = @getimagesize("modules/$ModPath/imgs/$row[2]");
-            $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-placement="bottom" />';
+            $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-placement="bottom" loading="lazy" />';
          } else
            $ibid = ReducePic($row[2],stripslashes($row[3]),$MaxSizeThumb);
       //==> geoloc
       if (($row[7] != '') or ($row[8] != '')) {
          $desc = trim(preg_replace('/\s\s+/', ' ', $row[3]));
          $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($desc).'","'.$row[4].'"]);';
-         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" />';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
       }
       //<== geoloc
         echo '
-            <div class="card">
+         <div class="col px-1 my-1">
+            <div class="card h-100">
                <a href="'.$ThisFile.'&amp;op=img&amp;galid='.$galid.'&amp;pos='.$pos.'">'.$ibid.'</a>
                '.$img_geotag.'
                <div class="card-body">
@@ -273,8 +278,9 @@ function ViewGal($galid, $page){
         if ($aff_vote and $nbvote>0)
            echo '<br /><span class="badge badge-secondary mr-1">'.$nbvote.'</span>'.gal_translate("vote(s)");
         echo '</p>
-               </div>
-            </div>';
+            </div>
+         </div>
+         </div>';
         $pos++;
       }
       echo '
@@ -374,16 +380,18 @@ function ViewImg($galid, $pos, $interface) {
             // Notation de l'image
             if (isset($user) || $vote_anon) {
                echo '
-               <h4 class="card-title">'.gal_translate("Noter cette image").'
-                  <span class="h5 rating">';
-               $i=0;
-               while ($i<6) {
-                  echo '<a class="" href="'.$ThisFile.'&amp;op=vote&amp;value='.(6-$i).'&amp;pic_id='.$row[0].'&amp;gal_id='.$galid.'&amp;pos='.$pos.'" title="'.(6-$i).'/6" data-toggle="tooltip"><i class="far fa-star fa-lg"></i></a>';
-                  $i++;
-               }
-            echo '
-               </span>
-            </h4>';
+      <div class="text-right mb-2">'.gal_translate("Noter cette image").'</div>
+      <div class="my-2">
+         <span class="h5 rating">';
+            $i=0;
+            while ($i<6) {
+               echo '<a class="" href="'.$ThisFile.'&amp;op=vote&amp;value='.(6-$i).'&amp;pic_id='.$row[0].'&amp;gal_id='.$galid.'&amp;pos='.$pos.'" title="'.(6-$i).'/6" data-toggle="tooltip"><i class="far fa-star fa-lg"></i></a>';
+               $i++;
+            }
+         echo '
+         </span>
+      <br />
+      </div>';
             }
          }
       }
@@ -392,7 +400,7 @@ function ViewImg($galid, $pos, $interface) {
    $tailleo = @filesize("modules/$ModPath/imgs/$row[2]");
    $taille = $tailleo/1000;
    echo '
-   <h4 class="card-title">'.gal_translate("Informations sur l'image").'</h4>
+   <h4 class="card-title mt-3">'.gal_translate("Informations sur l'image").'</h4>
    <ul class="list-group lead">
       <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Taille du fichier").'<span class="badge badge-secondary">'.$taille.' Ko</span></li>
       <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Dimensions").'<span class="badge badge-secondary">'.$width.' x '.$height.' Pixels</span></li>';
@@ -740,6 +748,7 @@ function PostComment($gal_id, $pos, $pic_id, $comm) {
    $name = $cookie[1];
    if ($name == '') $name = $anonymous;
    $comment = removeHack($comm);
+   $comment = dataimagetofileurl($comment,'modules/upload/upload/gal');
    $qverif = sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='$pic_id' AND user='$name' AND comhostname='$host'");
    if (sql_num_rows($qverif) == 0) {
       $stamp = time()+((integer)$gmt*3600);
@@ -827,14 +836,14 @@ function ViewAlea() {
       //==> geoloc
       if (($row[7] != '') or ($row[8] != '')) {
          $desc = trim(preg_replace('/\s\s+/', ' ', $row[3]));
-         $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($desc[3]).'","'.$row[4].'"]);';
-         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" />';
+         $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($desc).'","'.$row[4].'"]);';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
       }
       //<== geoloc
       $nbcom = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='".$row[0]."'"));
       if (file_exists("modules/$ModPath/imgs/".$row[2])) {
          list($width, $height, $type, $attr) = @getimagesize("modules/$ModPath/imgs/$row[2]");
-         $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-placement="bottom"/>';
+         $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-placement="bottom" loading="lazy" />';
       } else
          $ibid = ReducePic($row[2],stripslashes($row[3]),$MaxSizeThumb);
       echo '
@@ -891,18 +900,15 @@ function ViewLastAdd() {
       $nbcom = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='".$row[0]."'"));
       if (file_exists("modules/$ModPath/imgs/".$row[2])) {
          list($width, $height, $type, $attr) = @getimagesize("modules/$ModPath/imgs/$row[2]");
-         $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/imgs/'.$row[2].'" alt="'.stripslashes($row[3]).' '.$attr.'" title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-placement="bottom"/>';
+         $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/imgs/'.$row[2].'" alt="'.stripslashes($row[3]).' '.$attr.'" title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-placement="bottom" loading="lazy" />';
       } else
          $ibid = ReducePic($row[2],stripslashes($row[3]),$MaxSizeThumb);
       $img_geotag='';
       //==> geoloc
       if (($row[7] != '') or ($row[8] != '')) {
-         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png"  title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" />';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png"  title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
       }
       //<== geoloc
-
-
-
       echo '
       <div class="card">
          '.$img_geotag.'
@@ -988,7 +994,7 @@ function ReducePic($image, $comment, $Max) {
          $h_i = ceil($h_i*$convert);
       }
    }
-   return '<img class="img-fluid" src="'.$image.'" height="'.$h_i.'" width="'.$w_i.'" alt="'.$comment.'" />';
+   return '<img class="img-fluid" src="'.$image.'" height="'.$h_i.'" width="'.$w_i.'" alt="'.$comment.'" loading="lazy" />';
 }
 
 function validate_email($email) {
@@ -1007,10 +1013,9 @@ function TopCV($typeOP, $nbtop) {
       </div>
       <div class="card-body">
          <h5 class="card-title">';
-   if ($typeOP=='comment')
-      echo gal_translate("Top").' '.$nbtop.' '.gal_translate("des images les plus commentées").'</h5>';
-   else
-      echo gal_translate("Top").' '.$nbtop.' '.gal_translate("des images les plus notées").'</h5>';
+    echo $typeOP=='comment'?
+      gal_translate("Top").' '.$nbtop.' '.gal_translate("des images les plus commentées").'</h5>':
+      gal_translate("Top").' '.$nbtop.' '.gal_translate("des images les plus notées").'</h5>';
 
    $TableRep=sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE noaff='0'");
    $NombreEntrees=sql_num_rows($TableRep);
@@ -1026,10 +1031,9 @@ function TopCV($typeOP, $nbtop) {
             <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de notes").'<span class="badge badge-secondary badge-pill">'.$NombreComs1.'</span></li>
          </ul>';
 
-   if ($typeOP=='comment')
-      $result1 = sql_query("SELECT pic_id, count(user) AS pic_nbcom FROM ".$NPDS_Prefix."tdgal_com GROUP BY pic_id ORDER BY pic_nbcom DESC LIMIT 0,$nbtop");
-   else
-      $result1 = sql_query("SELECT pic_id, count(user) AS pic_nbvote FROM ".$NPDS_Prefix."tdgal_vot GROUP BY pic_id ORDER BY pic_nbvote DESC LIMIT 0,$nbtop");
+   $result1 = $typeOP=='comment' ?
+      sql_query("SELECT pic_id, count(user) AS pic_nbcom FROM ".$NPDS_Prefix."tdgal_com GROUP BY pic_id ORDER BY pic_nbcom DESC LIMIT 0,$nbtop"):
+      sql_query("SELECT pic_id, count(user) AS pic_nbvote FROM ".$NPDS_Prefix."tdgal_vot GROUP BY pic_id ORDER BY pic_nbvote DESC LIMIT 0,$nbtop");
    echo '
          <div class="card-columns p-0 mt-2">';
    $j=1;
@@ -1044,13 +1048,12 @@ function TopCV($typeOP, $nbtop) {
                   <div class="h2 text-center">
                      <span class="badge badge-success badge-pill ">'.$j.'</span>
                   </div>
-                  <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=img&amp;galid='.($result2['gal_id']).'&amp;pos=-'.$pic_id.'" ><img class="n-irl" src="modules/'.$ModPath.'/mini/'.$result2['name'].'" alt="'.$comm_vignette.'" /></a>
+                  <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=img&amp;galid='.($result2['gal_id']).'&amp;pos=-'.$pic_id.'" ><img class="n-irl" src="modules/'.$ModPath.'/mini/'.$result2['name'].'" alt="'.$comm_vignette.'" loading="lazy" /></a>
                   <div class="card-text">
                   <span class="badge badge-secondary badge-pill" data-toggle="tooltip" data-placement="left"';
-         if ($typeOP=='comment')
-            echo ' title="'.gal_translate("Nombre de commentaires").'"';
-         else
-            echo ' title="'.gal_translate("Nombre de vote(s)").'"';
+         echo $typeOP=='comment'?
+                  ' title="'.gal_translate("Nombre de commentaires").'"':
+                  ' title="'.gal_translate("Nombre de vote(s)").'"';
          echo ' >'.$nb.'</span>
                   </div>
                </div>
@@ -1093,15 +1096,15 @@ function select_arbo($sel) {
          $ibid.='<optgroup label="'.stripslashes($row_cat[2]).'">';
          $queryX = sql_query("SELECT id, nom, acces FROM ".$NPDS_Prefix."tdgal_gal WHERE cid='".$row_cat[0]."' ORDER BY nom ASC");
          while ($rowX_gal = sql_fetch_row($queryX)) {
-            if ($rowX_gal[0] == $sel) $IsSelected = ' selected'; else $IsSelected = '';
+            if ($rowX_gal[0] == $sel) $IsSelected = ' selected="selected" '; else $IsSelected = '';
             switch ($rowX_gal[2]) {
                //case -127: $af=true; break;
               // case 1: $af=$icondroits[1]; break;
                //case 0: $af=true; break;
                case $rowX_gal[2]>1: $af=autorisation($rowX_gal[2]); break;
             }
-            if($af)
-            $ibid.='<option value="'.$rowX_gal[0].'" '.$IsSelected.'>'.stripslashes($rowX_gal[1]).'</option>';
+            if(isset($af))
+               $ibid.='<option value="'.$rowX_gal[0].'" '.$IsSelected.'>'.stripslashes($rowX_gal[1]).'</option>';
          } // Fin Galerie Catégorie
 
          // SOUS-CATEGORIE
@@ -1135,7 +1138,8 @@ function PrintFormImgs() {
       redirect_url($ThisRedo);
    echo '
    <div class="card">
-      <div class="card-header lead"><a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a></div>
+      <div class="card-header lead"><a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>               <a class="float-right" href=""><i class="fa fa-question fa-lg align-middle mr-2"></i></a>
+</div>
       <div class="card-body">
          <h5 class="card-title">'.gal_translate("Proposer des images").'</h5>
          <hr />
@@ -1154,8 +1158,8 @@ function PrintFormImgs() {
       $i=1;
       do {
          echo '
-                  <div class="form-group">
-                     <label class="">'.gal_translate("Image").' '.$i.'</label>
+                  <div class="form-group mb-0">
+                     <label class="font-weight-bolder">'.gal_translate("Image").' '.$i.'</label>
                      <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend" onclick="reset2($(\'#newcard'.$i.'\'),'.$i.');">
                            <div class="input-group-text"><i class="fas fa-sync"></i></div>
@@ -1165,16 +1169,16 @@ function PrintFormImgs() {
                            <label id="lab'.$i.'" class="custom-file-label" for="newcard'.$i.'">'.gal_translate("Sélectionner votre image").'</label>
                         </div>
                      </div>
-                     <div class="form-group">
+                     <div class="form-group mb-2">
                         <label class="sr-only" for="newdesc'.$i.'">'.gal_translate("Description").'</label>
                         <input type="text" class="form-control" id="newdesc'.$i.'"  name="newdesc[]" placeholder="'.gal_translate("Description").'" />
                      </div>
                      <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-6 mb-0">
                            <label for="imglat'.$i.'" class="sr-only">'.gal_translate("Latitude").'</label>
                            <div class="input-group mb-2 mr-sm-2">
                               <div class="input-group-prepend">
-                                 <div class="input-group-text"><i class="fa fa-globe fa-lg"></i></div>
+                                 <div class="input-group-text jsgeo'.$i.'" title="'.gal_translate("Latitude").'" data-toggle="tooltip"><i class="fa fa-globe fa-lg"></i></div>
                               </div>
                               <input type="text" class="form-control js-lat" name="imglat[]" id="imglat'.$i.'" placeholder="'.gal_translate("Latitude").'" />
                            </div>
@@ -1182,7 +1186,7 @@ function PrintFormImgs() {
                         <div class="form-group col-md-6">
                            <div class="input-group mb-2 mr-sm-2">
                               <div class="input-group-prepend">
-                                 <div class="input-group-text"><i class="fa fa-globe fa-lg"></i></div>
+                                 <div class="input-group-text jsgeo'.$i.'" title="'.gal_translate("Longitude").'" data-toggle="tooltip"><i class="fa fa-globe fa-lg"></i></div>
                               </div>
                               <label for="imglong'.$i.'" class="sr-only">'.gal_translate("Longitude").'</label>
                               <input type="text" class="form-control js-long" name="imglong[]" id="imglong'.$i.'" placeholder="'.gal_translate("Longitude").'"/>
@@ -1378,7 +1382,7 @@ function CreateThumb($Image, $Source, $Destination, $Max, $ext) {
       @chmod($Dest.$Image,0766);
    }
 }
-// cette fonction ne peut etre utiliser qu'une fois par page ...
+// cette fonction ne peut être utilisé qu'une fois par page ...
 
 #autodoc Img_carte($img_point) : $img_point est une ou plusieurs commande js (push) de construction du tableau "img_features", cette variable $img_point doit donc être remplie dans la boucle récupérant les données dans la bd. Cette fonction ne peut être utilisée qu'une fois par page généré. 
 function Img_carte($img_point){
@@ -1387,37 +1391,49 @@ function Img_carte($img_point){
 $source_fond=''; $max_r=''; $min_r='';$layer_id='';
 switch ($cartyp) {
    case 'Road': case 'Aerial': case 'AerialWithLabels':
-      $source_fond='new ol.source.BingMaps({key: "'.$api_key_bing.'",imagerySet: "'.$cartyp.'"})';
+      $source_fond='
+      new ol.source.BingMaps({
+         key: "'.$api_key_bing.'",imagerySet: "'.$cartyp.'"
+      })';
       $max_r='40000';
       $min_r='0';
       $layer_id= $cartyp;
    break;
    case 'natural-earth-hypso-bathy': case 'geography-class':
-      $source_fond=' new ol.source.TileJSON({url: "https://api.tiles.mapbox.com/v4/mapbox.'.$cartyp.'.json?access_token='.$api_key_mapbox.'"})';
+      $source_fond='
+      new ol.source.TileJSON({
+         url: "https://api.tiles.mapbox.com/v4/mapbox.'.$cartyp.'.json?access_token='.$api_key_mapbox.'",
+         attributions: "© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>"
+      })';
       $max_r='40000';
       $min_r='2000';
       $layer_id= $cartyp;
    break;
    case 'sat-google':
-      $source_fond=' new ol.source.XYZ({url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",crossOrigin: "Anonymous", attributions: " &middot; <a href=\"https://www.google.at/permissions/geoguidelines/attr-guide.html\">Map data ©2015 Google</a>"})';
+      $source_fond='
+      new ol.source.XYZ({
+         url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+         crossOrigin: "Anonymous",
+         attributions: " &middot; <a href=\"https://www.google.at/permissions/geoguidelines/attr-guide.html\">Map data ©2015 Google</a>"
+      })';
       $max_r='40000';
       $min_r='0';
       $layer_id= $cartyp;
    break;
    case 'terrain':case 'toner':case 'watercolor':
-      $source_fond='new ol.source.Stamen({layer:"'.$cartyp.'"})';
+      $source_fond='
+      new ol.source.Stamen({
+         layer:"'.$cartyp.'"
+      })';
       $max_r='40000';
       $min_r='0';
       $layer_id= $cartyp;
    break;
-   case 'sat':
-      $source_fond='';
-      $max_r='';
-      $min_r='';
-      $layer_id= $cartyp;
-   break;
    case 'modisterra':
-      $source_fond='new ol.source.XYZ({url: "https://gibs-{a-c}.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/2013-06-15/GoogleMapsCompatible_Level13/{z}/{y}/{x}.jpg"})';
+      $source_fond='
+      new ol.source.XYZ({
+         url: "https://gibs-{a-c}.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/2013-06-15/GoogleMapsCompatible_Level13/{z}/{y}/{x}.jpg"
+      })';
       $max_r='40000';
       $min_r='0';
       $layer_id= $cartyp;
@@ -1428,11 +1444,11 @@ switch ($cartyp) {
       $min_r='0';
       $layer_id= 'OSM';
 }
-   
+
    echo '
    <div class="my-3">
       <div id="map-wrapper" class="ol-fullscreen my-3">
-         <div id="mapol" class="map" tabindex="20" lang="fr">
+         <div id="mapimg" class="map" tabindex="20" lang="'.language_iso(1,0,0).'">
             <div id="ol_popup" class="ol-popup small"></div>
             <div id="ol_tooltip"></div>
          </div>
@@ -1443,17 +1459,18 @@ switch ($cartyp) {
 
 <script type="text/javascript">
    //<![CDATA[
-   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
+   if (!$("link[href=\'/lib/ol/ol.css\']").length)
+      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
    if (typeof ol=="undefined")
       $("head").append($("<script />").attr({"type":"text/javascript","src":"/lib/ol/ol.js"}));
    $(function () {
-      //==>  affichage des coordonnées à revoir pour réinverser ....
+      //==>  affichage des coordonnées...
          var mousePositionControl = new ol.control.MousePosition({
-           coordinateFormat: new ol.coordinate.createStringXY(4),
-           projection: "EPSG:4326",
-           className: "custom-mouse-position",
-           undefinedHTML: "&nbsp;"
+            coordinateFormat: function(coord) {return ol.coordinate.toStringHDMS(coord,2)},
+            projection: "EPSG:4326",
+            className: "custom-mouse-position",
+            undefinedHTML: "&nbsp;"
          });
       //<==
       var 
@@ -1463,7 +1480,12 @@ switch ($cartyp) {
         })
       }),
       popup = new ol.Overlay({
-        element: document.getElementById("ol_popup")
+        element: document.getElementById("ol_popup"),
+         autoPan: true,
+         autoPanAnimation: {
+            duration: 1000
+         },
+         offset : [-0,-14],
       }),
       popuptooltip = new ol.Overlay({
         element: document.getElementById("ol_tooltip")
@@ -1490,18 +1512,21 @@ switch ($cartyp) {
          style: iconimg
       });
 
-      var src_fond = '.$source_fond.',
-          minR='.$min_r.',
-          maxR='.$max_r.',
-          layer_id="'.$layer_id.'",
-          fond_carte = new ol.layer.Tile({
+      var
+         src_fond = '.$source_fond.',
+         minR='.$min_r.',
+         maxR='.$max_r.',
+         layer_id="'.$layer_id.'",
+         fond_carte = new ol.layer.Tile({
             id:layer_id,
             source: src_fond,
             minResolution: minR,
             maxResolution: maxR
-          }),
+         }),
          attribution = new ol.control.Attribution({collapsible: true}),
          zoomslider = new ol.control.ZoomSlider(),
+         fullscreen = new ol.control.FullScreen({source: "map-wrapper"}),
+         scaleline = new ol.control.ScaleLine,
          view = new ol.View({
             center: ol.proj.fromLonLat([105, 36]),
             zoom: 8,
@@ -1512,8 +1537,8 @@ switch ($cartyp) {
          interactions: new ol.interaction.defaults({
             constrainResolution: true, onFocusOnly: true
          }),
-         controls: new ol.control.defaults({attribution: false}).extend([attribution, new ol.control.FullScreen({source: "map-wrapper",}), mousePositionControl, new ol.control.ScaleLine, zoomslider]),
-         target: document.getElementById("mapol"),
+         controls: new ol.control.defaults({attribution: false}).extend([attribution, fullscreen, mousePositionControl, scaleline, zoomslider]),
+         target: document.getElementById("mapimg"),
          layers: [
             fond_carte,
             img_markers
@@ -1525,16 +1550,25 @@ switch ($cartyp) {
 
       var extimg = img_markers.getSource().getExtent();
       if (src_img_length==1) {
-         view.setCenter(src_img.idIndex_["i0"].values_.geometry.flatCoordinates);
+         view.setCenter(src_img.Tu["i0"].A.geometry.flatCoordinates);
          view.setZoom(4);
       }
       else
          view.fit(extimg);
 
       var button = document.createElement("button");
-      button.innerHTML = "&#xf0d7";
+      button.innerHTML = "&#xf0d8";
+      button.setAttribute("title", "Masquer")
       var sidebarSwitch = function(e) {
-         if($("#sidebar").hasClass("show")) {$("#sidebar").collapse("toggle")} else{$("#sidebar").collapse("show")}
+         if($("#sidebar").hasClass("show")) {
+            $("#sidebar").collapse("toggle");
+            button.innerHTML = "&#xf0d7";
+            button.setAttribute("data-original-title", "Voir")
+         } else{
+            $("#sidebar").collapse("show");
+            button.innerHTML = "&#xf0d8";
+            button.setAttribute("data-original-title", "Masquer")
+         }
       };
       button.addEventListener("click", sidebarSwitch, true);
       var element = document.createElement("div");
@@ -1545,15 +1579,15 @@ switch ($cartyp) {
       });
       map.addControl(sidebarControl);
 
-      var button = document.createElement("button");
-      button.setAttribute("id","export-png");
-      button.setAttribute("title","'.html_entity_decode(gal_translate("Télécharger comme image.png"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'");
-      button.setAttribute("data-toggle","tooltip");
-      button.setAttribute("data-placement","left");
-      button.innerHTML = "&#xf019";
+      var buttond = document.createElement("button");
+      buttond.setAttribute("id","export-png");
+      buttond.setAttribute("title","'.html_entity_decode(gal_translate("Télécharger comme image.png"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'");
+      buttond.setAttribute("data-toggle","tooltip");
+      buttond.setAttribute("data-placement","left");
+      buttond.innerHTML = "&#xf019";
       var element = document.createElement("div");
       element.className = "ol-download ol-unselectable ol-control fa";
-      element.appendChild(button);
+      element.appendChild(buttond);
       var downloadControl = new ol.control.Control({
           element: element
       });
@@ -1566,7 +1600,7 @@ switch ($cartyp) {
           sbimg=\'<div id="sb_img" class="list-group small"><div class="list-group-item bg-light text-dark font-weight-light px-1 lead"><img class="mr-1" src="modules/npds_galerie/npds_galerie.png" alt="" style="vertical-align:middle;" data-toggle="tooltip" title="'.html_entity_decode(gal_translate("Images géoréférencées"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'" /><span class="badge badge-secondary float-right">\'+ima_nb+\'</span></div><a class="sb_res list-group-item list-group-item-action py-1 px-1" ><input id="n_filtreimages" placeholder="'.html_entity_decode(gal_translate("Filtrer les images"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'" class="my-1 form-control form-control-sm" type="text" /></a>\';
       for (var key in img_feat) {
          if (img_feat.hasOwnProperty(key)) {
-            sbimg += \'<a id="\'+ img_feat[key].id_ +\'" href="#" onclick="centeronMe(\\\'\'+ img_feat[key].id_ +\'\\\');return false;" class="sb_img list-group-item list-group-item-action py-1 px-1" href="#"><img class="img-fluid n-ava-48" src="modules/npds_galerie/mini/\' + img_feat[key].values_.imgName + \'"/><span class="ml-1 nlfilt">\' + img_feat[key].values_.imgName + \'</span></a>\';
+            sbimg += \'<a id="\'+ img_feat[key].W +\'" href="#" onclick="centeronMe(\\\'\'+ img_feat[key].W +\'\\\');return false;" class="sb_img list-group-item list-group-item-action py-1 px-1" href="#"><img class="img-fluid n-ava-48" src="modules/npds_galerie/mini/\' + img_feat[key].A.imgName + \'" loading="lazy" /><span class="ml-1 nlfilt">\' + img_feat[key].A.imgName + \'</span></a>\';
          }
       }
       sbimg +=\'</div>\';
@@ -1577,10 +1611,11 @@ switch ($cartyp) {
       centeronMe = function(u) {
          $(".sb_img").removeClass( "animated faa-horizontal faa-slow" );
          if(u.substr(0,1) == "i") {
-            view.setCenter(src_img.idIndex_[u].values_.geometry.flatCoordinates);
+         var position = src_img.getFeatureById(u).getGeometry().getFlatCoordinates();
+            view.setCenter(position);
             $("#ol_popup").show();
-            container.innerHTML = \'<div class="text-center"><img class="" src="modules/npds_galerie/mini/\' + src_img.idIndex_[u].values_.imgName + \'"/></div>\';
-            popup.setPosition(src_img.idIndex_[u].values_.geometry.flatCoordinates);
+            container.innerHTML = \'<div class="text-center"><img class="" src="modules/npds_galerie/mini/\' + src_img.Tu[u].A.imgName + \'" loading="lazy" /></div>\';
+            popup.setPosition(position);
          }
          $("#"+u).addClass("animated faa-horizontal faa-slow" );
          map.getView().setZoom(16);
@@ -1598,7 +1633,7 @@ switch ($cartyp) {
             var coord = map.getCoordinateFromPixel(evt.pixel);
             if (typeof feature.get("features") === "undefined") {
                if(feature.getId().substr(0,1) == "i") {
-                   container.innerHTML = \'<div class="text-center"><img src="modules/npds_galerie/mini/\' + feature.get("imgName") + \'" /></div><div class="text-muted small mt-1">\' + feature.get("imgCom") + \'</div></div>\';
+                   container.innerHTML = \'<div class="text-center"><img src="modules/npds_galerie/mini/\' + feature.get("imgName") + \'" loading="lazy" /></div><div class="text-muted small mt-1">\' + feature.get("imgCom") + \'</div></div>\';
                }
             }
             popup.setPosition(coord);
@@ -1614,7 +1649,7 @@ switch ($cartyp) {
 var containertooltip = $("#ol_tooltip");
 containertooltip.tooltip({
    animation: false,
-   container: "#mapol",
+   container: "#mapimg",
    trigger: "manual",
    placement:"bottom",
    offset:"40,20",
@@ -1717,11 +1752,29 @@ document.getElementById("export-png").addEventListener("click", function () {
   map.renderSync();
 });
 //<== download carte.png
+';
 
-   $(\'[data-toggle="tooltip"]\').tooltip({container:"#mapol"});
-   $("#ol_tooltip").tooltip({container:"#mapol"});
-   $(".ol-zoom-in, .ol-zoom-out").tooltip({placement: "right", container:"#mapol"});
-   $(".ol-full-screen-false, .ol-rotate-reset, .ol-attribution button[title]").tooltip({placement: "left", container:"#mapol"});
+echo file_get_contents('modules/geoloc/include/ol-dico.js');
+echo '
+      const targ = map.getTarget();
+      const lang = targ.lang;
+      for (var i in dic) {
+         if (dic.hasOwnProperty(i)) {
+            $("#mapimg "+dic[i].cla).prop("title", dic[i][lang]);
+         }
+      }
+
+      fullscreen.on("enterfullscreen",function(){
+         $(dic.olfullscreentrue.cla).attr("data-original-title", dic["olfullscreentrue"][lang]);
+      })
+      fullscreen.on("leavefullscreen",function(){
+         $(dic.olfullscreenfalse.cla).attr("data-original-title", dic["olfullscreenfalse"][lang]);
+      })
+
+   $(\'[data-toggle="tooltip"]\').tooltip({container:"#mapimg"});
+   $("#ol_tooltip").tooltip({container:"#mapimg"});
+   $("#mapimg .ol-zoom-in, #mapimg .ol-zoom-out").tooltip({placement: "right", container:"#mapimg"});
+   $("#mapimg .ol-sidebar button[title], #mapimg .ol-full-screen-false, #mapimg .ol-rotate-reset, #mapimg .ol-attribution button[title]").tooltip({placement: "left", container:"#mapimg"});
 
    });
    //]]>
@@ -1729,29 +1782,60 @@ document.getElementById("export-png").addEventListener("click", function () {
 }
 
 function img_geolocalisation($lat,$long,$multi){
-   include_once('modules/geoloc/geoloc_conf.php');
-   $img_point='';
-   $affi='';
-   if (($lat != '') or ($long != ''))
-      $img_point .= 'img_features.push([['.$long.','.$lat.']]);';
+   global $nuke_url, $language, $api_key_bing, $api_key_mapbox;
+   include('modules/geoloc/lang/geoloc.lang-'.$language.'.php');
 
-   $cartyp='sat-google'; // choix manuel du provider ready4admin interface
+   $affi='';
+   if($lat=='') $lat=0;
+   if($long=='') $long=0;
+   $img_point = 'img_features.push([['.$long.','.$lat.']]);';
+   $date_jour = date('Y-m-d');
+   $fond_provider=array(
+   ['OSM', geoloc_translate("Plan").' (OpenStreetMap)'],
+   ['sat-google', geoloc_translate("Satellite").' (Google maps)'],
+   ['toner', geoloc_translate("Noir et blanc").' (Stamen)'],
+   ['watercolor', geoloc_translate("Dessin").' (Stamen)'],
+   ['terrain', geoloc_translate("Relief").' (Stamen)'],
+   ['modisterra', geoloc_translate("Satellite").' (NASA)'],
+   ['natural-earth-hypso-bathy', geoloc_translate("Relief").' (mapbox)'],
+   ['geography-class', geoloc_translate("Carte").' (mapbox)'],
+   ['Road', geoloc_translate("Plan").' (Bing maps)'],
+   ['Aerial', geoloc_translate("Satellite").' (Bing maps)'],
+   ['AerialWithLabels', geoloc_translate("Satellite").' et label (Bing maps)']
+   );
+   if($api_key_bing=='' and $api_key_mapbox=='') unset($fond_provider[6],$fond_provider[7],$fond_provider[8],$fond_provider[9],$fond_provider[10]);
+   elseif($api_key_bing=='') unset($fond_provider[8],$fond_provider[9],$fond_provider[10]);
+   elseif($api_key_mapbox=='') unset($fond_provider[6],$fond_provider[7]);
+
+   $cartyp=''; // choix manuel du provider
    $source_fond=''; $max_r=''; $min_r='';$layer_id='';
    switch ($cartyp) {
       case 'Road': case 'Aerial': case 'AerialWithLabels':
-         $source_fond='new ol.source.BingMaps({key: "'.$api_key_bing.'",imagerySet: "'.$cartyp.'"})';
+         $source_fond='
+         new ol.source.BingMaps({
+            key: "'.$api_key_bing.'",imagerySet: "'.$cartyp.'"
+         })';
          $max_r='40000';
          $min_r='0';
          $layer_id= $cartyp;
       break;
       case 'natural-earth-hypso-bathy': case 'geography-class':
-         $source_fond=' new ol.source.TileJSON({url: "https://api.tiles.mapbox.com/v4/mapbox.'.$cartyp.'.json?access_token='.$api_key_mapbox.'"})';
+         $source_fond='
+         new ol.source.TileJSON({
+            url: "https://api.tiles.mapbox.com/v4/mapbox.'.$cartyp.'.json?access_token='.$api_key_mapbox.'",
+            attributions: "© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>"
+         })';
          $max_r='40000';
          $min_r='2000';
          $layer_id= $cartyp;
       break;
       case 'sat-google':
-         $source_fond=' new ol.source.XYZ({url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",crossOrigin: "Anonymous", attributions: " &middot; <a href=\"https://www.google.at/permissions/geoguidelines/attr-guide.html\">Map data ©2015 Google</a>"})';
+         $source_fond='
+         new ol.source.XYZ({
+            url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+            crossOrigin: "Anonymous",
+            attributions: " &middot; <a href=\"https://www.google.at/permissions/geoguidelines/attr-guide.html\">Map data ©2015 Google</a>"
+         })';
          $max_r='40000';
          $min_r='0';
          $layer_id= $cartyp;
@@ -1763,86 +1847,159 @@ function img_geolocalisation($lat,$long,$multi){
          $layer_id= $cartyp;
       break;
       default:
-         $source_fond='new ol.source.OSM()';
+         $source_fond='new ol.source.OSM({})';
          $max_r='40000';
          $min_r='0';
          $layer_id= 'OSM';
    }
+   $affi .= '
+   <div class="my-3">';
    if($multi!='')
       $affi .= '
-   <div class="my-3">
-      <div id="map-wrapper"  style="height:950px;" class=" my-3">
-         <div id="mapol" class="map" tabindex="20" lang="fr"></div>
-      </div>
-   </div>';
+      <div id="map-wrapper" style="height:950px;" class=" my-3">';
    else
       $affi .= '
-   <div class="my-3">
-      <div id="map-wrapper" class="ol-fullscreen my-3">
-         <div id="mapol" class="map" tabindex="20" lang="fr"></div>
+      <div id="map-wrapper" class="ol-fullscreen my-3">';
+      $affi .= '
+         <div id="mapol" class="map" tabindex="20" lang="'.language_iso(1,0,0).'"></div>
+         <div id="sidebar_loca" class= "collapse show col-sm-4 col-md-3 col-6 px-0">
+            <div id="sb_tools" class="list-group mb-3">
+               <div class="" id="l_sb_tools">
+                  <div class="list-group-item list-group-item-action py-1 px-1">
+                     <div class="form-group row mb-0">
+                        <label class="col-form-label col-sm-12 font-weight-bolder" for="cartyp">Type de carte</label>
+                        <div class="col-sm-12">
+                           <select class="custom-select form-control-sm" name="cartyp" id="cartyp">';
+   $j=0;
+   foreach ($fond_provider as $v) {
+      if($v[0]==$cartyp) $sel='selected="selected"'; else $sel='';
+      switch($j){
+         case '0': $affi .= '
+                              <optgroup label="OpenStreetMap">';break;
+         case '1': $affi .= '
+                              <optgroup label="Google">';break;
+         case '2': $affi .= '
+                              <optgroup label="Stamen">';break;
+         case '5': $affi .= '
+                              <optgroup label="NASA">';break;
+         case '6': if($api_key_mapbox==!'') 
+                     $affi .= '
+                              <optgroup label="Mapbox">';
+                   elseif($api_key_bing==!'')
+                     $affi .= '
+                              <optgroup label="Bing maps">'; break;
+         case '8': if($api_key_bing==!'' and $api_key_mapbox!=='') 
+                     $affi .= '
+                              <optgroup label="Bing maps">'; break;
+      }
+      $affi .= '
+                                 <option '.$sel.' value="'.$v[0].'">'.$v[1].'</option>';
+      switch($j){
+         case '0': case '1': case '4': case '10': $affi .= '
+                              </optgroup>'; break;
+         case '7': if($api_key_mapbox==!'') $affi .= '
+                              </optgroup>'; break;
+         case '8': if($api_key_mapbox=='' and $api_key_bing==!'') $affi .= '
+                              </optgroup>'; break;
+      }
+      $j++;
+   }
+$affi .= '
+                           </select>
+                           <input type="range" value="1" class="custom-range mt-1" min="0" max="1" step="0.1" id="baselayeropacity" />
+                           <label class="mt-0 float-right small" for="baselayeropacity">Opacity</label>
+                           <div id="dayslider" class="collapse">
+                              <input type="range" value="1" class="custom-range mt-1" min="-6" max="0" value="0" id="nasaday" />
+                              <label id="dateimages" class="mt-0 float-right small" for="nasaday">'.$date_jour.'</label>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
       </div>
    </div>';
-   $affi .=  '
+   $affi .= '
 <script type="text/javascript">
    //<![CDATA[
-   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
+   if (!$("link[href=\'/lib/ol/ol.css\']").length)
+      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/geoloc/include/ol-geocoder.css\' type=\'text/css\' media=\'screen\'>");
+
    if (typeof ol=="undefined")
-      $("head").append($("<script />").attr({"type":"text/javascript","src":"/lib/ol/ol.js"}));
+      $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/lib/ol/ol.js"}));
+   $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/modules/geoloc/include/ol-geocoder.js"}));
    $(function () {
-      //==>  affichage des coordonnées à revoir pour réinverser ....
+      //==>  affichage des coordonnées...
          var mousePositionControl = new ol.control.MousePosition({
-           coordinateFormat: new ol.coordinate.createStringXY(4),
-           projection: "EPSG:4326",
-           className: "custom-mouse-position",
-           undefinedHTML: "&nbsp;"
+            coordinateFormat: function(coord) {return ol.coordinate.toStringHDMS(coord,2)},
+            projection: "EPSG:4326",
+            className: "custom-mouse-position",
+            undefinedHTML: "&nbsp;"
          });
       //<==
-      var 
-      iconimg = new ol.style.Style({
-        image: new ol.style.Icon({
-          src: "modules/npds_galerie/npds_galerie.png"
-        })
-      }),
-      iconimgs = new ol.style.Style({
-        image: new ol.style.Icon({
-          src: "modules/npds_galerie/npds_galerie.png"
-        }),
-        text: new ol.style.Text({
-          text: "Image",
-          font: "18px sans-serif",
-          fill: new ol.style.Fill({color: "white"}),
-          stroke: new ol.style.Stroke({color: "rgba(0, 0, 0, 0)", width: 0.1}),
-          offsetY:20
-        })
-      }),
-      popup = new ol.Overlay({
-        element: document.getElementById("ol_popup")
-      }),
-      popuptooltip = new ol.Overlay({
-        element: document.getElementById("ol_tooltip")
-      }),
+      var
+         geocodestyle= new ol.style.Style({
+            image: new ol.style.Circle({
+               radius: 6,
+               fill: new ol.style.Fill({color: "rgba(255, 0, 0, 0.4)"}),
+               stroke: new ol.style.Stroke({color: "red", width: 1})
+            })
+         }),
+         locatedstyle = new ol.style.Style({
+            text: new ol.style.Text({
+               text: "\uf030",
+               font: "900 18px \'Font Awesome 5 Free\'",
+               bottom: "Bottom",
+               scale: [1.5, 1.5],
+               fill: new ol.style.Fill({color: "rgba(0, 104, 255, 0.4)"}),
+               stroke: new ol.style.Stroke({color: "rgba(255, 255, 255, 1)", width: 1})
+            })
+         }),
+         nolocatedstyle = new ol.style.Style({
+            text: new ol.style.Text({
+               text: "\uf030",
+               font: "900 18px \'Font Awesome 5 Free\'",
+               bottom: "Bottom",
+               scale: [1.5, 1.5],
+               fill: new ol.style.Fill({color: "rgba(0, 0, 0, 0.4)"}),
+               stroke: new ol.style.Stroke({color: "rgba(255, 255, 255, 1)", width: 1})
+            })
+         }),
+         popuptooltip = new ol.Overlay({
+           element: document.getElementById("ol_tooltip")
+         }),
       img_features=[];
       '.$img_point.'
-      var src_img = new ol.source.Vector({});
-      var src_img_length = img_features.length;
+      var
+         src_img = new ol.source.Vector({}),
+         src_img_length = img_features.length;
+
       for (var i = 0; i < src_img_length; i++){
          var iconFeature = new ol.Feature({
             geometry: new ol.geom.Point(ol.proj.transform(img_features[i][0], "EPSG:4326","EPSG:3857"))
          });
-            iconFeature.setId(("i"+i));
-            src_img.addFeature(iconFeature);
+         iconFeature.setId(("pg"+i));
+         src_img.addFeature(iconFeature);
       }
+
       var img_markers = new ol.layer.Vector({
          id: "imag",
-         source: src_img,
-         style: iconimgs
-      });
+         source: src_img,';
+         if (($lat == '0') and ($long == '0'))
+            $affi .= '
+         style: nolocatedstyle';
+         else 
+            $affi .= '
+         style: locatedstyle';
+   $affi .= '});
       var src_georef = new ol.source.Vector({});';
    if($multi!='')
       $affi .= '
       var pointGeoref1 = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.fromLonLat([30, 60])),
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([25, 60])),
       });
       pointGeoref1.setId(("pg1"));
       var pointGeoref2 = new ol.Feature({
@@ -1858,74 +2015,69 @@ function img_geolocalisation($lat,$long,$multi){
       });
       pointGeoref4.setId(("pg4"));
       var pointGeoref5 = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.fromLonLat([-30, -60])),
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([-25, -60])),
       });
       pointGeoref5.setId(("pg5"));
-      src_georef.addFeatures([pointGeoref1,pointGeoref2,pointGeoref3,pointGeoref4,pointGeoref5]);
       
-      console.log(src_georef.getFeatures());
+      src_georef.addFeatures([pointGeoref1,pointGeoref2,pointGeoref3,pointGeoref4,pointGeoref5]);
       src_georef.getFeatures().forEach(feat => {feat.setStyle(
          new ol.style.Style({
-            image: new ol.style.Icon({
-               src: "modules/npds_galerie/npds_galerie.png"
-            }),
-            text:new ol.style.Text({
-               text: "'.gal_translate("Image").' "+feat.id_.substr(2),
-               font: "18px sans-serif",
-               fill: new ol.style.Fill({color: "white"}),
-               stroke: new ol.style.Stroke({color: "rgba(0, 0, 0, 0)", width: 0.1}),
-               offsetY:20
+            text: new ol.style.Text({
+               text: "\uf030 "+feat.W.substr(2),
+               font: "900 18px \'Font Awesome 5 Free\'",
+               bottom: "Bottom",
+               scale: [1.5, 1.5],
+               fill: new ol.style.Fill({color: "rgba(0, 0, 0, 0.4)"}),
+               stroke: new ol.style.Stroke({color: "rgba(255, 255, 255, 1)", width: 1})
             })
          })
-      )})
-      ';
-   else
-      $affi .= '
-      var pointGeoref = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.transform([0, 0], "EPSG:4326","EPSG:3857")) 
-      });
-      src_georef.addFeature(pointGeoref);';
+      )})';
    $affi .= '
-      var georef_marker = new ol.layer.Vector({
-        source: src_georef,
-         style: iconimgs
-      });
-
-      var src_fond = '.$source_fond.',
-          minR='.$min_r.',
-          maxR='.$max_r.',
-          layer_id="'.$layer_id.'",
-          fond_carte = new ol.layer.Tile({
+      var
+         georef_marker = new ol.layer.Vector({
+            id:"georef",
+            source: src_georef,
+            style: nolocatedstyle
+         }),
+         source = new ol.source.Stamen({layer:"toner"}),
+         overviewMapControl = new ol.control.OverviewMap({
+            layers: [new ol.layer.Tile({source: source,})],
+         }),
+         src_fond = '.$source_fond.',
+         minR='.$min_r.',
+         maxR='.$max_r.',
+         layer_id="'.$layer_id.'",
+         fond_carte = new ol.layer.Tile({
             id:layer_id,
             source: src_fond,
             minResolution: minR,
             maxResolution: maxR
-          }),
+         }),
          attribution = new ol.control.Attribution({collapsible: true}),
          zoomslider = new ol.control.ZoomSlider(),
+         fullscreen = new ol.control.FullScreen({source: "map-wrapper"}),
+         scaleline = new ol.control.ScaleLine(),
          view = new ol.View({';
    if($multi=='')
-      $affi .= '
-            center: ol.proj.fromLonLat(['.$long.', '.$lat.']),
+      $affi .= 'center: ol.proj.fromLonLat(['.$long.', '.$lat.']),
             zoom: 5,';
    else
-      $affi .= '
-            center: ol.proj.fromLonLat([0, 0]),
+      $affi .= 'center: ol.proj.fromLonLat([0, 0]),
             zoom: 2,';
    $affi .= '
             minZoom:2
          });
-
-         var select = new ol.interaction.Select({style:null});
-         var translate = new ol.interaction.Translate({
-           features: select.getFeatures(),
-         });
+         var
+            select = new ol.interaction.Select({style:null}),
+            translate = new ol.interaction.Translate({
+               features: select.getFeatures(),
+            });
 
       var map = new ol.Map({
          interactions: new ol.interaction.defaults({
             constrainResolution: true, onFocusOnly: true
          }).extend([select,translate]),
-         controls: new ol.control.defaults({attribution: false}).extend([attribution, new ol.control.FullScreen({source: "map-wrapper",}), mousePositionControl, new ol.control.ScaleLine, zoomslider]),
+         controls: new ol.control.defaults({attribution: false}).extend([attribution, fullscreen, mousePositionControl, scaleline, zoomslider, overviewMapControl]),
          target: document.getElementById("mapol"),
          layers: [
             fond_carte,';
@@ -1939,41 +2091,180 @@ function img_geolocalisation($lat,$long,$multi){
       });';
    if($multi !=='')
       $affi .= '
+      map.on("singleclick", function (evt) {
+         const Ll= evt.coordinate;
+         const hdms = ol.proj.toLonLat(Ll);
+         console.log(evt.coordinate);
+         console.log(hdms);
+      });
+
       translate.on("translateend", function(evt) {
-         var idim = (evt.features.array_[0].id_).substr(2),
+         var idim = (evt.features.R[0].W).substr(2),
              coordinate = evt.coordinate,
-             coordWgs = ol.proj.transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
+             coordWgs = ol.proj.toLonLat(coordinate);
          $("#imglat"+idim).val(coordWgs[1].toFixed(6));
          $("#imglong"+idim).val(coordWgs[0].toFixed(6));
+         if((evt.features.R[0].W).substr(0, 2) ==="pg") {
+            evt.features.R[0].setStyle(new ol.style.Style({
+               text: new ol.style.Text({
+                  text: "\uf030 "+idim,
+                  font: "900 18px \'Font Awesome 5 Free\'",
+                  bottom: "Bottom",
+                  scale: [1.5, 1.5],
+                  fill: new ol.style.Fill({color: "rgba(0, 104, 255, 0.4)"}),
+                  stroke: new ol.style.Stroke({color: "rgba(255, 255, 255, 1)", width: 1})
+               })
+            }));
+            $(".jsgeo"+idim).click(function () {
+               view.setCenter(coordinate);
+            }).addClass("text-primary")
+         }
       });';
    if($multi=='')
       $affi .= '
-      map.on("click", function(evt) {
-         pointGeoref.getGeometry().setCoordinates(evt.coordinate);
-             var coordinate = evt.coordinate,
-             coordWgs = ol.proj.transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
-             $("#imglat").val(coordWgs[1].toFixed(6));
-             $("#imglong").val(coordWgs[0].toFixed(6));
-//         georef_popup.setPosition(coordinate);
-         iconFeature.getGeometry().setCoordinates(evt.coordinate);
+      $("#imglat").val().length ? $(".jsgeo").addClass("text-primary"):"";
+      translate.on("translateend", function(evt) {
+         coordinate = evt.coordinate,
+         coordWgs = ol.proj.transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
+         $("#imglat").val(coordWgs[1].toFixed(6));
+         $("#imglong").val(coordWgs[0].toFixed(6));
+         if((evt.features.R[0].W).substr(0, 2) ==="pg") {
+            evt.features.R[0].setStyle(new ol.style.Style({
+               text: new ol.style.Text({
+                  text: "\uf030",
+                  font: "900 18px \'Font Awesome 5 Free\'",
+                  bottom: "Bottom",
+                  scale: [1.5, 1.5],
+                  fill: new ol.style.Fill({color: "rgba(0, 104, 255, 0.5)"}),
+                  stroke: new ol.style.Stroke({color: "rgba(255, 255, 255, 1)", width: 1})
+               })
+            }));
+            $(".jsgeo").click(function () {
+               view.setCenter(coordinate);
+            }).addClass("text-primary")
+         }
       });';
    $affi .= '
-//==> changement etat pointeur sur les markers
-   map.on("pointermove", function(e) {
-        if (e.dragging) {
-          $(".popover").popover("dispose");
-          return;
-        }
-        var pixel = map.getEventPixel(e.originalEvent);
-        var hit = map.hasFeatureAtPixel(pixel);
-        map.getTarget().style.cursor = hit ? "pointer" : "";
+      //==> changement etat pointeur sur les markers
+      map.on("pointermove", function(e) {
+         var
+            pixel = map.getEventPixel(e.originalEvent),
+            hit = map.hasFeatureAtPixel(pixel);
+         map.getTarget().style.cursor = hit ? "pointer" : "";
       });
-//<== changement etat pointeur sur les markers
+      //<== changement etat pointeur sur les markers';
+   $source ='';
+   if($multi=='') $source ='src_img';
+   else if($multi!=='') $source ='src_georef';
+   $affi .= '
+      var
+         geocoder = new Geocoder("nominatim", {
+            featureStyle : geocodestyle,
+            provider: "osm",
+            lang: "'.language_iso(1,0,0).'",
+            placeholder: "Chercher un lieu",
+            limit: 5,
+            debug: false,
+            autoComplete: true,
+            keepOpen: false
+         });
+      map.addControl(geocoder);
+      geocoder.on("addresschosen", function (evt) {
+         var x=500;
+         geocoder.getSource().clear();
+         geocoder.getSource().addFeature(evt.feature);
+         '.$source.'.getFeatures().forEach(feat=>{';
+   if($multi=='')
+      $affi .='
+            var idf = 1;
+            if ($("#imglat").val()=="" && $("#imglong").val()=="") {';
+   if($multi!=='')
+      $affi .='
+            var idf = feat.W.substr(2);
+            if ($("#imglat"+idf).val()=="" && $("#imglong"+idf).val()=="") {';
+   $affi .='
+               window.setTimeout(function () {
+                  feat.getGeometry().setCoordinates([(evt.coordinate[0]+(x*idf)),evt.coordinate[1]+(x*idf)]);
+               }, 600*idf);
+            }
+         });
+      });';
 
-   $(\'[data-toggle="tooltip"]\').tooltip({container:"#mapol"});
-   $("#ol_tooltip").tooltip({container:"#mapol"});
-   $(".ol-zoom-in, .ol-zoom-out").tooltip({placement: "right", container:"#mapol"});
-   $(".ol-full-screen-false, .ol-rotate-reset, .ol-attribution button[title]").tooltip({placement: "left", container:"#mapol"});
+   $affi .= file_get_contents('modules/geoloc/include/ol-dico.js');
+   $affi .='
+      const targ = map.getTarget();
+      const lang = targ.lang;
+      for (var i in dic) {
+         if (dic.hasOwnProperty(i)) {
+            $("#mapol "+dic[i].cla).prop("title", dic[i][lang]);
+         }
+      }
+      fullscreen.on("enterfullscreen",function(){
+         $(dic.olfullscreentrue.cla).attr("data-original-title", dic["olfullscreentrue"][lang]);
+      })
+      fullscreen.on("leavefullscreen",function(){
+         $(dic.olfullscreenfalse.cla).attr("data-original-title", dic["olfullscreenfalse"][lang]);
+      })
+
+   $("#cartyp").on("change", function() {
+      cartyp = $( "#cartyp option:selected" ).val();
+      $("#dayslider").removeClass("show");
+      switch (cartyp) {
+         case "OSM":
+            fond_carte.setSource(new ol.source.OSM());
+            map.getLayers().R[0].setProperties({"id":cartyp});
+            fond_carte.setMinResolution(1);
+         break;
+         case "sat-google":
+            fond_carte.setSource(new ol.source.XYZ({url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",crossOrigin: "Anonymous", attributions: " &middot; <a href=\"https://www.google.at/permissions/geoguidelines/attr-guide.html\">Map data ©2015 Google</a>"}));
+            map.getLayers().R[0].setProperties({"id":cartyp});
+         break;
+         case "Road":case "Aerial":case "AerialWithLabels":
+            fond_carte.setSource(new ol.source.BingMaps({key: "'.$api_key_bing.'",imagerySet: cartyp }));
+            map.getLayers().R[0].setProperties({"id":cartyp});
+            fond_carte.setMinResolution(1);
+         break;
+         case "natural-earth-hypso-bathy": case "geography-class":
+            fond_carte.setSource(new ol.source.TileJSON({url: "https://api.tiles.mapbox.com/v4/mapbox."+cartyp+".json?access_token='.$api_key_mapbox.'"}));
+            fond_carte.setMinResolution(2000);
+            fond_carte.setMaxResolution(40000);
+            map.getLayers().R[0].setProperties({"id":cartyp});
+         break;
+         case "terrain": case "toner": case "watercolor":
+            fond_carte.setSource(new ol.source.Stamen({layer:cartyp}));
+            fond_carte.setMinResolution(0);
+            fond_carte.setMaxResolution(40000);
+            map.getLayers().R[0].setProperties({"id":cartyp});
+         break;
+         case "modisterra":
+            $("#dayslider").addClass("show");
+            var datejour="'.$date_jour.'";
+            var today = new Date();
+            fond_carte.setSource(new ol.source.XYZ({url: "https://gibs-{a-c}.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_SNPP_CorrectedReflectance_TrueColor/default/"+datejour+"/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg"}));
+            $("#nasaday").on("input change", function(event) {
+               var newDay = new Date(today.getTime());
+               newDay.setUTCDate(today.getUTCDate() + Number.parseInt(event.target.value));
+               datejour = newDay.toISOString().split("T")[0];
+               var datejourFr = datejour.split("-");
+               $("#dateimages").html(datejourFr[2]+"/"+datejourFr[1]+"/"+datejourFr[0]);
+               fond_carte.setSource(new ol.source.XYZ({url: "https://gibs-{a-c}.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_SNPP_CorrectedReflectance_TrueColor/default/"+datejour+"/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg"}));
+            });
+            fond_carte.setMinResolution(2);
+            fond_carte.setMaxResolution(40000);
+            map.getLayers().R[0].setProperties({"id":cartyp});
+         break;
+      }
+   });
+
+   // ==> opacité sur couche de base
+      $("#baselayeropacity").on("input change", function() {
+         map.getLayers().R[0].setOpacity(parseFloat(this.value));
+      });
+   // <== opacité sur couche de base
+
+      $("#ol_tooltip").tooltip({container:"#mapol"});
+      $("#mapol .ol-zoom-in, #mapol .ol-zoom-out, #mapol .ol-overviewmap ").tooltip({placement: "right", container:"#mapol"});
+      $("#mapol .ol-full-screen-false, #mapol .ol-rotate-reset, #mapol .ol-attribution button[title]").tooltip({placement: "left", container:"#mapol"});
    });
    //]]>
 </script>';
