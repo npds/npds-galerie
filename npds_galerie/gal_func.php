@@ -220,7 +220,7 @@ function ListGalCat($catid) {
 }
 
 function ViewGal($galid, $page){
-   global $NPDS_Prefix, $ModPath, $imgpage, $MaxSizeThumb, $aff_comm, $aff_vote, $galid, $pos,$pid;
+   global $NPDS_Prefix, $ModPath, $imgpage, $MaxSizeThumb, $aff_comm, $aff_vote, $galid, $pos,$pid, $nuke_url;
    $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
    settype($galid,'integer');
    settype($page,'integer');
@@ -263,7 +263,7 @@ function ViewGal($galid, $page){
       if (($row[7] != '') or ($row[8] != '')) {
          $desc = trim(preg_replace('/\s\s+/', ' ', $row[3]));
          $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($desc).'","'.$row[4].'"]);';
-         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="'.$nuke_url.'/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
       }
       //<== geoloc
         echo '
@@ -804,7 +804,7 @@ function PostVote($gal_id, $pos, $pic_id, $value) {
 }
 
 function ViewAlea() {
-   global $NPDS_Prefix, $ModPath, $ThisFile, $imgpage, $MaxSizeThumb, $aff_comm;
+   global $NPDS_Prefix, $ModPath, $ThisFile, $imgpage, $MaxSizeThumb, $aff_comm, $nuke_url;
    $tab_groupe=autorisation_local();
    // Fabrication de la requête 1
    $where1='';
@@ -837,7 +837,7 @@ function ViewAlea() {
       if (($row[7] != '') or ($row[8] != '')) {
          $desc = trim(preg_replace('/\s\s+/', ' ', $row[3]));
          $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($desc).'","'.$row[4].'"]);';
-         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="'.$nuke_url.'/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
       }
       //<== geoloc
       $nbcom = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='".$row[0]."'"));
@@ -869,7 +869,7 @@ function ViewAlea() {
 }
 
 function ViewLastAdd() {
-   global $NPDS_Prefix, $ModPath, $ThisFile, $imgpage, $MaxSizeThumb, $aff_comm;
+   global $NPDS_Prefix, $ModPath, $ThisFile, $imgpage, $MaxSizeThumb, $aff_comm, $nuke_url;
    // Fabrication de la requête 1
    $where1='';
    $tab_groupe=autorisation_local();
@@ -906,7 +906,7 @@ function ViewLastAdd() {
       $img_geotag='';
       //==> geoloc
       if (($row[7] != '') or ($row[8] != '')) {
-         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png"  title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="'.$nuke_url.'/modules/'.$ModPath.'/data/geotag_16.png"  title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
       }
       //<== geoloc
       echo '
@@ -1386,6 +1386,7 @@ function CreateThumb($Image, $Source, $Destination, $Max, $ext) {
 
 #autodoc Img_carte($img_point) : $img_point est une ou plusieurs commande js (push) de construction du tableau "img_features", cette variable $img_point doit donc être remplie dans la boucle récupérant les données dans la bd. Cette fonction ne peut être utilisée qu'une fois par page généré. 
 function Img_carte($img_point){
+   global $nuke_url;
    include_once('modules/geoloc/geoloc_conf.php');
    $cartyp='sat-google'; // choix manuel du provider ready4admin interface
 $source_fond=''; $max_r=''; $min_r='';$layer_id='';
@@ -1460,10 +1461,10 @@ switch ($cartyp) {
 <script type="text/javascript">
    //<![CDATA[
    if (!$("link[href=\'/lib/ol/ol.css\']").length)
-      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
-   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
+      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
    if (typeof ol=="undefined")
-      $("head").append($("<script />").attr({"type":"text/javascript","src":"/lib/ol/ol.js"}));
+      $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/lib/ol/ol.js"}));
    $(function () {
       //==>  affichage des coordonnées...
          var mousePositionControl = new ol.control.MousePosition({
@@ -1924,9 +1925,9 @@ $affi .= '
 <script type="text/javascript">
    //<![CDATA[
    if (!$("link[href=\'/lib/ol/ol.css\']").length)
-      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
-   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
-   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/geoloc/include/ol-geocoder.css\' type=\'text/css\' media=\'screen\'>");
+      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/modules/geoloc/include/ol-geocoder.css\' type=\'text/css\' media=\'screen\'>");
 
    if (typeof ol=="undefined")
       $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/lib/ol/ol.js"}));
