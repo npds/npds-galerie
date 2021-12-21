@@ -2424,10 +2424,9 @@ $affi .= '
 <script type="text/javascript">
    //<![CDATA[
    if (!$("link[href=\'/lib/ol/ol.css\']").length)
-      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
-   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
-   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/geoloc/include/ol-geocoder.css\' type=\'text/css\' media=\'screen\'>");
-
+      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/modules/geoloc/include/ol-geocoder.css\' type=\'text/css\' media=\'screen\'>");
    if (typeof ol=="undefined")
       $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/lib/ol/ol.js"}));
    $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/modules/geoloc/include/ol-geocoder.js"}));
