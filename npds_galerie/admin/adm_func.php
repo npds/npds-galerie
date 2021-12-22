@@ -530,10 +530,7 @@ function AddImgs($imggal,$newcard1,$newdesc,$imglat,$imglong,$newcard2,$newcard3
       
       if (!empty($$img)) {
          $newimg = stripslashes(removeHack($$img));
-         if (!empty($newdesc[$i-1]))
-            $newtit = addslashes(removeHack($newdesc[$i-1]));
-         else
-            $newtit = '';
+         $newtit = !empty($newdesc[$i-1]) ? addslashes(removeHack($newdesc[$i-1])) : '';
          $upload = new Upload();
          $upload->maxupload_size=200000*100;
          $origin_filename = trim($upload->getFileName("newcard".$i));
@@ -547,7 +544,7 @@ function AddImgs($imggal,$newcard1,$newdesc,$imglat,$imglong,$newcard2,$newcard3
                   @CreateThumb($newfilename, "modules/$ModPath/imgs/", "modules/$ModPath/mini/", $MaxSizeThumb, $filename_ext);
                }
                   echo '<ul class="list-group">';
-               if (sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES ('','$imggal','$newfilename','$newtit','','0','0','$lat','$long')")) {
+               if (sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES ('0','$imggal','$newfilename','$newtit','0','0','0','$lat','$long')")) {
                   echo '<li class="list-group-item list-group-item-success"><i class="fa fa-info-circle mr-2"></i>'.gal_translate("Image ajoutée avec succès").'</li>';
                } else {
                   echo '<li class="list-group-item list-group-item-danger"><i class="fa fa-info-circle mr-2"></i>'.gal_translate("Impossible d'ajouter l'image en BDD").'</li>';
@@ -912,7 +909,7 @@ function PrintArbo() {
       while ($rowZ_img = sql_fetch_row($queryZ)) {
          if ($rowZ_img[6]==1)  {$cla=' alert-danger '; $j++;} else $cla='alert-secondary';
          if (($rowZ_img[7] != '') and ($rowZ_img[8] != ''))
-            $img_geotag = '<img class="geotag tooltipbyclass float-left mt-1" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
+            $img_geotag = '<img class="geotag tooltipbyclass float-left mt-1" src="modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
          else
             $img_geotag ='';
          $affgaltemp.= '
@@ -1104,7 +1101,7 @@ function PrintArbo() {
             while ($rowZ_img = sql_fetch_row($queryZ)) {
                $cla = $rowZ_img[6]==1 ? ' alert-danger ' : 'alert-secondary';
                if (($rowZ_img[7] != '') and ($rowZ_img[8] != ''))
-                  $img_geotag = '<img class="geotag tooltipbyclass float-right mt-1" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
+                  $img_geotag = '<img class="geotag tooltipbyclass float-right mt-1" src="modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
                else
                   $img_geotag ='';
                $affcatgalimg .= '
@@ -1234,7 +1231,7 @@ function PrintArbo() {
                while($row_img = sql_fetch_row($querz)) {
                   $cla = $row_img[6]==1 ? ' alert-danger ' : 'alert-secondary';
                   if (($row_img[7] != '') and ($row_img[8] != ''))
-                     $img_geotag = '<img class="geotag tooltipbyclass float-right mt-1" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
+                     $img_geotag = '<img class="geotag tooltipbyclass float-right mt-1" src="modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
                   else
                   $img_geotag ='';
                   $affsoucatgalimg .= '
@@ -2166,7 +2163,7 @@ function massimport($imggal, $descri) {
             @CreateThumb($newfilename, "modules/$ModPath/import/", "modules/$ModPath/mini/", $MaxSizeThumb, $filename_ext);
          }
       echo '<ul class="list-group">';
-         if (sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES ('','$imggal','$newfilename','$descri','','0','0','','')")) {
+         if (sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES ('0','$imggal','$newfilename','$descri','0','0','0','','')")) {
             echo '<li class="list-group-item list-group-item-success mb-1">'.gal_translate("Image ajoutée avec succès").' : '.$file.'</li>';
             $i++;
          } else {
