@@ -608,7 +608,7 @@ function PrintFormConfig() {
          </div>
       </div>';
 
-   if ($view_alea) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
+   if ($view_alea!==false) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
    echo '
       <div class="form-group row">
          <label class="col-sm-8 col-form-label">'.gal_translate("Afficher des photos aléatoires ?").'</label>
@@ -623,7 +623,7 @@ function PrintFormConfig() {
             </div>
          </div>
       </div>';
-   if ($view_last) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; ' checked="checked"'; }
+   if ($view_last!==false) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
    echo '
       <div class="form-group row">
          <label class="col-sm-8 col-form-label">'.gal_translate("Afficher les derniers ajouts ?").'</label>
@@ -638,7 +638,7 @@ function PrintFormConfig() {
             </div>
          </div>
       </div>';
-   if ($aff_vote) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
+   if ($aff_vote!==false) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
    echo '
       <div class="form-group row">
          <label class="col-sm-8 col-form-label">'.gal_translate("Afficher les votes ?").'</label>
@@ -653,7 +653,7 @@ function PrintFormConfig() {
             </div>
          </div>
       </div>';
-   if ($aff_comm) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
+   if ($aff_comm!==false) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
    echo '
       <div class="form-group row">
          <label class="col-sm-8 col-form-label">'.gal_translate("Afficher les commentaires ?").'</label>
@@ -668,7 +668,7 @@ function PrintFormConfig() {
             </div>
          </div>
       </div>';
-   if ($vote_anon) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
+   if ($vote_anon!==false) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
    echo '
       <div class="form-group row">
          <label class="col-sm-8 col-form-label">'.gal_translate("Les anonymes peuvent voter ?").'</label>
@@ -683,7 +683,7 @@ function PrintFormConfig() {
             </div>
          </div>
       </div>';
-   if ($comm_anon) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
+   if ($comm_anon!==false) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
    echo '
       <div class="form-group row">
          <label class="col-sm-8 col-form-label">'.gal_translate("Les anonymes peuvent poster un commentaire ?").'</label>
@@ -698,7 +698,7 @@ function PrintFormConfig() {
             </div>
          </div>
       </div>';
-   if ($post_anon) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
+   if ($post_anon!==false) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
    echo '
       <div class="form-group row">
          <label class="col-sm-8 col-form-label">'.gal_translate("Les anonymes peuvent envoyer des E-Cartes ?").'</label>
@@ -713,7 +713,7 @@ function PrintFormConfig() {
             </div>
          </div>
       </div>';
-   if ($notif_admin) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
+   if ($notif_admin!==false) { $rad1 = ' checked="checked"'; $rad2 = ''; } else { $rad1 = ''; $rad2 = ' checked="checked"'; }
    echo '
       <div class="form-group row">
          <label class="col-sm-8 col-form-label">'.gal_translate("Notifier par email l'administrateur de la proposition de photos ?").'</label>
@@ -781,6 +781,7 @@ function PrintFormConfig() {
 function WriteConfig($maxszimg,$maxszthb,$nbimpg,$nbimcomment,$nbimvote,$viewalea,$viewlast,$vote,$comm,$votano,$comano,$postano,$notifadmin) {
    global $ModPath, $ModStart, $ThisRedo;
 
+/*
    if (!is_integer($maxszimg) && ($maxszimg > 1024)) {
       $msg_erreur = gal_translate("Dimension maximale de l'image incorrecte");
       $erreur=true;
@@ -793,6 +794,7 @@ function WriteConfig($maxszimg,$maxszthb,$nbimpg,$nbimcomment,$nbimvote,$viewale
       echo '<p class="lead text-danger">'.$msg_erreur.'</p>';
       exit;
    }
+*/
    
    $filename = "modules/".$ModPath."/gal_conf.php";
    $content = "<?php\n";
@@ -814,10 +816,8 @@ function WriteConfig($maxszimg,$maxszthb,$nbimpg,$nbimcomment,$nbimvote,$viewale
    $content.= "/* v 3.2                                                                */\n";
    $content.= "/************************************************************************/\n\n";
    $content.= "// Dimension max des images\n";
-//   $content.= "\$MaxSizeImg = ".$maxszimg.";\n\n";
    $content.= "\$MaxSizeImg = 1000;\n\n";
    $content.= "// Dimension max des images miniatures\n";
-//   $content.= "\$MaxSizeThumb = ".$maxszthb.";\n\n";
    $content.= "\$MaxSizeThumb = 300;\n\n";
    $content.= "// Nombre de photos par page\n";
    $content.= "\$imgpage = ".$nbimpg.";\n\n";
@@ -828,16 +828,16 @@ function WriteConfig($maxszimg,$maxszthb,$nbimpg,$nbimcomment,$nbimvote,$viewale
    if (!$nbimvote) $nbimvote=5;
    $content.= "\$nbtopvote = ".$nbimvote.";\n\n";
    $content.= "// Personnalisation de l'affichage\n";
-   $content.= "\$view_alea = \"$viewalea\";\n";
-   $content.= "\$view_last = \"$viewlast\";\n";
-   $content.= "\$aff_vote = \"$vote\";\n";
-   $content.= "\$aff_comm = \"$comm\";\n\n";
+   $content.= "\$view_alea = ".$viewalea.";\n";
+   $content.= "\$view_last = ".$viewlast.";\n";
+   $content.= "\$aff_vote = ".$vote.";\n";
+   $content.= "\$aff_comm = ".$comm.";\n\n";
    $content.= "// Autorisations pour les anonymes\n";
-   $content.= "\$vote_anon = \"$votano\";\n";
-   $content.= "\$comm_anon = \"$comano\";\n";
-   $content.= "\$post_anon = \"$postano\";\n\n";
+   $content.= "\$vote_anon = ".$votano.";\n";
+   $content.= "\$comm_anon = ".$comano.";\n";
+   $content.= "\$post_anon = ".$postano.";\n\n";
    $content.= "// Notification admin par email de la proposition\n";
-   $content.= "\$notif_admin = \"$notifadmin\";\n\n";
+   $content.= "\$notif_admin = ".$notifadmin.";\n\n";
    $content.= "// Version du module\n";
    $content.= "\$npds_gal_version = \"V 3.2\";\n";
    $content.= "?>";
