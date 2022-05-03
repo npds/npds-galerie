@@ -1,6 +1,8 @@
+@charset "UTF-8";
 /*
 modules npds_galerie
 galerie.css
+v 3.3 jpb-2022
 */
 
 a[href*="intent"] {
@@ -9,7 +11,7 @@ a[href*="intent"] {
 }
 .rating a {
    float:right;
-   color: var(--primary);
+   color: var(--bs-primary);
    text-decoration: none;
    -webkit-transition: color .4s;
    -moz-transition: color .4s;
@@ -20,7 +22,7 @@ a[href*="intent"] {
 .rating a:hover ~ a,
 .rating a:focus,
 .rating a:focus ~ a {
-   color: var(--success);
+   color: var(--bs-success);
    cursor: pointer;
 }
 .rating2 {
@@ -193,7 +195,7 @@ font-size: 0.8rem;
 }
 
 .ol-control button, .ol-scale-line {
-   background-color: var(--primary);
+   background-color: var(--bs-primary);
    opacity: 0.8;
 }
 .ol-full-screen {
@@ -235,4 +237,3 @@ font-size: 0.8rem;
    top:8px;
    right:8px;
 }
-

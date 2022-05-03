@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2021 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2022 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -15,6 +15,7 @@
 /* MAJ Dev - 2011                                                       */
 /* npds_galerie v 3.2                                                   */
 /* Changement de nom du module version Rev16 par jpb/phr janv 2017      */
+/* v 3.3 jpb-2022                                                       */
 /************************************************************************/
 /*
 $reqalertes est un tableau où chaque tableau correspond à un état du module qui nécessite une intervention de l'administrateur.
