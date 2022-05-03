@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2021 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2022 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -14,14 +14,13 @@
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
-/* v 3.2                                                                */
-/************************************************************************/
+/* v 3.3 jpb-2022                                                       */
 /************************************************************************/
 /* Fonctions du module                                                  */
 /************************************************************************/
 // les menus
 /*******************************************************/
-include 'modules/geoloc/geoloc_conf.php';
+include 'modules/geoloc/geoloc.conf';
 
 function FabMenu() {
    global $NPDS_Prefix, $ThisFile, $aff_comm, $aff_vote, $ModPath, $user;
@@ -32,14 +31,14 @@ function FabMenu() {
          if (autorisation($row[2])) {
             $ibid.='
             <div class="col-md-4 mb-2">
-            <a href="'.$ThisFile.'&amp;op=cat&amp;catid='.$row[0].'"><i class="fa fa-folder fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'</a>
+            <a href="'.$ThisFile.'&amp;op=cat&amp;catid='.$row[0].'"><i class="fa fa-folder fa-2x align-middle me-2"></i>'.stripslashes($row[1]).'</a>
             </div>';
          }
       }
       if ($ibid) {
          echo '
-         <nav class="card-header lead nav flex-column flex-sm-row pl-0 align-items-center" role="navigation">
-               <a class="nav-link disabled"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>';
+         <nav class="card-header lead nav flex-column flex-sm-row ps-0 align-items-center" role="navigation">
+               <a class="nav-link disabled"><i class="fa fa-camera fa-2x align-middle me-2"></i>'.gal_translate("Accueil").'</a>';
          if ($aff_comm)
             echo '
                <a class="nav-link" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=topcomment">'.gal_translate("Top-Commentaires").'</a>';
@@ -50,10 +49,10 @@ function FabMenu() {
             echo '
                <a class="nav-link" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=formimgs">'.gal_translate("Proposer des images").'</a>';
          echo '
-               <a class="nav-link" href=""><i class="fa fa-question fa-lg align-middle mr-2"></i></a>
+               <a class="nav-link" href=""><i class="fa fa-question fa-lg align-middle me-2"></i></a>
          </nav>
          <div class="card-body">
-            <div class="row lead">';
+            <div class="row">';
          echo $ibid;
          echo '
             </div>
@@ -75,17 +74,17 @@ function FabMenuCat($catid) {
       $nbsc = sql_num_rows($query);
       echo '
       <nav class="card-header lead">
-         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center border-0">
-            <li class="breadcrumb-item active"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-lg align-middle mr-2"></i>'.gal_translate("Accueil").'</a></li>
+         <ol class="breadcrumb bg-transparent ps-0 mb-0 align-items-center border-0">
+            <li class="breadcrumb-item active"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-lg align-middle me-2"></i>'.gal_translate("Accueil").'</a></li>
             <li class="breadcrumb-item active">'.stripslashes($cat[0]).'</li>
          </ol>
       </nav>';
       if($nbsc>0) { 
          echo '
       <div class="card-body">
-         <h4>'.gal_translate("Sous-catégories").'<span class="float-right badge badge-secondary badge-pill">'.$nbsc.'</span></h4>
+         <h4>'.gal_translate("Sous-catégories").'<span class="float-end badge bg-secondary rounded-pill">'.$nbsc.'</span></h4>
          <hr />
-         <div class="row lead">';
+         <div class="row">';
          while ($row = sql_fetch_row($query)) {
             if (autorisation($row[2])) {
                $ngal = sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_gal WHERE cid='".$row[0]."'");
@@ -94,10 +93,10 @@ function FabMenuCat($catid) {
                <div class="col-md-4 mb-2">';
                if($nbgal>0)
                   echo '
-                  <a href="'.$ThisFile.'&amp;op=sscat&amp;catid='.$catid.'&amp;sscid='.$row[0].'"><i class="fa fa-folder fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'</a> <span class="badge badge-secondary badge-pill">'.$nbgal.'</span>';
+                  <a href="'.$ThisFile.'&amp;op=sscat&amp;catid='.$catid.'&amp;sscid='.$row[0].'"><i class="fa fa-folder fa-2x align-middle me-2"></i>'.stripslashes($row[1]).'</a> <span class="badge bg-secondary rounded-pill">'.$nbgal.'</span>';
                else
                   echo '
-                  <a class="text-muted"><i class="far fa-folder fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'</a>';
+                  <a class="text-muted"><i class="far fa-folder fa-2x align-middle me-2"></i>'.stripslashes($row[1]).'</a>';
                echo '
                </div>';
             }
@@ -124,8 +123,8 @@ function FabMenuSsCat($catid, $sscid) {
       if (autorisation($sscat[1]))
          echo '
       <nav class="card-header lead" aria-label="breadcrumb" role="navigation">
-         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center border-0">
-            <li class="breadcrumb-item"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-lg align-middle mr-2"></i>'.gal_translate("Accueil").'</a></li>
+         <ol class="breadcrumb bg-transparent ps-0 mb-0 align-items-center border-0">
+            <li class="breadcrumb-item"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-lg align-middle me-2"></i>'.gal_translate("Accueil").'</a></li>
             <li class="breadcrumb-item"><a href="'.$ThisFile.'&op=cat&amp;catid='.$catid.'">'.stripslashes($cat[0]).'</a></li>
             <li class="breadcrumb-item active">'.stripslashes($sscat[0]).'</li>
          </ol>
@@ -147,8 +146,8 @@ function FabMenuGal($galid) {
    if (autorisation($gal[1])) {
       echo '
       <nav class="card-header lead" aria-label="breadcrumb" role="navigation">
-         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center border-0">
-            <li class="breadcrumb-item"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-lg mr-2 align-middle"></i>'.gal_translate("Accueil").'</a></li>';
+         <ol class="breadcrumb bg-transparent ps-0 mb-0 align-items-center border-0">
+            <li class="breadcrumb-item"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-lg me-2 align-middle"></i>'.gal_translate("Accueil").'</a></li>';
       echo GetGalArbo($galid);
       echo '
             <li class="breadcrumb-item active">'.stripslashes($gal[0]).'</li>
@@ -169,8 +168,8 @@ function FabMenuImg($galid, $pos) {
    if (autorisation($gal[1])) {
       echo '
       <nav class="card-header lead" aria-label="breadcrumb" role="navigation">
-         <ol class="breadcrumb bg-transparent pl-0 mb-0 align-items-center border-0">
-            <li class="breadcrumb-item"><a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a></li>';
+         <ol class="breadcrumb bg-transparent ps-0 mb-0 align-items-center border-0">
+            <li class="breadcrumb-item"><a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle me-2"></i>'.gal_translate("Accueil").'</a></li>';
       echo GetGalArbo($galid);
       echo '
             <li class="breadcrumb-item"> <a href="'.$ThisFile.'&amp;op=gal&amp;galid='.$galid.'">'.stripslashes($gal[0]).'</a></li>';
@@ -201,10 +200,10 @@ function ListGalCat($catid) {
             $ibid.= '
             <div class="col-md-4 mb-2">';
             if($nimg[0]!='0')
-               $ibid.= '<a href="'.$ThisFile.'&amp;op=gal&amp;galid='.$row[0].'"><i class="fa fa-folder fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'</a> <span class="badge badge-success badge-pill" title="'.gal_translate("Nombre d'images").'" data-toggle="tooltip" data-placement="right">'.$nimg[0].'</span>
+               $ibid.= '<a href="'.$ThisFile.'&amp;op=gal&amp;galid='.$row[0].'"><i class="fa fa-folder fa-2x align-middle me-2"></i>'.stripslashes($row[1]).'</a> <span class="badge bg-success rounded-pill" title="'.gal_translate("Nombre d'images").'" data-bs-toggle="tooltip" data-bs-placement="right">'.$nimg[0].'</span>
                <br /><span class="small">'.gal_translate("Créée le").' '.date(translate("dateinternal"),$row[2]).'</span>';
             else 
-               $ibid.= '<span class="text-muted"><i class="far fa-folder fa-2x align-middle mr-2"></i>'.stripslashes($row[1]).'<br /><span class="small">'.gal_translate("Créée le").' '.date(translate("dateinternal"),$row[2]).'</span></span>';
+               $ibid.= '<span class="text-muted"><i class="far fa-folder fa-2x align-middle me-2"></i>'.stripslashes($row[1]).'<br /><span class="small">'.gal_translate("Créée le").' '.date(translate("dateinternal"),$row[2]).'</span></span>';
             $ibid.= '
             </div>';
          }
@@ -212,15 +211,15 @@ function ListGalCat($catid) {
       if ($ibid!='')
          echo '
          <div class="card-body">
-            <h4>'.gal_translate("Galeries").'<span class="float-right badge badge-secondary badge-pill">'.$nb_gal.'</span></h4>
+            <h4>'.gal_translate("Galeries").'<span class="float-end badge bg-secondary rounded-pill">'.$nb_gal.'</span></h4>
             <hr />
-            <div class="row lead">'.$ibid.'</div>
+            <div class="row">'.$ibid.'</div>
          </div>';
    }
 }
 
 function ViewGal($galid, $page){
-   global $NPDS_Prefix, $ModPath, $imgpage, $MaxSizeThumb, $aff_comm, $aff_vote, $galid, $pos,$pid, $nuke_url;
+   global $NPDS_Prefix, $ModPath, $imgpage, $MaxSizeThumb, $aff_comm, $aff_vote, $galid, $pos,$pid;
    $ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
    settype($galid,'integer');
    settype($page,'integer');
@@ -243,12 +242,8 @@ function ViewGal($galid, $page){
          $current=1;
       else
          $current = $nbPages;
-/*
       echo '
-      <div class="row row-cols-1 row-cols-sm-3 m-0">';
-*/
-      echo '
-      <div class="card-columns p-2 mt-2">';
+      <div class="row g-2 mt-2 gridphot">';
       $img_point='';
       while ($row = sql_fetch_row($query)) {
          $img_geotag='';
@@ -256,30 +251,31 @@ function ViewGal($galid, $page){
          $nbvote = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_vot WHERE pic_id='".$row[0]."'"));
          if (@file_exists("modules/$ModPath/imgs/".$row[2])) {
             list($width, $height, $type, $attr) = @getimagesize("modules/$ModPath/imgs/$row[2]");
-            $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-placement="bottom" loading="lazy" />';
+            $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-bs-html="true" data-bs-placement="bottom" loading="lazy" />';
          } else
            $ibid = ReducePic($row[2],stripslashes($row[3]),$MaxSizeThumb);
       //==> geoloc
       if (($row[7] != '') or ($row[8] != '')) {
          $desc = trim(preg_replace('/\s\s+/', ' ', $row[3]));
          $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($desc).'","'.$row[4].'"]);';
-         $img_geotag = '<img class="geotag tooltipbyclass" src="'.$nuke_url.'/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
       }
       //<== geoloc
         echo '
-         <div class="col px-1 my-1">
-            <div class="card h-100">
+         <div class="griditem col-12 col-sm-6 col-lg-4 col-xl-3" >
+            <div class="card">
                <a href="'.$ThisFile.'&amp;op=img&amp;galid='.$galid.'&amp;pos='.$pos.'">'.$ibid.'</a>
                '.$img_geotag.'
                <div class="card-body">
-                  <p class="card-text text-muted"><span class="badge badge-secondary mr-1">'.$row[4].'</span>'.gal_translate("affichage(s)");
+                  <p class="card-text text-muted"><span class="badge bg-secondary me-1">'.$row[4].'</span>'.gal_translate("affichage(s)");
         if ($aff_comm and $nbcom>0)
-           echo '<br /><span class="badge badge-secondary mr-1">'.$nbcom.'</span>'.gal_translate("commentaire(s)");
+           echo '<br /><span class="badge bg-secondary me-1">'.$nbcom.'</span>'.gal_translate("commentaire(s)");
         if ($aff_vote and $nbvote>0)
-           echo '<br /><span class="badge badge-secondary mr-1">'.$nbvote.'</span>'.gal_translate("vote(s)");
-        echo '</p>
+           echo '<br /><span class="badge bg-secondary me-1">'.$nbvote.'</span>'.gal_translate("vote(s)");
+        echo '
+                  </p>
+               </div>
             </div>
-         </div>
          </div>';
         $pos++;
       }
@@ -296,7 +292,7 @@ function ViewGal($galid, $page){
       echo '
       <nav class="d-flex my-2 mx-2 justify-content-between flex-wrap border-top pt-2">
          <div>
-            <button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target=".carou">'.gal_translate("Diaporama").'</button>
+            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target=".carou">'.gal_translate("Diaporama").'</button>
          </div>
          <div>';
       echo paginate_single('modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=gal&amp;galid='.$galid.'&amp;page=', '', $nbPages, $current, $adj=3,'',$page);
@@ -368,7 +364,7 @@ function ViewImg($galid, $pos, $interface) {
          if (isset($user) || $post_anon)
          echo '
             <li class="nav-item">
-               <a class="nav-link" href="'.$ThisFile.'&amp;op=ecard&amp;galid='.$galid.'&amp;pos='.$pos.'&amp;pid='.$row[0].'" title="'.gal_translate("Envoyer comme e-carte").'" data-toggle="tooltip" data-placement="right"><i class="fa fa-at fa-2x"></i></a>
+               <a class="nav-link" href="'.$ThisFile.'&amp;op=ecard&amp;galid='.$galid.'&amp;pos='.$pos.'&amp;pid='.$row[0].'" title="'.gal_translate("Envoyer comme e-carte").'" data-bs-toggle="tooltip" data-bs-placement="right"><i class="fa fa-at fa-2x"></i></a>
             </li>';
          echo '
       </ul>';
@@ -380,12 +376,12 @@ function ViewImg($galid, $pos, $interface) {
             // Notation de l'image
             if (isset($user) || $vote_anon) {
                echo '
-      <div class="text-right mb-2">'.gal_translate("Noter cette image").'</div>
+      <div class="text-end mb-2">'.gal_translate("Noter cette image").'</div>
       <div class="my-2">
          <span class="h5 rating">';
             $i=0;
             while ($i<6) {
-               echo '<a class="" href="'.$ThisFile.'&amp;op=vote&amp;value='.(6-$i).'&amp;pic_id='.$row[0].'&amp;gal_id='.$galid.'&amp;pos='.$pos.'" title="'.(6-$i).'/6" data-toggle="tooltip"><i class="far fa-star fa-lg"></i></a>';
+               echo '<a class="" href="'.$ThisFile.'&amp;op=vote&amp;value='.(6-$i).'&amp;pic_id='.$row[0].'&amp;gal_id='.$galid.'&amp;pos='.$pos.'" title="'.(6-$i).'/6" data-bs-toggle="tooltip"><i class="far fa-star fa-lg"></i></a>';
                $i++;
             }
          echo '
@@ -402,8 +398,8 @@ function ViewImg($galid, $pos, $interface) {
    echo '
    <h4 class="card-title mt-3">'.gal_translate("Informations sur l'image").'</h4>
    <ul class="list-group lead">
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Taille du fichier").'<span class="badge badge-secondary">'.$taille.' Ko</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Dimensions").'<span class="badge badge-secondary">'.$width.' x '.$height.' Pixels</span></li>';
+      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Taille du fichier").'<span class="badge bg-secondary">'.$taille.' Ko</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Dimensions").'<span class="badge bg-secondary">'.$width.' x '.$height.' Pixels</span></li>';
    if ($aff_vote) {
       $rowV = sql_fetch_row(sql_query("SELECT COUNT(id), AVG(rating) FROM ".$NPDS_Prefix."tdgal_vot WHERE pic_id='".$row[0]."'"));
       $note = round($rowV[1]); $star='';
@@ -412,10 +408,10 @@ function ViewImg($galid, $pos, $interface) {
          while($i<$note) {$star.='<i class="fa fa-star mx-1"></i>';$i++;}
       }
       echo '
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Note ").$rowV[0].' '.gal_translate("vote(s)").'<span class="text-success" title="'.$note.'/6" data-toggle="tooltip" data-placement="left">'.$star.'</span></li>';
+      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Note ").$rowV[0].' '.gal_translate("vote(s)").'<span class="text-success" title="'.$note.'/6" data-bs-toggle="tooltip" data-bs-placement="left">'.$star.'</span></li>';
       }
    echo '
-      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Affichées").'<span class="badge badge-secondary">'.($row[4] + 1).' '.gal_translate("fois").'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Affichées").'<span class="badge bg-secondary">'.($row[4] + 1).' '.gal_translate("fois").'</span></li>
    </ul>';
 
       if ($interface!="no") {
@@ -428,7 +424,7 @@ function ViewImg($galid, $pos, $interface) {
       <h4 class="card-title mt-3">'.gal_translate("Commentaire(s)").'</h4>';
                while ($rowC = sql_fetch_row($qcomment)) {
                   echo '
-      <div class="card mb-2"><div class="card-header"><strong>'.$rowC[2].'</strong><span class="small float-right">'.gal_translate('Posté le').' '.date(translate("dateinternal"),$rowC[5]).'</span></div>
+      <div class="card mb-2"><div class="card-header"><strong>'.$rowC[2].'</strong><span class="small float-end">'.gal_translate('Posté le').' '.date(translate("dateinternal"),$rowC[5]).'</span></div>
       <div class="card-body">'.stripslashes($rowC[3]).'</div></div>';
                }
 
@@ -440,7 +436,7 @@ function ViewImg($galid, $pos, $interface) {
                      <input type="hidden" name="gal_id" value="'.$galid.'" />
                      <input type="hidden" name="pos" value="'.$pos.'">
                      <input type="hidden" name="pic_id" value="'.$row[0].'" />
-                     <fieldset class="form-group">
+                     <fieldset class="mb-3">
                         <label class="col-form-label" for="com">'.gal_translate("Ajoutez votre commentaire").'</label>
                         <textarea class="form-control tin" id="com" name="comm" rows="5"></textarea>
                      </fieldset>';
@@ -473,16 +469,16 @@ function ViewDiapo($galid, $pos, $pid) {
       </style>
       
       <div class="wrapper">
-      <div id="photosIndicators" class="carousel slide" data-ride="carousel" data-wrap="true" data-interval="3000">
+      <div id="photosIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true" data-bs-interval="3000">
          <ol class="carousel-indicators">';
       $i = 0;
       settype($pos,"integer");
       $pic_query = sql_query("SELECT id, name FROM ".$NPDS_Prefix."tdgal_img WHERE gal_id='$galid' AND noaff='0'");
       while($picture = sql_fetch_assoc($pic_query)) {
          if($i==0)
-            echo '<li data-target="#photosIndicators" data-slide-to="'.$i.'" class="active"></li>';
+            echo '<li data-bs-target="#photosIndicators" data-bs-slide-to="'.$i.'" class="active"></li>';
          else
-            echo '<li data-target="#photosIndicators" data-slide-to="'.$i.'"></li>';
+            echo '<li data-bs-target="#photosIndicators" data-bs-slide-to="'.$i.'"></li>';
          $i++;
       }
       echo '
@@ -509,11 +505,11 @@ function ViewDiapo($galid, $pos, $pid) {
       }
 
    echo '</div>
-         <a class="carousel-control-prev" href="#photosIndicators" role="button" data-slide="prev">
+         <a class="carousel-control-prev" href="#photosIndicators" role="button" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
          </a>
-         <a class="carousel-control-next" href="#photosIndicators" role="button" data-slide="next">
+         <a class="carousel-control-next" href="#photosIndicators" role="button" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
          </a>
@@ -550,7 +546,7 @@ function PrintFormEcard($galid, $pos, $pid) {
          $username = $anonymous;
       echo '
       <div class="card">
-         <div class="card-header lead"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a></div>
+         <div class="card-header lead"><a href="'.$ThisFile.'"><i class="fa fa-camera fa-2x align-middle me-2"></i>'.gal_translate("Accueil").'</a></div>
          <div class="card-body">
             <h4 class="">'.gal_translate("Envoyer une E-carte").'. ' .gal_translate("De la part de").' <span class="text-muted">'.$username.'</span></h4>
             <hr />
@@ -658,11 +654,12 @@ function PostEcard($galid, $pos, $pid, $from_name, $from_mail, $to_name, $to_mai
         'ms' => $card_msg,
       );
       $coded_data = urlencode(base64_encode(serialize($data)));
-      $message = "<!DOCTYPE html>";
+      $message = '<!DOCTYPE html>';
+      $message.= '<html>';
       $message.= '<head>';
+      $message.= '<meta charset="utf-8" />';
       $message.= '<title>'.gal_translate("Une e-carte pour vous").'</title>';
       $message.= '<meta http-equiv="content-type" content="text/html" />';
-      $message.= '<meta charset="utf-8" />';
       $message.= '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />';
       $message.= '<meta http-equiv="x-ua-compatible" content="ie=edge" />';
       $message.= '<meta http-equiv="content-script-type" content="text/javascript" />';
@@ -706,10 +703,10 @@ function PostEcard($galid, $pos, $pid, $from_name, $from_mail, $to_name, $to_mai
    }
    if (!empty($error) || !$result )
       echo '
-      <p class="card-text alert alert-danger" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Erreur").'<br />';
+      <p class="card-text alert alert-danger" role="alert"><i class="fa fa-info-circle me-2" aria-hidden="true"></i>'.gal_translate("Erreur").'<br />';
    else
       echo '
-      <p class="card-text alert alert-success" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Résultat").'<br />';
+      <p class="card-text alert alert-success" role="alert"><i class="fa fa-info-circle me-2" aria-hidden="true"></i>'.gal_translate("Résultat").'<br />';
    if (!empty($error)) {
       if ($error == "01") echo gal_translate("Votre adresse mail est incorrecte.").'<br />';
       if ($error == "02") echo gal_translate("Le nom du destinataire ne peut être vide.").'<br />';
@@ -757,7 +754,7 @@ function PostComment($gal_id, $pos, $pic_id, $comm) {
    } else {
       echo '
       <div class="card-body">
-         <div class="lead alert alert-danger"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Vous avez déjà commenté cette photo").'</div>
+         <div class="lead alert alert-danger"><i class="fa fa-info-circle me-2" aria-hidden="true"></i>'.gal_translate("Vous avez déjà commenté cette photo").'</div>
       </div>
       <script  type="text/javascript">
          //<![CDATA[
@@ -790,21 +787,21 @@ function PostVote($gal_id, $pos, $pic_id, $value) {
    } else {
       echo '
       <div class="alert alert-danger">
-         <i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Vous avez déjà noté cette photo").'
+         <i class="fa fa-info-circle me-2" aria-hidden="true"></i>'.gal_translate("Vous avez déjà noté cette photo").'
       </div>
       <script type="text/javascript">
       //<![CDATA[
          function redirect() {
             window.location="'.$ThisRedo.'&op=img&galid='.$gal_id.'&pos='.$pos.'"
          }
-      setTimeout("redirect()",2000);
+         setTimeout("redirect()",2000);
       //]]>
       </script>';
   }
 }
 
 function ViewAlea() {
-   global $NPDS_Prefix, $ModPath, $ThisFile, $imgpage, $MaxSizeThumb, $aff_comm, $nuke_url;
+   global $NPDS_Prefix, $ModPath, $ThisFile, $imgpage, $MaxSizeThumb, $aff_comm;
    $tab_groupe=autorisation_local();
    // Fabrication de la requête 1
    $where1='';
@@ -828,8 +825,8 @@ function ViewAlea() {
    $img_point='';
    // Affichage
    echo '
-   <h4 class="card-header">'.gal_translate("Photos aléatoires").'</h4>
-   <div class="card-columns p-2 mt-2">';
+   <h4 class="card-header border-0">'.gal_translate("Photos aléatoires").'</h4>
+   <div class="row g-2 mt-2 griditem" data-masonry=\'{"columnWidth": 0, "itemSelector": ".griditem" }\'>';
    $pos='0';
    while ($row = sql_fetch_row($query)) {
       $img_geotag='';
@@ -837,27 +834,29 @@ function ViewAlea() {
       if (($row[7] != '') or ($row[8] != '')) {
          $desc = trim(preg_replace('/\s\s+/', ' ', $row[3]));
          $img_point .= 'img_features.push([['.str_replace(",",".",$row[8]).','.str_replace(",",".",$row[7]).'], "'.$row[0].'", "'.$row[1].'", "'.addslashes($row[2]).'","'.addslashes($desc).'","'.$row[4].'"]);';
-         $img_geotag = '<img class="geotag tooltipbyclass" src="'.$nuke_url.'/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png" title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
       }
       //<== geoloc
       $nbcom = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='".$row[0]."'"));
       if (file_exists("modules/$ModPath/imgs/".$row[2])) {
          list($width, $height, $type, $attr) = @getimagesize("modules/$ModPath/imgs/$row[2]");
-         $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-placement="bottom" loading="lazy" />';
+         $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/mini/'.$row[2].'" alt="'.stripslashes($row[3]).'" '.$attr.' title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-bs-html="true" data-bs-placement="bottom" loading="lazy" />';
       } else
          $ibid = ReducePic($row[2],stripslashes($row[3]),$MaxSizeThumb);
       echo '
+      <div class="griditem col-12 col-md-6 col-lg-4 col-xl-3">
          <div class="card">
             '.$img_geotag.'
             <a href="'.$ThisFile.'&amp;op=img&amp;galid='.$row[1].'&amp;pos=-'.$row[0].'">'.$ibid.'</a>
             <div class="card-body">
-               <p class="card-text text-muted"><span class="badge badge-secondary mr-1">'.$row[4].'</span>'.gal_translate("affichage(s)");
+               <p class="card-text text-muted"><span class="badge bg-secondary me-1">'.$row[4].'</span>'.gal_translate("affichage(s)");
       if ($aff_comm and $nbcom>0)
-         echo '<br /><span class="badge badge-secondary mr-1">'.$nbcom.'</span>'.gal_translate("commentaire(s)");
+         echo '<br /><span class="badge bg-secondary me-1">'.$nbcom.'</span>'.gal_translate("commentaire(s)");
       echo '
                </p>
             </div>
-         </div>';
+         </div>
+      </div>';
       $pos++;
    }
    echo '
@@ -869,7 +868,7 @@ function ViewAlea() {
 }
 
 function ViewLastAdd() {
-   global $NPDS_Prefix, $ModPath, $ThisFile, $imgpage, $MaxSizeThumb, $aff_comm, $nuke_url;
+   global $NPDS_Prefix, $ModPath, $ThisFile, $imgpage, $MaxSizeThumb, $aff_comm;
    // Fabrication de la requête 1
    $where1='';
    $tab_groupe=autorisation_local();
@@ -894,31 +893,33 @@ function ViewLastAdd() {
    $pos = 0;
 
    echo '
-   <h4 class="card-header">'.gal_translate("Derniers ajouts").'</h4>
-   <div class="card-columns p-2 mt-2">';
+   <h4 class="card-header border-0">'.gal_translate("Derniers ajouts").'</h4>
+   <div class="row g-2 mt-2 gridphot">';
    while ($row = sql_fetch_row($query)) {
       $nbcom = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='".$row[0]."'"));
       if (file_exists("modules/$ModPath/imgs/".$row[2])) {
          list($width, $height, $type, $attr) = @getimagesize("modules/$ModPath/imgs/$row[2]");
-         $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/imgs/'.$row[2].'" alt="'.stripslashes($row[3]).' '.$attr.'" title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-html="true" data-placement="bottom" loading="lazy" />';
+         $ibid = '<img class="img-fluid card-img-top tooltipbyclass" src="modules/'.$ModPath.'/imgs/'.$row[2].'" alt="'.stripslashes($row[3]).' '.$attr.'" title="'.$row[2].'<br />'.stripslashes($row[3]).'" data-bs-html="true" data-bs-placement="bottom" loading="lazy" />';
       } else
          $ibid = ReducePic($row[2],stripslashes($row[3]),$MaxSizeThumb);
       $img_geotag='';
       //==> geoloc
       if (($row[7] != '') or ($row[8] != '')) {
-         $img_geotag = '<img class="geotag tooltipbyclass" src="'.$nuke_url.'/modules/'.$ModPath.'/data/geotag_16.png"  title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
+         $img_geotag = '<img class="geotag tooltipbyclass" src="/modules/'.$ModPath.'/data/geotag_16.png"  title="'.gal_translate("Image géoréférencée").'" alt="'.gal_translate("Image géoréférencée").'" loading="lazy" />';
       }
       //<== geoloc
       echo '
-      <div class="card">
-         '.$img_geotag.'
-         <a href="'.$ThisFile.'&amp;op=img&amp;galid='.$row[1].'&amp;pos=-'.$row[0].'">'.$ibid.'</a>
-         <div class="card-body">
-            <p class="card-text text-muted"><span class="badge badge-secondary mr-1">'.$row[4].'</span>'.gal_translate("affichage(s)");
+      <div class="griditem col-12 col-md-6 col-lg-4 col-xl-3">
+         <div class="card">
+            '.$img_geotag.'
+            <a href="'.$ThisFile.'&amp;op=img&amp;galid='.$row[1].'&amp;pos=-'.$row[0].'">'.$ibid.'</a>
+            <div class="card-body">
+               <p class="card-text text-muted"><span class="badge bg-secondary me-1">'.$row[4].'</span>'.gal_translate("affichage(s)");
       if ($aff_comm and $nbcom>0)
-         echo '<br /><span class="badge badge-secondary mr-1">'.$nbcom.'</span>'.gal_translate("commentaire(s)");
+         echo '<br /><span class="badge bg-secondary me-1">'.$nbcom.'</span>'.gal_translate("commentaire(s)");
       echo '
-            </p>
+               </p>
+            </div>
          </div>
       </div>';
       $pos++;
@@ -1009,7 +1010,7 @@ function TopCV($typeOP, $nbtop) {
    echo '
    <div class="card">
       <div class="card-header lead">
-         <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>
+         <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle me-2"></i>'.gal_translate("Accueil").'</a>
       </div>
       <div class="card-body">
          <h5 class="card-title">';
@@ -1026,16 +1027,16 @@ function TopCV($typeOP, $nbtop) {
    echo '
          <hr />
          <ul class="list-group mb-3 lead">
-            <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre d'images").'<span class="badge badge-secondary badge-pill">'.$NombreEntrees.'</span></li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de commentaires").'<span class="badge badge-secondary badge-pill">'.$NombreComs.'</span></li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de notes").'<span class="badge badge-secondary badge-pill">'.$NombreComs1.'</span></li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre d'images").'<span class="badge bg-secondary rounded-pill">'.$NombreEntrees.'</span></li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de commentaires").'<span class="badge bg-secondary rounded-pill">'.$NombreComs.'</span></li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Nombre de notes").'<span class="badge bg-secondary rounded-pill">'.$NombreComs1.'</span></li>
          </ul>';
 
    $result1 = $typeOP=='comment' ?
       sql_query("SELECT pic_id, count(user) AS pic_nbcom FROM ".$NPDS_Prefix."tdgal_com GROUP BY pic_id ORDER BY pic_nbcom DESC LIMIT 0,$nbtop"):
       sql_query("SELECT pic_id, count(user) AS pic_nbvote FROM ".$NPDS_Prefix."tdgal_vot GROUP BY pic_id ORDER BY pic_nbvote DESC LIMIT 0,$nbtop");
    echo '
-         <div class="card-columns p-0 mt-2">';
+      <div class="row g-2 mt-2 gridphot">';
    $j=1;
    while (list($pic_id, $nb) = sql_fetch_row($result1)) {
       $result2=sql_fetch_assoc(sql_query("SELECT gal_id, name, comment FROM ".$NPDS_Prefix."tdgal_img WHERE id='$pic_id' AND noaff='0'"));
@@ -1043,21 +1044,23 @@ function TopCV($typeOP, $nbtop) {
       if ($result2) {
          $comm_vignette=StripSlashes($result2['comment']);
          echo '
-            <div class="card" title="'.$result2['name'].'" data-toggle="tooltip" data-placement="bottom" >
+         <div class="griditem col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card" title="'.$result2['name'].'" data-bs-toggle="tooltip" data-bs-placement="bottom" >
                <div class="card-body px-0 pt-1 pb-1 text-center">
                   <div class="h2 text-center">
-                     <span class="badge badge-success badge-pill ">'.$j.'</span>
+                     <span class="badge bg-success rounded-pill ">'.$j.'</span>
                   </div>
                   <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=img&amp;galid='.($result2['gal_id']).'&amp;pos=-'.$pic_id.'" ><img class="n-irl" src="modules/'.$ModPath.'/mini/'.$result2['name'].'" alt="'.$comm_vignette.'" loading="lazy" /></a>
                   <div class="card-text">
-                  <span class="badge badge-secondary badge-pill" data-toggle="tooltip" data-placement="left"';
+                  <span class="badge bg-secondary rounded-pill" data-bs-toggle="tooltip" data-bs-placement="left"';
          echo $typeOP=='comment'?
                   ' title="'.gal_translate("Nombre de commentaires").'"':
                   ' title="'.gal_translate("Nombre de vote(s)").'"';
          echo ' >'.$nb.'</span>
                   </div>
                </div>
-            </div>';
+            </div>
+         </div>';
       }
       $j++;
    }
@@ -1138,56 +1141,50 @@ function PrintFormImgs() {
       redirect_url($ThisRedo);
    echo '
    <div class="card">
-      <div class="card-header lead"><a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle mr-2"></i>'.gal_translate("Accueil").'</a>               <a class="float-right" href=""><i class="fa fa-question fa-lg align-middle mr-2"></i></a>
-</div>
+      <div class="card-header lead">
+         <a href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal"><i class="fa fa-camera fa-2x align-middle me-2"></i>'.gal_translate("Accueil").'</a>
+         <a class="float-end" href=""><i class="fa fa-question fa-lg align-middle me-2"></i></a>
+      </div>
       <div class="card-body">
          <h5 class="card-title">'.gal_translate("Proposer des images").'</h5>
          <hr />
-         <div class="row">
+         <div class="row g-3">
             <div class="col-md-6">
                <form enctype="multipart/form-data" method="post" action="'.$ThisFile.'" id="formimgs" name="FormImgs" lang="'.language_iso(1,'','').'">
                   <input type="hidden" name="op" value="addimgs" />
                   <input type="hidden" name="user_connecte" value="'.$user_connecte.'" />
-                  <div class="form-group">
-                     <label class="col-form-label" for="imggal">'.gal_translate("Galerie").'</label>
-                     <select class="custom-select" name="imggal" id="imggal" >';
+                  <div class="form-floating mb-3">
+                     <select class="form-select" name="imggal" id="imggal" >';
    echo select_arbo('');
    echo '
                      </select>
-                  </div>';
+                     <label for="imggal">'.gal_translate("Galerie").'</label>
+                 </div>';
       $i=1;
       do {
          echo '
-                  <div class="form-group mb-0">
-                     <label class="font-weight-bolder">'.gal_translate("Image").' '.$i.'</label>
-                     <div class="input-group mb-2 mr-sm-2">
-                        <div class="input-group-prepend" onclick="reset2($(\'#newcard'.$i.'\'),'.$i.');">
-                           <div class="input-group-text"><i class="fas fa-sync"></i></div>
-                        </div>
-                        <div class="custom-file">
-                           <input type="file" class="custom-file-input" name="newcard'.$i.'" id="newcard'.$i.'" />
-                           <label id="lab'.$i.'" class="custom-file-label" for="newcard'.$i.'">'.gal_translate("Sélectionner votre image").'</label>
-                        </div>
+                  <div class="mb-2">
+                     <label class="fw-bolder">'.gal_translate("Image").' '.$i.'</label>
+                     <div class="input-group mb-2 me-sm-2">
+                        <button class="btn btn-secondary" onclick="reset2($(\'#newcard'.$i.'\'),'.$i.');"><i class="bi bi-arrow-clockwise"></i></button>
+                        <label id="lab'.$i.'" class="input-group-text n-ci" for="newcard'.$i.'"></label>
+                        <input type="file" class="form-control custom-file-input" name="newcard'.$i.'" id="newcard'.$i.'" />
                      </div>
-                     <div class="form-group mb-2">
+                     <div class="mb-3">
                         <label class="sr-only" for="newdesc'.$i.'">'.gal_translate("Description").'</label>
                         <input type="text" class="form-control" id="newdesc'.$i.'"  name="newdesc[]" placeholder="'.gal_translate("Description").'" />
                      </div>
-                     <div class="form-row">
-                        <div class="form-group col-md-6 mb-0">
-                           <label for="imglat'.$i.'" class="sr-only">'.gal_translate("Latitude").'</label>
-                           <div class="input-group mb-2 mr-sm-2">
-                              <div class="input-group-prepend">
-                                 <div class="input-group-text jsgeo'.$i.'" title="'.gal_translate("Latitude").'" data-toggle="tooltip"><i class="fa fa-globe fa-lg"></i></div>
-                              </div>
+                     <div class="row g-2">
+                        <div class="col-md-6 mb-3">
+                           <div class="input-group mb-2 me-sm-2">
+                              <span class="input-group-text jsgeo'.$i.'" title="'.gal_translate("Latitude").'" data-bs-toggle="tooltip"><i class="fa fa-globe fa-lg"></i></span>
+                              <label for="imglat'.$i.'" class="sr-only">'.gal_translate("Latitude").'</label>
                               <input type="text" class="form-control js-lat" name="imglat[]" id="imglat'.$i.'" placeholder="'.gal_translate("Latitude").'" />
                            </div>
                         </div>
-                        <div class="form-group col-md-6">
-                           <div class="input-group mb-2 mr-sm-2">
-                              <div class="input-group-prepend">
-                                 <div class="input-group-text jsgeo'.$i.'" title="'.gal_translate("Longitude").'" data-toggle="tooltip"><i class="fa fa-globe fa-lg"></i></div>
-                              </div>
+                        <div class="col-md-6 mb-3">
+                           <div class="input-group mb-2 me-sm-2">
+                              <span class="input-group-text jsgeo'.$i.'" title="'.gal_translate("Longitude").'" data-bs-toggle="tooltip"><i class="fa fa-globe fa-lg"></i></span>
                               <label for="imglong'.$i.'" class="sr-only">'.gal_translate("Longitude").'</label>
                               <input type="text" class="form-control js-long" name="imglong[]" id="imglong'.$i.'" placeholder="'.gal_translate("Longitude").'"/>
                            </div>
@@ -1198,7 +1195,7 @@ function PrintFormImgs() {
       }
       while($i<=5);
    echo '
-                  <div class="form-group">
+                  <div class="mb-3">
                      <button class="btn btn-primary" type="submit">'.gal_translate("Envoyer").'</button>
                   </div>
                </form>
@@ -1211,14 +1208,10 @@ function PrintFormImgs() {
    </div>
    <script type="text/javascript">
       //<![CDATA[
-         $(".custom-file-input").on("change",function(){
-            $(this).next(".custom-file-label").addClass("selected").html($(this).val().split(\'\\\\\').pop());
-         });
          window.reset2 = function (e,f) {
             e.wrap("<form>").closest("form").get(0).reset();
             e.unwrap();
             event.preventDefault();
-            $("#lab"+f).html("'.gal_translate("Sélectionner votre image").'")
          };
       //]]>
    </script>';
@@ -1306,19 +1299,19 @@ function AddImgs($imggal,$newcard1,$newcard2,$newcard3,$newcard4,$newcard5,$newd
                   @CreateThumb($newfilename, "modules/$ModPath/imgs/", "modules/$ModPath/mini/", $MaxSizeThumb, $filename_ext);
                }
                if (sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES ('','$imggal','$newfilename','$newtit','','0','1','$lat','$long')")) {
-                  echo '<div class="alert alert-info" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Image").' '.gal_translate("envoyée à la validation du webmaster").' : '.$origin_filename.'</div>';
+                  echo '<div class="alert alert-info" role="alert"><i class="fa fa-info-circle me-2" aria-hidden="true"></i>'.gal_translate("Image").' '.gal_translate("envoyée à la validation du webmaster").' : '.$origin_filename.'</div>';
                   $soumission=true;
                } else {
-                  echo '<div class="alert alert-danger" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Impossible d'ajouter l'image à la BDD").' : '.$origin_filename.'</span></div>';
+                  echo '<div class="alert alert-danger" role="alert"><i class="fa fa-info-circle me-2" aria-hidden="true"></i>'.gal_translate("Impossible d'ajouter l'image à la BDD").' : '.$origin_filename.'</span></div>';
                   @unlink ("modules/$ModPath/imgs/$newfilename");
                   @unlink ("modules/$ModPath/mini/$newfilename");
                }
             } else {
-               echo '<div class="alert alert-danger" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.$upload->errors.'</span></div>';
+               echo '<div class="alert alert-danger" role="alert"><i class="fa fa-info-circle me-2" aria-hidden="true"></i>'.$upload->errors.'</span></div>';
             }
          } else {
             if ($filename_ext!="")
-               echo '<div class="alert alert-warning" role="alert"><i class="fa fa-info-circle mr-2" aria-hidden="true"></i>'.gal_translate("Ce fichier n'est pas un fichier jpg ou gif").' png : '.$origin_filename.'</span></div>';
+               echo '<div class="alert alert-warning" role="alert"><i class="fa fa-info-circle me-2" aria-hidden="true"></i>'.gal_translate("Ce fichier n'est pas un fichier jpg ou gif").' png : '.$origin_filename.'</span></div>';
          }
       }
       $i++;
@@ -1386,8 +1379,7 @@ function CreateThumb($Image, $Source, $Destination, $Max, $ext) {
 
 #autodoc Img_carte($img_point) : $img_point est une ou plusieurs commande js (push) de construction du tableau "img_features", cette variable $img_point doit donc être remplie dans la boucle récupérant les données dans la bd. Cette fonction ne peut être utilisée qu'une fois par page généré. 
 function Img_carte($img_point){
-   global $nuke_url;
-   include_once('modules/geoloc/geoloc_conf.php');
+   include_once('modules/geoloc/geoloc.conf');
    $cartyp='sat-google'; // choix manuel du provider ready4admin interface
 $source_fond=''; $max_r=''; $min_r='';$layer_id='';
 switch ($cartyp) {
@@ -1461,10 +1453,10 @@ switch ($cartyp) {
 <script type="text/javascript">
    //<![CDATA[
    if (!$("link[href=\'/lib/ol/ol.css\']").length)
-      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
-   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
+      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
    if (typeof ol=="undefined")
-      $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/lib/ol/ol.js"}));
+      $("head").append($("<script />").attr({"type":"text/javascript","src":"/lib/ol/ol.js"}));
    $(function () {
       //==>  affichage des coordonnées...
          var mousePositionControl = new ol.control.MousePosition({
@@ -1477,7 +1469,8 @@ switch ($cartyp) {
       var 
       iconimg = new ol.style.Style({
         image: new ol.style.Icon({
-          src: "modules/npds_galerie/npds_galerie.png"
+          src: "modules/npds_galerie/npds_galerie.png",
+//          crossOrigin:"Anonymous",
         })
       }),
       popup = new ol.Overlay({
@@ -1550,8 +1543,9 @@ switch ($cartyp) {
       map.addOverlay(popuptooltip);
 
       var extimg = img_markers.getSource().getExtent();
+      console.log(extimg);
       if (src_img_length==1) {
-         view.setCenter(src_img.Tu["i0"].A.geometry.flatCoordinates);
+         view.setCenter(src_img.getFeatureById("i0").getGeometry().getFlatCoordinates());
          view.setZoom(4);
       }
       else
@@ -1564,11 +1558,11 @@ switch ($cartyp) {
          if($("#sidebar").hasClass("show")) {
             $("#sidebar").collapse("toggle");
             button.innerHTML = "&#xf0d7";
-            button.setAttribute("data-original-title", "Voir")
+            button.setAttribute("data-bs-original-title", "Voir")
          } else{
             $("#sidebar").collapse("show");
             button.innerHTML = "&#xf0d8";
-            button.setAttribute("data-original-title", "Masquer")
+            button.setAttribute("data-bs-original-title", "Masquer")
          }
       };
       button.addEventListener("click", sidebarSwitch, true);
@@ -1583,8 +1577,8 @@ switch ($cartyp) {
       var buttond = document.createElement("button");
       buttond.setAttribute("id","export-png");
       buttond.setAttribute("title","'.html_entity_decode(gal_translate("Télécharger comme image.png"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'");
-      buttond.setAttribute("data-toggle","tooltip");
-      buttond.setAttribute("data-placement","left");
+      buttond.setAttribute("data-bs-toggle","tooltip");
+      buttond.setAttribute("data-bs-placement","left");
       buttond.innerHTML = "&#xf019";
       var element = document.createElement("div");
       element.className = "ol-download ol-unselectable ol-control fa";
@@ -1594,14 +1588,13 @@ switch ($cartyp) {
       });
       map.addControl(downloadControl);
 
-
 //==> construction sidebar
       var img_feat = src_img.getFeatures(),
           ima_nb = img_feat.length,
-          sbimg=\'<div id="sb_img" class="list-group small"><div class="list-group-item bg-light text-dark font-weight-light px-1 lead"><img class="mr-1" src="modules/npds_galerie/npds_galerie.png" alt="" style="vertical-align:middle;" data-toggle="tooltip" title="'.html_entity_decode(gal_translate("Images géoréférencées"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'" /><span class="badge badge-secondary float-right">\'+ima_nb+\'</span></div><a class="sb_res list-group-item list-group-item-action py-1 px-1" ><input id="n_filtreimages" placeholder="'.html_entity_decode(gal_translate("Filtrer les images"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'" class="my-1 form-control form-control-sm" type="text" /></a>\';
+          sbimg=\'<div id="sb_img" class="list-group small"><div class="list-group-item bg-light text-dark fw-light px-1 lead"><img class="me-1" src="modules/npds_galerie/npds_galerie.png" alt="" style="vertical-align:middle;" data-bs-toggle="tooltip" title="'.html_entity_decode(gal_translate("Images géoréférencées"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'" /><span class="badge bg-secondary float-end">\'+ima_nb+\'</span></div><a class="sb_res list-group-item list-group-item-action py-1 px-1" ><input id="n_filtreimages" placeholder="'.html_entity_decode(gal_translate("Filtrer les images"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'" class="my-1 form-control form-control-sm" type="text" /></a>\';
       for (var key in img_feat) {
          if (img_feat.hasOwnProperty(key)) {
-            sbimg += \'<a id="\'+ img_feat[key].W +\'" href="#" onclick="centeronMe(\\\'\'+ img_feat[key].W +\'\\\');return false;" class="sb_img list-group-item list-group-item-action py-1 px-1" href="#"><img class="img-fluid n-ava-48" src="modules/npds_galerie/mini/\' + img_feat[key].A.imgName + \'" loading="lazy" /><span class="ml-1 nlfilt">\' + img_feat[key].A.imgName + \'</span></a>\';
+            sbimg += \'<a id="\'+ img_feat[key].V +\'" href="#" onclick="centeronMe(\\\'\'+ img_feat[key].V +\'\\\');return false;" class="sb_img list-group-item list-group-item-action py-1 px-1" href="#"><img class="img-fluid n-ava-48" src="modules/npds_galerie/mini/\' + img_feat[key].A.imgName + \'" loading="lazy" /><span class="ms-1 nlfilt">\' + img_feat[key].A.imgName + \'</span></a>\';
          }
       }
       sbimg +=\'</div>\';
@@ -1615,7 +1608,7 @@ switch ($cartyp) {
          var position = src_img.getFeatureById(u).getGeometry().getFlatCoordinates();
             view.setCenter(position);
             $("#ol_popup").show();
-            container.innerHTML = \'<div class="text-center"><img class="" src="modules/npds_galerie/mini/\' + src_img.Tu[u].A.imgName + \'" loading="lazy" /></div>\';
+            container.innerHTML = \'<div class="text-center"><img class="" src="modules/npds_galerie/mini/\' + src_img.getFeatureById(u).get("imgName") + \'" loading="lazy" /></div>\';
             popup.setPosition(position);
          }
          $("#"+u).addClass("animated faa-horizontal faa-slow" );
@@ -1663,7 +1656,7 @@ var displayFeatureInfo = function(evt) {
          var coord = map.getCoordinateFromPixel(evt.pixel);
          if (typeof feature.get("features") === "undefined") {
             if(feature.getId().substr(0,1) == "i") {
-                containertooltip.attr("data-original-title", feature.get("imgName")).tooltip("show");
+                containertooltip.attr("data-bs-original-title", feature.get("imgName")).tooltip("show");
             }
          }
          popuptooltip.setPosition(coord);
@@ -1685,7 +1678,6 @@ map.on("pointermove", displayFeatureInfo);
         var pixel = map.getEventPixel(e.originalEvent);
         var hit = map.hasFeatureAtPixel(pixel);
         map.getTarget().style.cursor = hit ? "pointer" : "";
-//        centeronMe;
       });
 //<== changement etat pointeur sur les markers
 
@@ -1715,23 +1707,43 @@ map.on("pointermove", displayFeatureInfo);
 //==> download carte.png
 document.getElementById("export-png").addEventListener("click", function () {
   map.once("rendercomplete", function () {
-    var mapCanvas = document.createElement("canvas");
-    var size = map.getSize();
+    const mapCanvas = document.createElement("canvas");
+    const size = map.getSize();
     mapCanvas.width = size[0];
     mapCanvas.height = size[1];
-    var mapContext = mapCanvas.getContext("2d");
+    const mapContext = mapCanvas.getContext("2d");
     Array.prototype.forEach.call(
       document.querySelectorAll(".ol-layer canvas"),
       function (canvas) {
         if (canvas.width > 0) {
-          var opacity = canvas.parentNode.style.opacity;
+          const opacity = canvas.parentNode.style.opacity || canvas.style.opacity;
           mapContext.globalAlpha = opacity === "" ? 1 : Number(opacity);
-          var transform = canvas.style.transform;
-          // Get the transform parameters from the style\'s transform matrix
-          var matrix = transform
-            .match(/^matrix\(([^\(]*)\)$/)[1]
-            .split(",")
-            .map(Number);
+          
+         const backgroundColor = canvas.parentNode.style.backgroundColor;
+          if (backgroundColor) {
+            mapContext.fillStyle = backgroundColor;
+            mapContext.fillRect(0, 0, canvas.width, canvas.height);
+          }
+
+          let matrix;
+         const transform = canvas.style.transform;
+            if(transform) {
+               // Get the transform parameters from the style\'s transform matrix
+               matrix = transform
+               .match(/^matrix\(([^\(]*)\)$/)[1]
+               .split(",")
+               .map(Number);
+            }
+            else {
+               matrix = [
+                 parseFloat(canvas.style.width) / canvas.width,
+                 0,
+                 0,
+                 parseFloat(canvas.style.height) / canvas.height,
+                 0,
+                 0,
+               ];
+            }
           // Apply the transform to the export map context
           CanvasRenderingContext2D.prototype.setTransform.apply(
             mapContext,
@@ -1741,11 +1753,13 @@ document.getElementById("export-png").addEventListener("click", function () {
         }
       }
     );
+    mapContext.globalAlpha = 1;
+
     if (navigator.msSaveBlob) {
       // link download attribute does not work on MS browsers
       navigator.msSaveBlob(mapCanvas.msToBlob(), "npds_galerie_map.png");
     } else {
-      var link = document.getElementById("image-download");
+      const link = document.getElementById("image-download");
       link.href = mapCanvas.toDataURL();
       link.click();
     }
@@ -1766,13 +1780,13 @@ echo '
       }
 
       fullscreen.on("enterfullscreen",function(){
-         $(dic.olfullscreentrue.cla).attr("data-original-title", dic["olfullscreentrue"][lang]);
+         $(dic.olfullscreentrue.cla).attr("data-bs-original-title", dic["olfullscreentrue"][lang]);
       })
       fullscreen.on("leavefullscreen",function(){
-         $(dic.olfullscreenfalse.cla).attr("data-original-title", dic["olfullscreenfalse"][lang]);
+         $(dic.olfullscreenfalse.cla).attr("data-bs-original-title", dic["olfullscreenfalse"][lang]);
       })
 
-   $(\'[data-toggle="tooltip"]\').tooltip({container:"#mapimg"});
+   $(\'[data-bs-toggle="tooltip"]\').tooltip({container:"#mapimg"});
    $("#ol_tooltip").tooltip({container:"#mapimg"});
    $("#mapimg .ol-zoom-in, #mapimg .ol-zoom-out").tooltip({placement: "right", container:"#mapimg"});
    $("#mapimg .ol-sidebar button[title], #mapimg .ol-full-screen-false, #mapimg .ol-rotate-reset, #mapimg .ol-attribution button[title]").tooltip({placement: "left", container:"#mapimg"});
@@ -1867,10 +1881,10 @@ function img_geolocalisation($lat,$long,$multi){
             <div id="sb_tools" class="list-group mb-3">
                <div class="" id="l_sb_tools">
                   <div class="list-group-item list-group-item-action py-1 px-1">
-                     <div class="form-group row mb-0">
-                        <label class="col-form-label col-sm-12 font-weight-bolder" for="cartyp">Type de carte</label>
+                     <div class="row mb-0">
+                        <label class="col-form-label col-sm-12 fw-bolder" for="cartyp">Type de carte</label>
                         <div class="col-sm-12">
-                           <select class="custom-select form-control-sm" name="cartyp" id="cartyp">';
+                           <select class="form-select" name="cartyp" id="cartyp">';
    $j=0;
    foreach ($fond_provider as $v) {
       if($v[0]==$cartyp) $sel='selected="selected"'; else $sel='';
@@ -1907,11 +1921,11 @@ function img_geolocalisation($lat,$long,$multi){
    }
 $affi .= '
                            </select>
-                           <input type="range" value="1" class="custom-range mt-1" min="0" max="1" step="0.1" id="baselayeropacity" />
-                           <label class="mt-0 float-right small" for="baselayeropacity">Opacity</label>
+                           <input type="range" value="1" class="form-range mt-1" min="0" max="1" step="0.1" id="baselayeropacity" />
+                           <label class="mt-0 float-end small" for="baselayeropacity">Opacity</label>
                            <div id="dayslider" class="collapse">
-                              <input type="range" value="1" class="custom-range mt-1" min="-6" max="0" value="0" id="nasaday" />
-                              <label id="dateimages" class="mt-0 float-right small" for="nasaday">'.$date_jour.'</label>
+                              <input type="range" value="1" class="form-range mt-1" min="-6" max="0" value="0" id="nasaday" />
+                              <label id="dateimages" class="mt-0 float-end small" for="nasaday">'.$date_jour.'</label>
                            </div>
                         </div>
                      </div>
@@ -1925,9 +1939,9 @@ $affi .= '
 <script type="text/javascript">
    //<![CDATA[
    if (!$("link[href=\'/lib/ol/ol.css\']").length)
-      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
-   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
-   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\''.$nuke_url.'/modules/geoloc/include/ol-geocoder.css\' type=\'text/css\' media=\'screen\'>");
+      $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
+   $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/geoloc/include/ol-geocoder.css\' type=\'text/css\' media=\'screen\'>");
 
    if (typeof ol=="undefined")
       $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/lib/ol/ol.js"}));
@@ -2021,10 +2035,10 @@ $affi .= '
       pointGeoref5.setId(("pg5"));
       
       src_georef.addFeatures([pointGeoref1,pointGeoref2,pointGeoref3,pointGeoref4,pointGeoref5]);
-      src_georef.getFeatures().forEach(feat => {feat.setStyle(
+      src_georef.getFeatures().forEach(feat => {console.log(feat), feat.setStyle(
          new ol.style.Style({
             text: new ol.style.Text({
-               text: "\uf030 "+feat.W.substr(2),
+               text: "\uf030 "+feat.getId().substr(2),
                font: "900 18px \'Font Awesome 5 Free\'",
                bottom: "Bottom",
                scale: [1.5, 1.5],
@@ -2032,7 +2046,7 @@ $affi .= '
                stroke: new ol.style.Stroke({color: "rgba(255, 255, 255, 1)", width: 1})
             })
          })
-      )})';
+      )});';
    $affi .= '
       var
          georef_marker = new ol.layer.Vector({
@@ -2095,18 +2109,16 @@ $affi .= '
       map.on("singleclick", function (evt) {
          const Ll= evt.coordinate;
          const hdms = ol.proj.toLonLat(Ll);
-         console.log(evt.coordinate);
-         console.log(hdms);
       });
 
       translate.on("translateend", function(evt) {
-         var idim = (evt.features.R[0].W).substr(2),
+         var idim = (evt.features.item(0).getId()).substr(2),
              coordinate = evt.coordinate,
              coordWgs = ol.proj.toLonLat(coordinate);
          $("#imglat"+idim).val(coordWgs[1].toFixed(6));
          $("#imglong"+idim).val(coordWgs[0].toFixed(6));
-         if((evt.features.R[0].W).substr(0, 2) ==="pg") {
-            evt.features.R[0].setStyle(new ol.style.Style({
+         if((evt.features.item(0).getId()).substr(0, 2) ==="pg") {
+            evt.features.item(0).setStyle(new ol.style.Style({
                text: new ol.style.Text({
                   text: "\uf030 "+idim,
                   font: "900 18px \'Font Awesome 5 Free\'",
@@ -2129,8 +2141,8 @@ $affi .= '
          coordWgs = ol.proj.transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
          $("#imglat").val(coordWgs[1].toFixed(6));
          $("#imglong").val(coordWgs[0].toFixed(6));
-         if((evt.features.R[0].W).substr(0, 2) ==="pg") {
-            evt.features.R[0].setStyle(new ol.style.Style({
+         if((evt.features.item(0).getId()).substr(0, 2) ==="pg") {
+            evt.features.item(0).setStyle(new ol.style.Style({
                text: new ol.style.Text({
                   text: "\uf030",
                   font: "900 18px \'Font Awesome 5 Free\'",
@@ -2181,7 +2193,7 @@ $affi .= '
             if ($("#imglat").val()=="" && $("#imglong").val()=="") {';
    if($multi!=='')
       $affi .='
-            var idf = feat.W.substr(2);
+            var idf = feat.getId().substr(2);
             if ($("#imglat"+idf).val()=="" && $("#imglong"+idf).val()=="") {';
    $affi .='
                window.setTimeout(function () {
@@ -2201,10 +2213,10 @@ $affi .= '
          }
       }
       fullscreen.on("enterfullscreen",function(){
-         $(dic.olfullscreentrue.cla).attr("data-original-title", dic["olfullscreentrue"][lang]);
+         $(dic.olfullscreentrue.cla).attr("data-bs-original-title", dic["olfullscreentrue"][lang]);
       })
       fullscreen.on("leavefullscreen",function(){
-         $(dic.olfullscreenfalse.cla).attr("data-original-title", dic["olfullscreenfalse"][lang]);
+         $(dic.olfullscreenfalse.cla).attr("data-bs-original-title", dic["olfullscreenfalse"][lang]);
       })
 
    $("#cartyp").on("change", function() {
@@ -2213,29 +2225,29 @@ $affi .= '
       switch (cartyp) {
          case "OSM":
             fond_carte.setSource(new ol.source.OSM());
-            map.getLayers().R[0].setProperties({"id":cartyp});
+            map.getLayers().item(0).setProperties({"id":cartyp});
             fond_carte.setMinResolution(1);
          break;
          case "sat-google":
             fond_carte.setSource(new ol.source.XYZ({url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",crossOrigin: "Anonymous", attributions: " &middot; <a href=\"https://www.google.at/permissions/geoguidelines/attr-guide.html\">Map data ©2015 Google</a>"}));
-            map.getLayers().R[0].setProperties({"id":cartyp});
+            map.getLayers().item(0).setProperties({"id":cartyp});
          break;
          case "Road":case "Aerial":case "AerialWithLabels":
             fond_carte.setSource(new ol.source.BingMaps({key: "'.$api_key_bing.'",imagerySet: cartyp }));
-            map.getLayers().R[0].setProperties({"id":cartyp});
+            map.getLayers().item(0).setProperties({"id":cartyp});
             fond_carte.setMinResolution(1);
          break;
          case "natural-earth-hypso-bathy": case "geography-class":
             fond_carte.setSource(new ol.source.TileJSON({url: "https://api.tiles.mapbox.com/v4/mapbox."+cartyp+".json?access_token='.$api_key_mapbox.'"}));
             fond_carte.setMinResolution(2000);
             fond_carte.setMaxResolution(40000);
-            map.getLayers().R[0].setProperties({"id":cartyp});
+            map.getLayers().item(0).setProperties({"id":cartyp});
          break;
          case "terrain": case "toner": case "watercolor":
             fond_carte.setSource(new ol.source.Stamen({layer:cartyp}));
             fond_carte.setMinResolution(0);
             fond_carte.setMaxResolution(40000);
-            map.getLayers().R[0].setProperties({"id":cartyp});
+            map.getLayers().item(0).setProperties({"id":cartyp});
          break;
          case "modisterra":
             $("#dayslider").addClass("show");
@@ -2252,7 +2264,7 @@ $affi .= '
             });
             fond_carte.setMinResolution(2);
             fond_carte.setMaxResolution(40000);
-            map.getLayers().R[0].setProperties({"id":cartyp});
+            map.getLayers().item(0).setProperties({"id":cartyp});
          break;
       }
    });

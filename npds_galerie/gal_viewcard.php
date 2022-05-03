@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2020 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2022 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -14,7 +14,7 @@
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
-/* v 3.2                                                                */
+/* v 3.3 jpb-2022                                                       */
 /************************************************************************/
 
 /************************************************************************/
@@ -39,9 +39,10 @@ if (strstr($ModPath,'..') || strstr($ModStart,'..') || stristr($ModPath, 'script
 
    echo '
 <!DOCTYPE html>
+<html lang="'.language_iso(1,0,0).'">
    <head>
-      <title>'.gal_translate("Une E-carte pour vous").'</title>
       <meta charset="utf-8" />
+      <title>'.gal_translate("Une E-carte pour vous").'</title>
       <meta http-equiv="content-type" content="text/html" />
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -50,7 +51,7 @@ if (strstr($ModPath,'..') || strstr($ModStart,'..') || stristr($ModPath, 'script
       <meta http-equiv="expires" content="0" />
       <meta http-equiv="cache-control" content="no-cache" />
       <meta http-equiv="identifier-url" content="" />
-      <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="lib/font-awesome/css/all.min.css"/>
       <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
    </head>
    <body>
@@ -66,5 +67,4 @@ if (strstr($ModPath,'..') || strstr($ModStart,'..') || stristr($ModPath, 'script
       </div>
    </body>
 </html>';
-
 ?>

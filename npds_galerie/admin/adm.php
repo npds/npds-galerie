@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2020 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2022 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -14,7 +14,7 @@
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
-/* v 3.2                                                                */
+/* v 3.3 jpb-2022                                                       */
 /************************************************************************/
 
 // For More security
@@ -54,17 +54,17 @@ if ($admin) {
 
    echo '
    <div id="adm_men">
-      <h2 class="mb-3"><img class="mr-2 mb-2" src="modules/npds_galerie/npds_galerie.png" alt="icon_npds_galerie">'.gal_translate('Galeries de photos').'<small class="float-right">'.$npds_gal_version.'</small></h2>
+      <h2 class="mb-3"><img class="me-2 mb-2" src="modules/npds_galerie/npds_galerie.png" alt="icon_npds_galerie">'.gal_translate('Galeries de photos').'<small class="float-right">'.$npds_gal_version.'</small></h2>
       <div class=" mb-2 p-2 border rounded">
          <ul class="nav nav-pills nav-fill">
             <li class="nav-item">
-               <a class="nav-link" href="'.$ThisFile.'" title="'.gal_translate("Accueil").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-home fa-2x"></i></a>
+               <a class="nav-link" href="'.$ThisFile.'" title="'.gal_translate("Accueil").'" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-home fa-2x"></i></a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="'.$ThisFile.'&amp;subop=viewarbo" role="button" title="'.gal_translate("Arborescence").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-sitemap fa-2x" ></i></a>
+               <a class="nav-link" href="'.$ThisFile.'&amp;subop=viewarbo" role="button" title="'.gal_translate("Arborescence").'" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-sitemap fa-2x" ></i></a>
             </li>
             <li class="nav-item dropdown">
-               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-plus-square fa-2x mr-1 align-middle" ></i>Ajouter</a>
+               <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-plus-square fa-2x me-1 align-middle" ></i>Ajouter</a>
                <div class="dropdown-menu">
                   <a class="dropdown-item" href="'.$ThisFile.'&amp;subop=formcat">'.gal_translate("Ajout catégorie").'</a>
                   <a class="dropdown-item" href="'.$ThisFile.'&amp;subop=formsscat">'.gal_translate("Ajout sous-catégorie").'</a>
@@ -74,13 +74,13 @@ if ($admin) {
                </div>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="'.$ThisFile.'&amp;subop=import" role="button" title="'.gal_translate("Import images").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-long-arrow-alt-down fa-2x" ></i></a>
+               <a class="nav-link" href="'.$ThisFile.'&amp;subop=import" role="button" title="'.gal_translate("Import images").'" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-images fa-2x"></i><i class="fa fa-long-arrow-alt-down fa-2x" ></i></a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="'.$ThisFile.'&amp;subop=export" role="button" title="'.gal_translate("Export catégorie").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-long-arrow-alt-up fa-2x" ></i></a>
+               <a class="nav-link" href="'.$ThisFile.'&amp;subop=export" role="button" title="'.gal_translate("Export catégorie").'" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-database fa-2x"></i><i class="fa fa-long-arrow-alt-up fa-2x" ></i></a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="'.$ThisFile.'&amp;subop=config" role="button" title="'.gal_translate("Configuration").'" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-cogs fa-2x" ></i></a>
+               <a class="nav-link" href="'.$ThisFile.'&amp;subop=config" role="button" title="'.gal_translate("Configuration").'" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-cogs fa-2x" ></i></a>
             </li>
          </ul>
       </div>';
@@ -188,13 +188,13 @@ if ($admin) {
    echo '
    <h3 class="my-3">'.gal_translate("Tableau récapitulatif").'</h3>
    <ul class="list-group">
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de catégories").'<span class="badge badge-pill badge-ligth">'.$ncateg[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de sous-catégories").'<span class="badge badge-pill badge-dark">'.$nsscat[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de galeries").'<span class="badge badge-pill badge-secondary">'.$numgal[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre d'images").'<span class="badge badge-pill badge-success">'.$ncards[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de commentaires").'<span class="badge badge-pill badge-secondary">'.$ncomms[0].'</span></li> 
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de votes").'<span class="badge badge-pill badge-secondary">'.$nvotes[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Images vues").'<span class="badge badge-pill badge-secondary">'.$nviews[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de catégories").'<span class="badge rounded-pill bg-ligth">'.$ncateg[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de sous-catégories").'<span class="badge rounded-pill bg-dark">'.$nsscat[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de galeries").'<span class="badge rounded-pill bg-secondary">'.$numgal[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre d'images").'<span class="badge rounded-pill bg-success">'.$ncards[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de commentaires").'<span class="badge rounded-pill bg-secondary">'.$ncomms[0].'</span></li> 
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de votes").'<span class="badge rounded-pill bg-secondary">'.$nvotes[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Images vues").'<span class="badge rounded-pill bg-secondary">'.$nviews[0].'</span></li>
    </ul>';
      break;
    }

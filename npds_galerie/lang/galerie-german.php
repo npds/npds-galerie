@@ -2,12 +2,13 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2020 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2022 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
 /* the Free Software Foundation; either version 2 of the License.       */
 /* Module de gestion de galeries pour NPDS                              */
+/* German Language File                                                 */
 /*                                                                      */
 /* (c) 2004-2005 Tribal-Dolphin - http://www.tribal-dolphin.net         */
 /* (c) 2007 Xgonin, Lopez - http://modules.npds.org                     */
@@ -15,7 +16,7 @@
 /* MAJ Dev - 2011                                                       */
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
 /* v 3.2                                                                */
-/* German Language File                                                 */
+/* v 3.3 jpb-2022                                                       */
 /************************************************************************/
 
 function gal_translate($phrase) {

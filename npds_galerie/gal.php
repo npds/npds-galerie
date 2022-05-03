@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2020 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2022 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -14,7 +14,7 @@
 /* MAJ conformité XHTML pour REvolution 10.02 par jpb/phr en mars 2010  */
 /* MAJ Dev - 2011                                                       */
 /* MAJ jpb, phr - 2017 renommé npds_galerie pour Rev 16                 */
-/* v 3.2                                                                */
+/* v 3.3 jpb-2022                                                       */
 /************************************************************************/
 
 // For More security
@@ -53,12 +53,25 @@ switch($op) {
    break;
    // Affichage d'une galerie
    case 'gal':
-      echo '<div class="card">';
       FabMenuGal($galid);
       settype($page, "integer");
-      if (empty($page)) { $page = 1; }
+      if (empty($page)) $page = 1;
       ViewGal($galid, $page);
-      echo '</div>';
+      echo '
+      <script type="text/javascript" src="lib/js/masonry.pkgd.min.js"></script>
+      <script src="lib/js/imagesloaded.pkgd.min.js"></script>
+      <script  type="text/javascript">
+      //<![CDATA[
+            var grid = document.querySelector(".gridphot");
+            var msnry = new Masonry( grid, {
+              itemSelector: ".griditem",
+              columnWidth: 0,
+            });
+            imagesLoaded( grid ).on( "progress", function() {
+               msnry.layout();
+            });
+      //]]>
+      </script>';
    break;
    // Affichage d'une image
    case 'img':
@@ -87,10 +100,40 @@ switch($op) {
    // Top des commentaires
    case 'topcomment':
       TopCV("comment",$nbtopcomment);
+      echo '
+      <script type="text/javascript" src="lib/js/masonry.pkgd.min.js"></script>
+      <script src="lib/js/imagesloaded.pkgd.min.js"></script>
+      <script  type="text/javascript">
+      //<![CDATA[
+            var grid = document.querySelector(".gridphot");
+            var msnry = new Masonry( grid, {
+              itemSelector: ".griditem",
+              columnWidth: 0,
+            });
+            imagesLoaded( grid ).on( "progress", function() {
+               msnry.layout();
+            });
+      //]]>
+      </script>';
    break;
    // Top des votes
    case 'topvote':
       TopCV("vote",$nbtopvote);
+      echo '
+      <script type="text/javascript" src="lib/js/masonry.pkgd.min.js"></script>
+      <script src="lib/js/imagesloaded.pkgd.min.js"></script>
+      <script  type="text/javascript">
+      //<![CDATA[
+            var grid = document.querySelector(".gridphot");
+            var msnry = new Masonry( grid, {
+              itemSelector: ".griditem",
+              columnWidth: 0,
+            });
+            imagesLoaded( grid ).on( "progress", function() {
+               msnry.layout();
+            });
+      //]]>
+      </script>';
    break;
    // Vote pour une image
    case 'vote':
@@ -121,19 +164,26 @@ switch($op) {
    break;
 
    default :
-      echo '<div class="card">';
+      echo '<div class="card mb-3">';
       FabMenu();
       echo '</div>';
-      if ($view_alea) {
-      echo '<div class="card my-3">';
-      ViewAlea();
-      echo '</div>';
-      }
-      if ($view_last) {
-      echo '<div class="card my-3">';
-      ViewLastAdd();
-      echo '</div>';
-     }
+      if ($view_alea) ViewAlea();
+      if ($view_last) ViewLastAdd();
+      echo '
+      <script type="text/javascript" src="lib/js/masonry.pkgd.min.js"></script>
+      <script src="lib/js/imagesloaded.pkgd.min.js"></script>
+      <script  type="text/javascript">
+      //<![CDATA[
+            var grid = document.querySelector(".gridphot");
+            var msnry = new Masonry( grid, {
+              itemSelector: ".griditem",
+              columnWidth: 0,
+            });
+            imagesLoaded( grid ).on( "progress", function() {
+               msnry.layout();
+            });
+      //]]>
+      </script>';
    break;
 }
 

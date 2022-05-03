@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2020 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2022 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -99,7 +99,7 @@ $blocs = array(array("Galeries Photo"), array("include#modules/".$name_module."/
 $txtdeb = '<br /><strong>Attention:</strong> si le module '.$ModInstall.' est déjà installé sur votre site, veuillez sauter l\'étape de création de la base de données<br /><br />Sinon les tables tdgal_* de votre base de données seront écrasées</b><br /><br />';
 
 #autodoc $txtfin : Vous pouvez mettre ici un texte de votre choix avec du html qui s'affichera à la fin de l'install
-$txtfin = 'Nous vous recommandons de lire le tutorial situé dans le répertoire install du module.<br />Pour les questions et le support rendez vous sur <a href="http://modules.npds.org" target="_blank">modules.npds.org</a>';
+$txtfin = 'Nous vous recommandons de lire le tutorial situé dans le répertoire install du module.<br />Pour les questions et le support rendez vous sur <a href="http://www.npds.org" target="_blank">npds.org</a>';
 
 #autodoc $end_link: Lien sur lequel sera redirigé l'utilisateur à la fin de l'install (si laissé vide, redirigé sur index.php)
 #autodoc N'oubliez pas les '\' si vous utilisez des guillemets !!!
