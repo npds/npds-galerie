@@ -1557,34 +1557,30 @@ function EditImg($id) {
          <form id="formmodifimg" action="'.$ThisFile.'" method="post" name="FormModifImg">
             <input type="hidden" name="subop" value="doeditimg" />
             <input type="hidden" name="imgid" value="'.$id.'" />
-            <div class="form-group">
+            <div class="mb-3">
                <label class="col-form-label" for="imggal">'.gal_translate("Galeries").'</label>
-               <select id="imggal" name="imggal" class="custom-select">';
+               <select id="imggal" name="imggal" class="form-select">';
    echo select_arbo($rowA[2]);
    echo '
                </select>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                <label class="col-form-label" for="newdesc">'.gal_translate("Description").'</label>
                <textarea class="form-control" type="text" id="newdesc" name="newdesc" rows="3" maxlength="255">'.stripslashes($rowA[1]).'</textarea>
                <span class="help-block text-end" id="countcar_newdesc"></span>
             </div>
-            <div class="form-row">
-               <div class="form-group col-md-6">
+            <div class="form-row mb-3">
+               <div class="mb-3 col-md-6">
                   <label for="imglat" class="">'.gal_translate("Latitude").'</label>
                   <div class="input-group mb-2 me-sm-2">
-                     <div class="input-group-prepend">
-                        <div class="input-group-text jsgeo"><i class="fa fa-globe fa-lg"></i></div>
-                     </div>
+                     <div class="input-group-text jsgeo"><i class="fa fa-globe fa-lg"></i></div>
                      <input type="text" class="form-control" name="imglat" id="imglat" placeholder="'.gal_translate("Latitude").'" value="'.$rowA[3].'"/>
                   </div>
                </div>
-               <div class="form-group col-md-6">
+               <div class="mb-3 col-md-6">
                   <label for="imglong" class="">'.gal_translate("Longitude").'</label>
                   <div class="input-group mb-2 me-sm-2">
-                     <div class="input-group-prepend">
-                        <div class="input-group-text jsgeo"><i class="fa fa-globe fa-lg"></i></div>
-                     </div>
+                     <div class="input-group-text jsgeo"><i class="fa fa-globe fa-lg"></i></div>
                      <input type="text" class="form-control" name="imglong" id="imglong" placeholder="'.gal_translate("Longitude").'" value="'.$rowA[4].'"/>
                   </div>
                 </div>
@@ -2390,6 +2386,10 @@ $affi .= '
          </div>
       </div>
    </div>';
+   if(!defined('OL')) {
+      define('OL','ol');
+      $affi .= '<script type="text/javascript" src="/lib/ol/ol.js"></script>';
+   }
    $affi .= '
 <script type="text/javascript">
    //<![CDATA[
@@ -2397,9 +2397,6 @@ $affi .= '
       $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/geoloc/include/ol-geocoder.css\' type=\'text/css\' media=\'screen\'>");
-
-   if (typeof ol=="undefined")
-      $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/lib/ol/ol.js"}));
    $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/modules/geoloc/include/ol-geocoder.js"}));
    $(function () {
       //==>  affichage des coordonnées...
