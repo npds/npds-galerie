@@ -33,7 +33,7 @@ $affich='npds_galerie';
 $icon='npds_galerie';
 
 #autodoc $list_fich : Modifications de fichiers: Dans le premier tableau, tapez le nom du fichier
-#autodoc et dans le deuxème, A LA MEME POSITION D'INDEX QUE LE PREMIER, tapez le code à insérer dans le fichier.
+#autodoc et dans le deuxième, A LA MEME POSITION D'INDEX QUE LE PREMIER, tapez le code à insérer dans le fichier.
 #autodoc Si le fichier doit être créé, n'oubliez pas les < ? php et ? > !!! (sans espace!).
 #autodoc Synopsis: $list_fich = array(array("nom_fichier1","nom_fichier2"), array("contenu_fichier1","contenu_fichier2"));
 $list_fich = array(array(''), array(''));

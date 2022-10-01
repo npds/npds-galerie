@@ -1379,6 +1379,7 @@ function CreateThumb($Image, $Source, $Destination, $Max, $ext) {
 
 #autodoc Img_carte($img_point) : $img_point est une ou plusieurs commande js (push) de construction du tableau "img_features", cette variable $img_point doit donc être remplie dans la boucle récupérant les données dans la bd. Cette fonction ne peut être utilisée qu'une fois par page généré. 
 function Img_carte($img_point){
+   global $nuke_url;
    include_once('modules/geoloc/geoloc.conf');
    $cartyp='sat-google'; // choix manuel du provider ready4admin interface
 $source_fond=''; $max_r=''; $min_r='';$layer_id='';
@@ -1406,7 +1407,7 @@ switch ($cartyp) {
       $source_fond='
       new ol.source.XYZ({
          url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
-         crossOrigin: "Anonymous",
+         crossOrigin: "",
          attributions: " &middot; <a href=\"https://www.google.at/permissions/geoguidelines/attr-guide.html\">Map data ©2015 Google</a>"
       })';
       $max_r='40000';
@@ -1448,15 +1449,17 @@ switch ($cartyp) {
          <div id="sidebar" class= "sidebar collapse show col-sm-4 col-md-3 col-6 px-0"></div>
       </div>
    </div>
-   <a id="image-download" download="npds_galerie_map.png"></a>
-
+   <a id="image-download" crossorigin="anonymous" download="npds_galerie_map.png"></a>';
+   if(!defined('OL')) {
+      define('OL','ol');
+      echo '<script type="text/javascript" src="/lib/ol/ol.js"></script>';
+   }
+echo '
 <script type="text/javascript">
    //<![CDATA[
    if (!$("link[href=\'/lib/ol/ol.css\']").length)
       $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
-   if (typeof ol=="undefined")
-      $("head").append($("<script />").attr({"type":"text/javascript","src":"/lib/ol/ol.js"}));
    $(function () {
       //==>  affichage des coordonnées...
          var mousePositionControl = new ol.control.MousePosition({
@@ -1470,7 +1473,7 @@ switch ($cartyp) {
       iconimg = new ol.style.Style({
         image: new ol.style.Icon({
           src: "modules/npds_galerie/npds_galerie.png",
-//          crossOrigin:"Anonymous",
+          crossOrigin:"anonymous",
         })
       }),
       popup = new ol.Overlay({
@@ -1587,6 +1590,7 @@ switch ($cartyp) {
           element: element
       });
       map.addControl(downloadControl);
+
 
 //==> construction sidebar
       var img_feat = src_img.getFeatures(),
@@ -1718,7 +1722,6 @@ document.getElementById("export-png").addEventListener("click", function () {
         if (canvas.width > 0) {
           const opacity = canvas.parentNode.style.opacity || canvas.style.opacity;
           mapContext.globalAlpha = opacity === "" ? 1 : Number(opacity);
-          
          const backgroundColor = canvas.parentNode.style.backgroundColor;
           if (backgroundColor) {
             mapContext.fillStyle = backgroundColor;
@@ -1935,6 +1938,10 @@ $affi .= '
          </div>
       </div>
    </div>';
+   if(!defined('OL')) {
+      define('OL','ol');
+      $affi .= '<script type="text/javascript" src="/lib/ol/ol.js"></script>';
+   }
    $affi .= '
 <script type="text/javascript">
    //<![CDATA[
@@ -1942,9 +1949,6 @@ $affi .= '
       $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/lib/ol/ol.css\' type=\'text/css\' media=\'screen\'>");
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/npds_galerie/css/galerie.css\' type=\'text/css\' media=\'screen\'>");
    $("head link[rel=\'stylesheet\']").last().after("<link rel=\'stylesheet\' href=\'/modules/geoloc/include/ol-geocoder.css\' type=\'text/css\' media=\'screen\'>");
-
-   if (typeof ol=="undefined")
-      $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/lib/ol/ol.js"}));
    $("head").append($("<script />").attr({"type":"text/javascript","src":"'.$nuke_url.'/modules/geoloc/include/ol-geocoder.js"}));
    $(function () {
       //==>  affichage des coordonnées...
