@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2022 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2023 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -41,6 +41,7 @@ $list_fich = array(array(''), array(''));
 #autodoc $sql = array(""): Si votre module doit exécuter une ou plusieurs requêtes SQL, tapez vos requêtes ici.
 #autodoc Attention! UNE requête par élément de tableau! SVP respecter la syntaxe suivante PAS d'espace avant l'instruction
 #autodoc Synopsis: $sql = array("requête_sql_1","requête_sql_2");
+#autodoc Syntaxe création de table : 'CREATE TABLE "' ou 'CREATE TABLE IF NOT EXISTS "' <br /> tout les noms de table(s) utilisés doivent être concatené à gauche avec la variable $NPDS_Prefix
 global $NPDS_Prefix;
 $sql = array("CREATE TABLE ".$NPDS_Prefix."tdgal_cat (
   id int(11) NOT NULL auto_increment,

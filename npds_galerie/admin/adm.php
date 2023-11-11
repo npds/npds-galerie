@@ -37,11 +37,13 @@ if ($admin) {
    include_once("modules/$ModPath/admin/adm_func.php");
    include_once("modules/$ModPath/lang/galerie-$language.php");
 
+/*
 //update Tables for 2.2 release
    $result=sql_query("SELECT noaff from ".$NPDS_Prefix."tdgal_img");
    if (sql_num_rows($result)==0) {
       sql_query("ALTER TABLE ".$NPDS_Prefix."tdgal_img ADD `noaff` int(1) unsigned default '0'");
    }
+*/
 
    // Paramètres utilisé par le script
    $ThisFile = "admin.php?op=Extend-Admin-SubModule&amp;ModPath=$ModPath&amp;ModStart=$ModStart";

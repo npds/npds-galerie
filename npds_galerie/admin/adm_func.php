@@ -503,10 +503,7 @@ function AddImgs($imggal,$newcard1,$newdesc,$imglat,$imglong,$newcard2,$newcard3
       
       if (!empty($$img)) {
          $newimg = stripslashes(removeHack($$img));
-         if (!empty($newdesc[$i-1]))
-            $newtit = addslashes(removeHack($newdesc[$i-1]));
-         else
-            $newtit = '';
+         $newtit = (!empty($newdesc[$i-1])) ? addslashes(removeHack($newdesc[$i-1])) : '' ;
          $upload = new Upload();
          $upload->maxupload_size=200000*100;
          $origin_filename = trim($upload->getFileName("newcard".$i));
@@ -520,7 +517,7 @@ function AddImgs($imggal,$newcard1,$newdesc,$imglat,$imglong,$newcard2,$newcard3
                   @CreateThumb($newfilename, "modules/$ModPath/imgs/", "modules/$ModPath/mini/", $MaxSizeThumb, $filename_ext);
                }
                   echo '<ul class="list-group">';
-               if (sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES ('','$imggal','$newfilename','$newtit','','0','0','$lat','$long')")) {
+               if (sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_img VALUES ('0','$imggal','$newfilename','$newtit','0','0','0','$lat','$long')")) {
                   echo '<li class="list-group-item list-group-item-success"><i class="fa fa-info-circle me-2"></i>'.gal_translate("Image ajoutée avec succès").'</li>';
                } else {
                   echo '<li class="list-group-item list-group-item-danger"><i class="fa fa-info-circle me-2"></i>'.gal_translate("Impossible d'ajouter l'image en BDD").'</li>';
@@ -1321,7 +1318,7 @@ function PrintArbo() {
             echo '<span class="badge bg-secondary badge-pill ms-2" title="'.gal_translate("Nombre de galeries").'" data-bs-toggle="tooltip" data-bs-placement="right">'.($n_gc+$tn_gsc).'</span>';
          if(($tn_ig+$tn_igscs)>0)
             echo '<span class="badge bg-success badge-pill ms-2" title="'.gal_translate("Nombre d'images").'" data-bs-toggle="tooltip" data-bs-placement="right">'.($tn_ig+$tn_igscs).'</span>';
-         if($tn_ivgc>0 or $tn_ivgsc>0)
+         if($tn_ivgc>0 or (isset($tn_ivgsc) and$tn_ivgsc>0))
             echo '
             <a href="#cat'.$row_cat[0].'" data-bs-toggle="collapse" class="badge bg-danger badge-pill ms-2 tooltipbyclass" title="'.gal_translate("Nombre d'images à valider").'" data-bs-placement="right">'.($tn_ivgc+$tn_ivgsc).'</a>';
          echo '
