@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2022 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2023 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -43,27 +43,29 @@ foreach($tab_groupe as $X => $val) {
    if ($i < $count) $where1.= " OR ";
 }
 $query = sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_gal WHERE $where1");
+//var_dump("SELECT id FROM ".$NPDS_Prefix."tdgal_gal WHERE $where1");//debug on recupere toutes galerie ayant les droits en cours y compris la galerie temporaire...
 // Fabrication de la requête 2
 $where2='';
 $count = sql_num_rows($query); $i = 0;
 while ($row = sql_fetch_row($query)) {
-   $where2.= "(gal_id='$row[0]')";
+   $where2.= "(gal_id='$row[0]')"; // debug la on perd le -1 de la galerie temporaire ?????
    $i++;
    if ($i < $count) $where2.= ' OR ';
 }
+//var_dump("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE $where2 ORDER BY RAND() LIMIT 0,1");// debug
 $query = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE $where2 ORDER BY RAND() LIMIT 0,1");
 $row = sql_fetch_row($query);
-
 // Affichage
-$image=$row[2];
-$comment=$row[3];
-list($gallery)=sql_fetch_row(sql_query("SELECT nom FROM ".$NPDS_Prefix."tdgal_gal WHERE id='$row[1]'"));
+if (isset($row)) {
+   $image=$row[2];
+   $comment=$row[3];
+   list($gallery)=sql_fetch_row(sql_query("SELECT nom FROM ".$NPDS_Prefix."tdgal_gal WHERE id='$row[1]'"));
 
-$ibid ='<img class="img-thumbnail n-irl" src="modules/'.$ModPath.'/imgs/'.$image.'" data-bs-toggle="tooltip" data-bs-placement="bottom" title="'.gal_translate("Cliquer sur image").'" loading="lazy" />';
-$ibidg ='<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/imgs/'.$image.'" loading="lazy" />';
-$content ='';
-if ($image!='') {
-   $content .= '
+   $ibid ='<img class="img-thumbnail n-irl" src="modules/'.$ModPath.'/imgs/'.$image.'" data-bs-toggle="tooltip" data-bs-placement="bottom" title="'.gal_translate("Cliquer sur image").'" loading="lazy" />';
+   $ibidg ='<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/imgs/'.$image.'" loading="lazy" />';
+   $content ='';
+   if ($image!='') {
+      $content .= '
       <span data-bs-toggle="modal" data-bs-target="#photomodal">'.$ibid.'</span>
       <div class="modal fade" id="photomodal" tabindex="-1" role="dialog" aria-hidden="true">
          <div class="modal-dialog" role="document">
@@ -75,10 +77,13 @@ if ($image!='') {
       <p class="card-text d-flex justify-content-left mt-2"><a class="" data-bs-toggle="tooltip" data-bs-placement="bottom" title="'.gal_translate("Accès à la galerie").'" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=gal&amp;galid='.$row[1].'">
          '.stripslashes($gallery).'</a>
       </p>';
+      }
+   else
+      $content .= '<p class="card-text"><i class="fa fa-info-circle me-2"></i>'.gal_translate("Aucune galerie").'</p>';
    }
-else
-   $content .= '<p class="card-text"><i class="fa fa-info-circle me-2"></i>'.gal_translate("Aucune galerie").'</p>';
+else $content = 'Aucune image !';
 if($admin)
    $content .= '<div class="text-end"><a class="tooltipbyclass" href="admin.php?op=Extend-Admin-SubModule&amp;ModPath=npds_galerie&amp;ModStart=admin/adm" title="[french]Administration[/french][english]Administration[/english][chinese]&#34892;&#25919;[/chinese][spanish]Administraci&oacute;n[/spanish][german]Verwaltung[/german]" data-bs-placement="left"><i class="fa fa-cogs fa-lg ms-1"></i></a></div>';
+
 $content = aff_langue($content);
 ?>
