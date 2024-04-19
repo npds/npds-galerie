@@ -56,7 +56,7 @@ if ($admin) {
 
    echo '
    <div id="adm_men">
-      <h2 class="mb-3"><img class="me-2 mb-2" src="modules/npds_galerie/npds_galerie.png" alt="icon_npds_galerie">'.gal_translate('Galeries de photos').'<small class="float-right">'.$npds_gal_version.'</small></h2>
+      <h2 class="mb-3"><img class="me-2 mb-2" src="modules/'.$ModPath.'/npds_galerie.png" alt="icon_npds_galerie">'.gal_translate('Galeries de photos').'<small class="float-right">'.$npds_gal_version.'</small></h2>
       <div class=" mb-2 p-2 border rounded">
          <ul class="nav nav-pills nav-fill">
             <li class="nav-item">
