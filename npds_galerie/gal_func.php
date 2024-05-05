@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2022 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2024 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -2058,7 +2058,7 @@ $affi .= '
             source: src_georef,
             style: nolocatedstyle
          }),
-         source = new ol.source.Stamen({layer:"toner"}),
+         source = new ol.source.OSM(),
          overviewMapControl = new ol.control.OverviewMap({
             layers: [new ol.layer.Tile({source: source,})],
          }),
@@ -2275,7 +2275,7 @@ $affi .= '
 
    // ==> opacité sur couche de base
       $("#baselayeropacity").on("input change", function() {
-         map.getLayers().R[0].setOpacity(parseFloat(this.value));
+         map.getLayers().item(0).setOpacity(parseFloat(this.value));
       });
    // <== opacité sur couche de base
 
