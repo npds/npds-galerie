@@ -2,11 +2,11 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2022 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2024 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
-/* the Free Software Foundation; either version 2 of the License.       */
+/* the Free Software Foundation; either version 3 of the License.       */
 /* Module de gestion de galeries pour NPDS                              */
 /*                                                                      */
 /* (c) 2004-2005 Tribal-Dolphin - http://www.tribal-dolphin.net         */
@@ -201,9 +201,9 @@ function ListGalCat($catid) {
             <div class="col-md-4 mb-2">';
             if($nimg[0]!='0')
                $ibid.= '<a href="'.$ThisFile.'&amp;op=gal&amp;galid='.$row[0].'"><i class="fa fa-folder fa-2x align-middle me-2"></i>'.stripslashes($row[1]).'</a> <span class="badge bg-success rounded-pill" title="'.gal_translate("Nombre d'images").'" data-bs-toggle="tooltip" data-bs-placement="right">'.$nimg[0].'</span>
-               <br /><span class="small">'.gal_translate("Créée le").' '.date(translate("dateinternal"),$row[2]).'</span>';
+               <br /><span class="small">'.gal_translate("Créée le").' '.formatTimes($row[2], IntlDateFormatter::SHORT, IntlDateFormatter::NONE).'</span>';
             else 
-               $ibid.= '<span class="text-muted"><i class="far fa-folder fa-2x align-middle me-2"></i>'.stripslashes($row[1]).'<br /><span class="small">'.gal_translate("Créée le").' '.date(translate("dateinternal"),$row[2]).'</span></span>';
+               $ibid.= '<span class="text-muted"><i class="far fa-folder fa-2x align-middle me-2"></i>'.stripslashes($row[1]).'<br /><span class="small">'.gal_translate("Créée le").' '.formatTimes($row[2], IntlDateFormatter::SHORT, IntlDateFormatter::NONE).'</span></span>';
             $ibid.= '
             </div>';
          }
@@ -243,7 +243,7 @@ function ViewGal($galid, $page){
       else
          $current = $nbPages;
       echo '
-      <div class="row g-2 mt-2 gridphot">';
+      <div class="row g-2 mt-2 gridphot" data-masonry=\'{"percentPosition": true }\'>';
       $img_point='';
       while ($row = sql_fetch_row($query)) {
          $img_geotag='';
@@ -425,7 +425,7 @@ function ViewImg($galid, $pos, $interface) {
       <h4 class="card-title mt-3">'.gal_translate("Commentaire(s)").'</h4>';
                while ($rowC = sql_fetch_row($qcomment)) {
                   echo '
-      <div class="card mb-2"><div class="card-header"><strong>'.$rowC[2].'</strong><span class="small float-end">'.gal_translate('Posté le').' '.date(translate("dateinternal"),$rowC[5]).'</span></div>
+      <div class="card mb-2"><div class="card-header"><strong>'.$rowC[2].'</strong><span class="small float-end">'.gal_translate('Posté le').' '.formatTimes($rowC[5], IntlDateFormatter::MEDIUM, IntlDateFormatter::SHORT).'</span></div>
       <div class="card-body">'.stripslashes($rowC[3]).'</div></div>';
                }
 
@@ -895,7 +895,7 @@ function ViewLastAdd() {
 
    echo '
    <h4 class="card-header border-0">'.gal_translate("Derniers ajouts").'</h4>
-   <div class="row g-2 mt-2 gridphot">';
+   <div class="row g-2 mt-2 gridphot" data-masonry=\'{"percentPosition": true }\'>';
    while ($row = sql_fetch_row($query)) {
       $nbcom = sql_num_rows(sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='".$row[0]."'"));
       if (file_exists("modules/$ModPath/imgs/".$row[2])) {
@@ -1037,7 +1037,7 @@ function TopCV($typeOP, $nbtop) {
       sql_query("SELECT pic_id, count(user) AS pic_nbcom FROM ".$NPDS_Prefix."tdgal_com GROUP BY pic_id ORDER BY pic_nbcom DESC LIMIT 0,$nbtop"):
       sql_query("SELECT pic_id, count(user) AS pic_nbvote FROM ".$NPDS_Prefix."tdgal_vot GROUP BY pic_id ORDER BY pic_nbvote DESC LIMIT 0,$nbtop");
    echo '
-      <div class="row g-2 mt-2 gridphot">';
+      <div class="row g-2 mt-2 gridphot" data-masonry=\'{"percentPosition": true }\'>';
    $j=1;
    while (list($pic_id, $nb) = sql_fetch_row($result1)) {
       $result2=sql_fetch_assoc(sql_query("SELECT gal_id, name, comment FROM ".$NPDS_Prefix."tdgal_img WHERE id='$pic_id' AND noaff='0'"));
@@ -1532,10 +1532,10 @@ echo '
          });
 
       var map = new ol.Map({
-         interactions: new ol.interaction.defaults({
+         interactions: new ol.interaction.defaults.defaults({
             constrainResolution: true, onFocusOnly: true
          }),
-         controls: new ol.control.defaults({attribution: false}).extend([attribution, fullscreen, mousePositionControl, scaleline, zoomslider]),
+         controls: new ol.control.defaults.defaults({attribution: false}).extend([attribution, fullscreen, mousePositionControl, scaleline, zoomslider]),
          target: document.getElementById("mapimg"),
          layers: [
             fond_carte,
@@ -1547,7 +1547,6 @@ echo '
       map.addOverlay(popuptooltip);
 
       var extimg = img_markers.getSource().getExtent();
-      console.log(extimg);
       if (src_img_length==1) {
          view.setCenter(src_img.getFeatureById("i0").getGeometry().getFlatCoordinates());
          view.setZoom(4);
@@ -1597,9 +1596,10 @@ echo '
       var img_feat = src_img.getFeatures(),
           ima_nb = img_feat.length,
           sbimg=\'<div id="sb_img" class="list-group small"><div class="list-group-item bg-light text-dark fw-light px-1 lead"><img class="me-1" src="modules/npds_galerie/npds_galerie.png" alt="" style="vertical-align:middle;" data-bs-toggle="tooltip" title="'.html_entity_decode(gal_translate("Images géoréférencées"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'" /><span class="badge bg-secondary float-end">\'+ima_nb+\'</span></div><a class="sb_res list-group-item list-group-item-action py-1 px-1" ><input id="n_filtreimages" placeholder="'.html_entity_decode(gal_translate("Filtrer les images"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'" class="my-1 form-control form-control-sm" type="text" /></a>\';
+
       for (var key in img_feat) {
          if (img_feat.hasOwnProperty(key)) {
-            sbimg += \'<a id="\'+ img_feat[key].V +\'" href="#" onclick="centeronMe(\\\'\'+ img_feat[key].V +\'\\\');return false;" class="sb_img list-group-item list-group-item-action py-1 px-1" href="#"><img class="img-fluid n-ava-48" src="modules/npds_galerie/mini/\' + img_feat[key].A.imgName + \'" loading="lazy" /><span class="ms-1 nlfilt">\' + img_feat[key].A.imgName + \'</span></a>\';
+            sbimg += \'<a id="\'+ img_feat[key].getId() +\'" href="#" onclick="centeronMe(\\\'\'+ img_feat[key].getId() +\'\\\');return false;" class="sb_img list-group-item list-group-item-action py-1 px-1" href="#"><img class="img-fluid n-ava-48" src="modules/npds_galerie/mini/\' + img_feat[key].get("imgName") + \'" loading="lazy" /><span class="ms-1 nlfilt">\' + img_feat[key].get("imgName") + \'</span></a>\';
          }
       }
       sbimg +=\'</div>\';
@@ -2040,7 +2040,7 @@ $affi .= '
       pointGeoref5.setId(("pg5"));
       
       src_georef.addFeatures([pointGeoref1,pointGeoref2,pointGeoref3,pointGeoref4,pointGeoref5]);
-      src_georef.getFeatures().forEach(feat => {console.log(feat), feat.setStyle(
+      src_georef.getFeatures().forEach(feat => { feat.setStyle(
          new ol.style.Style({
             text: new ol.style.Text({
                text: "\uf030 "+feat.getId().substr(2),
@@ -2059,7 +2059,7 @@ $affi .= '
             source: src_georef,
             style: nolocatedstyle
          }),
-         source = new ol.source.Stamen({layer:"toner"}),
+         source = new ol.source.OSM(),
          overviewMapControl = new ol.control.OverviewMap({
             layers: [new ol.layer.Tile({source: source,})],
          }),
@@ -2094,10 +2094,10 @@ $affi .= '
             });
 
       var map = new ol.Map({
-         interactions: new ol.interaction.defaults({
+         interactions: new ol.interaction.defaults.defaults({
             constrainResolution: true, onFocusOnly: true
          }).extend([select,translate]),
-         controls: new ol.control.defaults({attribution: false}).extend([attribution, fullscreen, mousePositionControl, scaleline, zoomslider, overviewMapControl]),
+         controls: new ol.control.defaults.defaults({attribution: false}).extend([attribution, fullscreen, mousePositionControl, scaleline, zoomslider, overviewMapControl]),
          target: document.getElementById("mapol"),
          layers: [
             fond_carte,';
@@ -2276,7 +2276,7 @@ $affi .= '
 
    // ==> opacité sur couche de base
       $("#baselayeropacity").on("input change", function() {
-         map.getLayers().R[0].setOpacity(parseFloat(this.value));
+         map.getLayers().item(0).setOpacity(parseFloat(this.value));
       });
    // <== opacité sur couche de base
 

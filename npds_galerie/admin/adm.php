@@ -2,11 +2,11 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2022 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2024 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
-/* the Free Software Foundation; either version 2 of the License.       */
+/* the Free Software Foundation; either version 3 of the License.       */
 /* Module de gestion de galeries pour NPDS                              */
 /*                                                                      */
 /* (c) 2004-2005 Tribal-Dolphin - http://www.tribal-dolphin.net         */
@@ -56,7 +56,7 @@ if ($admin) {
 
    echo '
    <div id="adm_men">
-      <h2 class="mb-3"><img class="me-2 mb-2" src="modules/npds_galerie/npds_galerie.png" alt="icon_npds_galerie">'.gal_translate('Galeries de photos').'<small class="float-right">'.$npds_gal_version.'</small></h2>
+      <h2 class="mb-3"><img class="me-2 mb-2" src="modules/npds_galerie/npds_galerie.png" alt="icon_npds_galerie">'.gal_translate('Galeries de photos').'<small class="float-end">'.$npds_gal_version.'</small></h2>
       <div class=" mb-2 p-2 border rounded">
          <ul class="nav nav-pills nav-fill">
             <li class="nav-item">
