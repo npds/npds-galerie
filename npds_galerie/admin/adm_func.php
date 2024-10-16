@@ -1318,7 +1318,7 @@ function PrintArbo() {
             echo '<span class="badge bg-secondary badge-pill ms-2" title="'.gal_translate("Nombre de galeries").'" data-bs-toggle="tooltip" data-bs-placement="right">'.($n_gc+$tn_gsc).'</span>';
          if(($tn_ig+$tn_igscs)>0)
             echo '<span class="badge bg-success badge-pill ms-2" title="'.gal_translate("Nombre d'images").'" data-bs-toggle="tooltip" data-bs-placement="right">'.($tn_ig+$tn_igscs).'</span>';
-         if($tn_ivgc>0 or (isset($tn_ivgsc) and$tn_ivgsc>0))
+         if($tn_ivgc>0 or (isset($tn_ivgsc) and $tn_ivgsc>0))
             echo '
             <a href="#cat'.$row_cat[0].'" data-bs-toggle="collapse" class="badge bg-danger badge-pill ms-2 tooltipbyclass" title="'.gal_translate("Nombre d'images à valider").'" data-bs-placement="right">'.($tn_ivgc+$tn_ivgsc).'</a>';
          echo '
@@ -1640,7 +1640,7 @@ function EditImg($id) {
       <ul class="list-group mt-4">';
    while ($rowC = sql_fetch_row($qcomment)) {
       echo '
-         <li class="d-flex list-group-item list-group-item-light justify-content-between align-items-left">'.userpopover($rowC[2],40).' '.$rowC[2].'<br />'.gal_translate("Posté le").' '.date(translate("dateinternal"),$rowC[5]).'<span class="ms-auto"><a href="'.$ThisFile.'&amp;subop=delcomimg&amp;id='.$rowC[0].'&amp;picid='.$rowC[1].'"><i class="fas fa-trash fa-lg text-danger" title="'.gal_translate("Effacer").'" data-bs-toggle="tooltip"></i></a></span></li>
+         <li class="d-flex list-group-item list-group-item-light justify-content-between align-items-left">'.userpopover($rowC[2],40,'').' '.$rowC[2].'<br />'.gal_translate("Posté le").' '.formatTimes($rowC[5], IntlDateFormatter::MEDIUM, IntlDateFormatter::SHORT).'<span class="ms-auto"><a href="'.$ThisFile.'&amp;subop=delcomimg&amp;id='.$rowC[0].'&amp;picid='.$rowC[1].'"><i class="fas fa-trash fa-lg text-danger" title="'.gal_translate("Effacer").'" data-bs-toggle="tooltip"></i></a></span></li>
          <li class="list-group-item">'.stripslashes($rowC[3]).'</li>';
    }
    echo '
@@ -2145,9 +2145,9 @@ function massimport($imggal, $descri) {
 
 function ordre($ximg, $xordre, $xdesc) {
    global $ThisRedo, $NPDS_Prefix;
-   while(list($ibid,$img_id)=each($ximg)) {
-      echo $img_id, $xordre[$ibid].'<br />';
-      sql_query("UPDATE ".$NPDS_Prefix."tdgal_img SET ordre='$xordre[$ibid]', comment='$xdesc[$ibid]' WHERE id='$img_id'");
+   foreach ($ximg as $k => $v){
+      echo $v, $xordre[$k].'<br />';
+      sql_query("UPDATE ".$NPDS_Prefix."tdgal_img SET ordre='$xordre[$k]', comment='$xdesc[$k]' WHERE id='$v'");
    }
    redirect_url($ThisRedo."&subop=viewarbo");
 }
@@ -2496,15 +2496,17 @@ $affi .= '
          })
       )})';
    $affi .= '
+   
+      const source = new ol.source.OSM({});
+      const overviewMapControl = new ol.control.OverviewMap({
+            layers: [new ol.layer.Tile({source: source,})],
+         });
+
       var
          georef_marker = new ol.layer.Vector({
             id:"georef",
             source: src_georef,
             style: nolocatedstyle
-         }),
-         source = new ol.source.OSM({}),
-         overviewMapControl = new ol.control.OverviewMap({
-            layers: [new ol.layer.Tile({source: source,})],
          }),
          src_fond = '.$source_fond.',
          minR='.$min_r.',
@@ -2537,10 +2539,10 @@ $affi .= '
             });
 
       var map = new ol.Map({
-         interactions: new ol.interaction.defaults({
+         interactions: new ol.interaction.defaults.defaults({
             constrainResolution: true, onFocusOnly: true
          }).extend([select,translate]),
-         controls: new ol.control.defaults({attribution: false}).extend([attribution, fullscreen, mousePositionControl, scaleline, zoomslider, overviewMapControl]),
+         controls: new ol.control.defaults.defaults({attribution: false}).extend([attribution, fullscreen, mousePositionControl, scaleline, zoomslider, overviewMapControl]),
          target: document.getElementById("mapol"),
          layers: [
             fond_carte,';
