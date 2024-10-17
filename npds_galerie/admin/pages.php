@@ -6,7 +6,7 @@
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
-/* the Free Software Foundation; either version 3 of the License.       */
+/* the Free Software Foundation; either version 2 of the License.       */
 /* Module de gestion de galeries pour NPDS                              */
 /*                                                                      */
 /* (c) 2004-2005 Tribal-Dolphin - http://www.tribal-dolphin.net         */
@@ -23,6 +23,6 @@ $PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['run']="yes";
 $PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['blocs']="0";
 $PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['TinyMce']=1;
 $PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['TinyMce-theme']="short+setup";
-$PAGES['modules.php?ModPath='.$ModPath.'&ModStart=gal*']['css']=array($nuke_url.'/modules/npds_galerie/css/galerie.css+');
+$PAGES['modules.php?ModPath=npds_galerie&ModStart=gal*']['css']=array($nuke_url.'/modules/npds_galerie/css/galerie.css+',$nuke_url."/lib/bootstrap/dist/css/bootstrap-icons.css+");
 */
 ?>
