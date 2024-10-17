@@ -238,3 +238,8 @@ font-size: 0.8rem;
    top:8px;
    right:8px;
 }
+
+.n-irl {
+   max-width: 100%;
+   height: auto;
+}
