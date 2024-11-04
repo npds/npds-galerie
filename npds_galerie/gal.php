@@ -108,7 +108,7 @@ switch($op) {
             var grid = document.querySelector(".gridphot");
             var msnry = new Masonry( grid, {
               itemSelector: ".griditem",
-              columnWidth: 0,
+//              columnWidth: 0,
             });
             imagesLoaded( grid ).on( "progress", function() {
                msnry.layout();
