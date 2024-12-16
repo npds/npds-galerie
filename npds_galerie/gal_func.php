@@ -750,7 +750,7 @@ function PostComment($gal_id, $pos, $pic_id, $comm) {
    $qverif = sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_com WHERE pic_id='$pic_id' AND user='$name' AND comhostname='$host'");
    if (sql_num_rows($qverif) == 0) {
       $stamp = time()+((integer)$gmt*3600);
-      sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_com VALUES('',$pic_id,'$name','$comment','$host','$stamp')");
+      sql_query("INSERT INTO ".$NPDS_Prefix."tdgal_com VALUES(0,$pic_id,'$name','$comment','$host','$stamp')");
       redirect_url($ThisRedo."&op=img&galid=$gal_id&pos=$pos");
    } else {
       echo '
