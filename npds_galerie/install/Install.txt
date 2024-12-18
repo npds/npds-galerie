@@ -3,14 +3,14 @@
 ## Nom:  npds-galerie
 ## Version: 3.0
 ## Date:  2017
-## Auteurs: Tribal-Dolphin - Xgonin - Lopez - Dev -jpb -phr
+## Auteurs: Tribal-Dolphin - Xgonin - Lopez - Dev - jpb - phr
 ## 
 ## Description: Module de gestion de galerie photos
 ## 
 ## Niveau d'installation : Facile
 ## Temps d'installation : 2 minutes
-## Fichiers a éditer :  Aucuns
-## Minimum Requis : NPDS REvolutiion 16 
+## Fichiers à éditer :  Aucun
+## Minimum Requis : NPDS REvolution 16 
 ##
 ## Support sur: http://modules.npds.org/
 ##
