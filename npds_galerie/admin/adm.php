@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2024 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2025 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -190,7 +190,7 @@ if ($admin) {
    echo '
    <h3 class="my-3">'.gal_translate("Tableau récapitulatif").'</h3>
    <ul class="list-group">
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de catégories").'<span class="badge rounded-pill bg-ligth">'.$ncateg[0].'</span></li>
+      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de catégories").'<span class="badge rounded-pill bg-dark">'.$ncateg[0].'</span></li>
       <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de sous-catégories").'<span class="badge rounded-pill bg-dark">'.$nsscat[0].'</span></li>
       <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de galeries").'<span class="badge rounded-pill bg-secondary">'.$numgal[0].'</span></li>
       <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre d'images").'<span class="badge rounded-pill bg-success">'.$ncards[0].'</span></li>
