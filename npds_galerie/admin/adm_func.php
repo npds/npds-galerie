@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2024 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2025 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -38,7 +38,7 @@ function PrintFormCat() {
             <label class="col-sm-4 col-form-label" for="accescat">'.gal_translate("Accès pour").'</label>
             <div class="col-sm-8">
                <select class="form-select" id="accescat" name="accescat">';
-   echo Fab_Option_Group('','tousdroits');
+   echo Fab_Option_Group('tousdroits','');
    echo '
                </select>
             </div>
@@ -98,7 +98,7 @@ function PrintFormSSCat() {
          </div>
       </div>
       <div class="row mb-3 g-0">
-         <label class="col-sm-4 col-form-label" for="newsscat">'.gal_translate("Nom de la sous-catégorie").' '.$row[2].'</label>
+         <label class="col-sm-4 col-form-label" for="newsscat">'.gal_translate("Nom de la sous-catégorie").'</label>
          <div class="col-sm-8">
             <input type="text" class="form-control" name="newsscat" id="newsscat" placeholder="" required="required" />
             <span class="help-block text-end" id="countcar_newsscat"></span>
@@ -1827,10 +1827,10 @@ function Edit($type,$id) {
          <div class="col-sm-8">';
    if ($type=="Cat")
       echo '
-            <select class="form-select" type="select" name="newacces" id="newacces" >'.Fab_Option_Group($row[3],$rowp[0]).'</select>'.$notice;
+            <select class="form-select" type="select" name="newacces" id="newacces" >'.Fab_Option_Group($row[0],$rowp[3]).'</select>'.$notice;
    if ($type=="Gal")
       echo '
-            <select class="form-select" type="select" name="newacces" id="newacces" >'.Fab_Option_Group($row[4],$rowp[0]).'</select>';
+            <select class="form-select" type="select" name="newacces" id="newacces" >'.Fab_Option_Group($row[0],$rowp[4]).'</select>';
    echo '
          </div>
       </div>
@@ -1880,6 +1880,7 @@ function ChangeName($type,$id,$valeur,$galcat,$acces) {
 
 function PrintJavaCodeGal($selid) {
    global $NPDS_Prefix;
+   $tmp_groupe = array();//
    $query = sql_query("SELECT groupe_id, groupe_name FROM ".$NPDS_Prefix."groupes ORDER BY groupe_name");
    $nbgrp = sql_num_rows($query);
    while ($mX = sql_fetch_row($query)) {
@@ -1926,7 +1927,7 @@ function PrintJavaCodeGal($selid) {
          }
          txt_all.forEach(quelDroits);
       }
-      else if(code.indexOf("('.html_entity_decode(adm_translate("Utilisateur enregistré"),ENT_COMPAT | ENT_HTML401,cur_charset).')") !== -1) {
+      else if(code.indexOf("('.html_entity_decode(adm_translate("Utilisateur enregistré"),ENT_COMPAT | ENT_HTML401,'UTF-8').')") !== -1) {
          x.options.length = 0;
          function quelDroits(ac,ind) {
             if(ind != 0) { 
@@ -1962,7 +1963,7 @@ function PrintJavaCodeGal($selid) {
    </script>';
 }
 
-function Fab_Option_Group($GrpActu='0',$dp) {
+function Fab_Option_Group($dp, $GrpActu='0') {
    settype($txt,'string');
    switch($dp) {
       case -127: $priodroit = array("-127"); break;
