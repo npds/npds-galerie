@@ -37,26 +37,16 @@ if ($admin) {
    include_once("modules/$ModPath/admin/adm_func.php");
    include_once("modules/$ModPath/lang/galerie-$language.php");
 
-/*
-//update Tables for 2.2 release
-   $result=sql_query("SELECT noaff from ".$NPDS_Prefix."tdgal_img");
-   if (sql_num_rows($result)==0) {
-      sql_query("ALTER TABLE ".$NPDS_Prefix."tdgal_img ADD `noaff` int(1) unsigned default '0'");
-   }
-*/
-
    // Paramètres utilisé par le script
    $ThisFile = "admin.php?op=Extend-Admin-SubModule&amp;ModPath=$ModPath&amp;ModStart=$ModStart";
    $ThisRedo = "admin.php?op=Extend-Admin-SubModule&ModPath=$ModPath&ModStart=$ModStart";
 
 // En-Tête
-
    $hlpfile='';
    GraphicAdmin($hlpfile);
-
    echo '
    <div id="adm_men">
-      <h2 class="mb-3"><img class="me-2 mb-2" src="modules/npds_galerie/npds_galerie.png" alt="icon_npds_galerie">'.gal_translate('Galeries de photos').'<small class="float-end">'.$npds_gal_version.'</small></h2>
+      <h2 class="mb-3"><img class="me-2 mb-2" src="modules/'.$ModPath.'/npds_galerie.png" alt="icon_npds_galerie">'.gal_translate('Galeries de photos').'<small class="float-end">'.$npds_gal_version.'</small></h2>
       <div class=" mb-2 p-2 border rounded">
          <ul class="nav nav-pills nav-fill">
             <li class="nav-item">
@@ -89,119 +79,66 @@ if ($admin) {
    settype($subop,'string');
    settype($go, 'boolean');
    switch($subop) {
-   case 'formcat' :
-     PrintFormCat();
-     break;
-   case 'addcat' :
-     AddACat($newcat,$accescat);
-     break;
-   case 'formsscat' :
-     PrintFormSSCat();
-     break;
-   case 'addsscat' :
-     AddSsCat($cat,$newsscat,$accesscat);
-     break;
-   case 'formcregal' :
-     PrintCreerGalery();
-     break;
-   case 'creegal' :
-     AddNewGal($galcat,$newgal,$acces);
-     break;
-   case 'formimgs' :
-     PrintFormImgs();
-     break;
-   case 'addimgs' :
-     AddImgs($imggal,$newcard1,$newdesc,$imglat,$imglong,$newcard2,$newcard3,$newcard4,$newcard5);
-     break;
-   case 'viewarbo' :
-     PrintArbo();
-     break;
-   case 'delcat' :
-     DelCat($catid,$go);
-     break;
-   case 'editcat' :
-     Edit('Cat',$catid);
-     break;
-   case 'delsscat' :
-     DelSsCat($sscatid,$go);
-     break;
-   case 'delgal' :
-     DelGal($galid,$go);
-     break;
-   case 'editgal' :
-     Edit('Gal',$galid);
-     break;
-   case 'editimg' :
-     EditImg($imgid);
-     break;
-   case 'doeditimg' :
-     DoEditImg($imgid,$imggal,$newdesc,$imglat,$imglong);
-     break;
-   case 'delimg' :
-     DelImg($imgid,$go);
-     break;
-   case 'delimgbatch' :
-     DelImgBatch($imgids,$go);
-     break;
-   case 'valimgbatch' :
-     ValidImgBatch($imgidsv,$go);
-     break;
-   case 'validimg' :
-     DoValidImg($imgid);
-     break;
-   case 'delcomimg' :
-     DelComImg($id,$picid);
-     break;
-   case 'rename' :
-     if ($actualname == $newname) redirect_url($ThisRedo);
-     ChangeName($type,$gcid,$newname,$newgalcat,$newacces);
-     break;
-   case 'config' :
-     PrintFormConfig();
-     break;
-   case 'wrtconfig' :
-     WriteConfig($maxszimg,$maxszthb,$nbimpg,$nbimcomment,$nbimvote,$viewalea,$viewlast,$votegal,$commgal,$votano,$comano,$postano,$notifadmin);
-     break;
-   case 'import' :
-     import();
-     break;
-   case 'massimport' :
-     massimport($imggal, $descri);
-     break;
-   case 'export' :
-     PrintExportCat();
-     break;
-   case 'massexport' :
-     MassExportCat($cat);
-     break;
-   case 'ordre' :
-     ordre($img_id, $ordre, $desc);
-     break;
-
-   default :
-     $ncateg = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='0'"));
-     $nsscat = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_cat WHERE cid!='0'"));
-     $numgal = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_gal"));
-     $ncards = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_img"));
-     $ncomms = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_com"));
-     $nvotes = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_vot"));
-     $nviews = sql_fetch_row(sql_query("SELECT SUM(view) FROM ".$NPDS_Prefix."tdgal_img"));
-     $numgal[0] = ($numgal[0] -1);
-   echo '
-   <h3 class="my-3">'.gal_translate("Tableau récapitulatif").'</h3>
-   <ul class="list-group">
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de catégories").'<span class="badge rounded-pill bg-dark">'.$ncateg[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de sous-catégories").'<span class="badge rounded-pill bg-dark">'.$nsscat[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de galeries").'<span class="badge rounded-pill bg-secondary">'.$numgal[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre d'images").'<span class="badge rounded-pill bg-success">'.$ncards[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de commentaires").'<span class="badge rounded-pill bg-secondary">'.$ncomms[0].'</span></li> 
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de votes").'<span class="badge rounded-pill bg-secondary">'.$nvotes[0].'</span></li>
-      <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Images vues").'<span class="badge rounded-pill bg-secondary">'.$nviews[0].'</span></li>
-   </ul>';
-     break;
+      case 'formcat' : PrintFormCat(); break;
+      case 'addcat' : AddACat($newcat,$accescat); break;
+      case 'formsscat' : PrintFormSSCat(); break;
+      case 'addsscat' : AddSsCat($cat,$newsscat,$accesscat); break;
+      case 'formcregal' : PrintCreerGalery(); break;
+      case 'creegal' : AddNewGal($galcat,$newgal,$acces); break;
+      case 'formimgs' : PrintFormImgs(); break;
+      case 'addimgs' :
+         AddImgs($imggal,$newcard1,$newdesc,$imglat,$imglong,$newcard2,$newcard3,$newcard4,$newcard5);
+      break;
+      case 'viewarbo' : PrintArbo(); break;
+      case 'delcat' : DelCat($catid,$go); break;
+      case 'editcat' : Edit('Cat',$catid); break;
+      case 'delsscat' : DelSsCat($sscatid,$go); break;
+      case 'delgal' : DelGal($galid,$go); break;
+      case 'editgal' :  Edit('Gal',$galid); break;
+      case 'editimg' : EditImg($imgid); break;
+      case 'doeditimg' : DoEditImg($imgid,$imggal,$newdesc,$imglat,$imglong); break;
+      case 'delimg' : DelImg($imgid,$go); break;
+      case 'delimgbatch' : DelImgBatch($imgids,$go); break;
+      case 'valimgbatch' : ValidImgBatch($imgidsv,$go); break;
+      case 'validimg' : DoValidImg($imgid); break;
+      case 'delcomimg' : DelComImg($id,$picid); break;
+      case 'rename' :
+         if ($actualname == $newname) redirect_url($ThisRedo);
+         ChangeName($type,$gcid,$newname,$newgalcat,$newacces);
+      break;
+      case 'config' : PrintFormConfig(); break;
+      case 'wrtconfig' :
+         WriteConfig($maxszimg,$maxszthb,$nbimpg,$nbimcomment,$nbimvote,$viewalea,$viewlast,$votegal,$commgal,$votano,$comano,$postano,$notifadmin);
+      break;
+      case 'import' : import(); break;
+      case 'massimport' : massimport($imggal, $descri); break;
+      case 'export' : PrintExportCat(); break;
+      case 'massexport' : MassExportCat($cat); break;
+      case 'ordre' : ordre($img_id, $ordre, $desc); break;
+      default :
+         $ncateg = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_cat WHERE cid='0'"));
+         $nsscat = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_cat WHERE cid!='0'"));
+         $numgal = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_gal"));
+         $ncards = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_img"));
+         $ncomms = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_com"));
+         $nvotes = sql_fetch_row(sql_query("SELECT COUNT(id) FROM ".$NPDS_Prefix."tdgal_vot"));
+         $nviews = sql_fetch_row(sql_query("SELECT SUM(view) FROM ".$NPDS_Prefix."tdgal_img"));
+         $numgal[0] = ($numgal[0] -1);
+         echo '
+         <h3 class="my-3">'.gal_translate("Tableau récapitulatif").'</h3>
+         <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de catégories").'<span class="badge rounded-pill bg-dark">'.$ncateg[0].'</span></li>
+            <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de sous-catégories").'<span class="badge rounded-pill bg-dark">'.$nsscat[0].'</span></li>
+            <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de galeries").'<span class="badge rounded-pill bg-secondary">'.$numgal[0].'</span></li>
+            <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre d'images").'<span class="badge rounded-pill bg-success">'.$ncards[0].'</span></li>
+            <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de commentaires").'<span class="badge rounded-pill bg-secondary">'.$ncomms[0].'</span></li> 
+            <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Nombre de votes").'<span class="badge rounded-pill bg-secondary">'.$nvotes[0].'</span></li>
+            <li class="list-group-item d-flex justify-content-between align-items-center lead">'.gal_translate("Images vues").'<span class="badge rounded-pill bg-secondary">'.$nviews[0].'</span></li>
+         </ul>';
+      break;
    }
    echo '
    </div>';
-include "footer.php";
+   include "footer.php";
 }
 ?>
