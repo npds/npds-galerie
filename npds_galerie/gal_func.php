@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2024 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2025 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -1579,7 +1579,7 @@ echo '
 
       var buttond = document.createElement("button");
       buttond.setAttribute("id","export-png");
-      buttond.setAttribute("title","'.html_entity_decode(gal_translate("Télécharger comme image.png"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'");
+      buttond.setAttribute("title","'.html_entity_decode(gal_translate("Télécharger comme image.png"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,'UTF-8').'");
       buttond.setAttribute("data-bs-toggle","tooltip");
       buttond.setAttribute("data-bs-placement","left");
       buttond.innerHTML = "&#xf019";
@@ -1591,12 +1591,10 @@ echo '
       });
       map.addControl(downloadControl);
 
-
 //==> construction sidebar
       var img_feat = src_img.getFeatures(),
           ima_nb = img_feat.length,
-          sbimg=\'<div id="sb_img" class="list-group small"><div class="list-group-item bg-light text-dark fw-light px-1 lead"><img class="me-1" src="modules/npds_galerie/npds_galerie.png" alt="" style="vertical-align:middle;" data-bs-toggle="tooltip" title="'.html_entity_decode(gal_translate("Images géoréférencées"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'" /><span class="badge bg-secondary float-end">\'+ima_nb+\'</span></div><a class="sb_res list-group-item list-group-item-action py-1 px-1" ><input id="n_filtreimages" placeholder="'.html_entity_decode(gal_translate("Filtrer les images"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,cur_charset).'" class="my-1 form-control form-control-sm" type="text" /></a>\';
-
+          sbimg=\'<div id="sb_img" class="list-group small"><div class="list-group-item bg-light text-dark fw-light px-1 lead"><img class="me-1" src="modules/npds_galerie/npds_galerie.png" alt="" style="vertical-align:middle;" data-bs-toggle="tooltip" title="'.html_entity_decode(gal_translate("Images géoréférencées"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,'UTF-8').'" /><span class="badge bg-secondary float-end">\'+ima_nb+\'</span></div><a class="sb_res list-group-item list-group-item-action py-1 px-1" ><input id="n_filtreimages" placeholder="'.html_entity_decode(gal_translate("Filtrer les images"),ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML401,'UTF-8').'" class="my-1 form-control form-control-sm" type="text" /></a>\';
       for (var key in img_feat) {
          if (img_feat.hasOwnProperty(key)) {
             sbimg += \'<a id="\'+ img_feat[key].getId() +\'" href="#" onclick="centeronMe(\\\'\'+ img_feat[key].getId() +\'\\\');return false;" class="sb_img list-group-item list-group-item-action py-1 px-1" href="#"><img class="img-fluid n-ava-48" src="modules/npds_galerie/mini/\' + img_feat[key].get("imgName") + \'" loading="lazy" /><span class="ms-1 nlfilt">\' + img_feat[key].get("imgName") + \'</span></a>\';
