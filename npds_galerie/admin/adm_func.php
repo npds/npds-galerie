@@ -2178,7 +2178,7 @@ function PrintExportCat() {
 
 function MassExportCat($cat) {
    global $NPDS_Prefix, $ThisRedo, $ModPath;
-
+   $ibid = '';
    $sql_cat = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_cat WHERE id='$cat'");
    $num_cat = sql_num_rows($sql_cat);
    if ($num_cat != 0) {
