@@ -108,6 +108,7 @@ if ($admin) {
       break;
       case 'config' : PrintFormConfig(); break;
       case 'wrtconfig' :
+         $maxszimg = 1000 ; $maxszthb = 300 ; //just for remove undefined variables - à revoir
          WriteConfig($maxszimg,$maxszthb,$nbimpg,$nbimcomment,$nbimvote,$viewalea,$viewlast,$votegal,$commgal,$votano,$comano,$postano,$notifadmin);
       break;
       case 'import' : import(); break;
