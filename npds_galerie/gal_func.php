@@ -403,14 +403,15 @@ function ViewImg($galid, $pos, $interface) {
       <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Dimensions").'<span class="badge bg-secondary">'.$width.' x '.$height.' Pixels</span></li>';
    if ($aff_vote) {
       $rowV = sql_fetch_row(sql_query("SELECT COUNT(id), AVG(rating) FROM ".$NPDS_Prefix."tdgal_vot WHERE pic_id='".$row[0]."'"));
-      $note = round($rowV[1]); $star='';
-      if($note) {
+      $note = ($rowV[1] !== null) ? round($rowV[1]) : 0 ; 
+      $star='';
+      if ($note) {
          $i=0;
          while($i<$note) {$star.='<i class="fa fa-star mx-1"></i>';$i++;}
       }
       echo '
       <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Note ").$rowV[0].' '.gal_translate("vote(s)").'<span class="text-success" title="'.$note.'/6" data-bs-toggle="tooltip" data-bs-placement="left">'.$star.'</span></li>';
-      }
+   }
    echo '
       <li class="list-group-item d-flex justify-content-between align-items-center">'.gal_translate("Affichées").'<span class="badge bg-secondary">'.($row[4] + 1).' '.gal_translate("fois").'</span></li>
    </ul>';
