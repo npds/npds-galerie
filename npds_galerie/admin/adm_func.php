@@ -812,7 +812,7 @@ function WriteConfig($maxszimg,$maxszthb,$nbimpg,$nbimcomment,$nbimvote,$viewale
    $content.= "// Notification admin par email de la proposition\n";
    $content.= "\$notif_admin = ".$notifadmin.";\n\n";
    $content.= "// Version du module\n";
-   $content.= "\$npds_gal_version = \"V 3.2\";\n";
+   $content.= "\$npds_gal_version = \"v 3.3\";\n";
    $content.= "?>";
      
    if ($myfile = fopen("$filename", "wb")) {
