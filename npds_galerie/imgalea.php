@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2024 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2025 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -25,36 +25,36 @@ if (stristr($_SERVER['PHP_SELF'],'imgalea.php')) die();
 global $language, $NPDS_Prefix;
 $ModPath="npds_galerie";
 include_once("modules/$ModPath/lang/galerie-$language.php");
+$tab_groupe2 = array();
 
 if (isset($user) and $user !='') {
-   $tab_groupe = valid_group($user);
-   $tab_groupe[] = 1;
+   $tab_groupe2 = valid_group($user);
+   $tab_groupe2[] = 1;
 }
-if (isset($admin) && $admin!='')
-   $tab_groupe[] = -127;
-$tab_groupe[] = 0;
 
+if(autorisation(-127))
+   $tab_groupe2[] = -127;
+$tab_groupe2[] = 0;
 // Fabrication de la requête 1
 $where1='';
-$count = count($tab_groupe); $i = 0;
-foreach($tab_groupe as $X => $val) {
-   $where1.= "(acces='$val')";
+$count = count($tab_groupe2); $i = 0;
+foreach($tab_groupe2 as $X => $val) {
+  if($val!='') $where1.= "(acces='$val')";
    $i++;
-   if ($i < $count) $where1.= " OR ";
+   if ($i < $count and $val!='') $where1.= " OR ";
 }
 $query = sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_gal WHERE $where1");
-//var_dump("SELECT id FROM ".$NPDS_Prefix."tdgal_gal WHERE $where1");//debug on recupere toutes galerie ayant les droits en cours y compris la galerie temporaire...
-// Fabrication de la requête 2
 $where2='';
 $count = sql_num_rows($query); $i = 0;
-while ($row = sql_fetch_row($query)) {
-   $where2.= "(gal_id='$row[0]')"; // debug la on perd le -1 de la galerie temporaire ?????
-   $i++;
-   if ($i < $count) $where2.= ' OR ';
+if($count > 0) {
+   while ($row = sql_fetch_row($query)) {
+      $where2.= "(gal_id='$row[0]')";
+      $i++;
+      if ($i < $count) $where2.= ' OR ';
+   }
+   $query = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE $where2 ORDER BY RAND() LIMIT 0,1");
+   $row = sql_fetch_row($query);
 }
-//var_dump("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE $where2 ORDER BY RAND() LIMIT 0,1");// debug
-$query = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE $where2 ORDER BY RAND() LIMIT 0,1");
-$row = sql_fetch_row($query);
 // Affichage
 if (isset($row)) {
    $image=$row[2];
@@ -74,7 +74,7 @@ if (isset($row)) {
             </div>
          </div>
       </div>
-      <p class="card-text d-flex justify-content-left mt-2"><a class="" data-bs-toggle="tooltip" data-bs-placement="bottom" title="'.gal_translate("Accès à la galerie").'" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=gal&amp;galid='.$row[1].'">
+      <p class="card-text d-flex justify-content-left mt-2"><a data-bs-toggle="tooltip" data-bs-placement="bottom" title="'.gal_translate("Accès à la galerie").'" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=gal&amp;galid='.$row[1].'">
          '.stripslashes($gallery).'</a>
       </p>';
       }
