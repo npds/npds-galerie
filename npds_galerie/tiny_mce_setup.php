@@ -3,9 +3,9 @@
 /* DUNE by NPDS                                                         */
 /* ===========================                                          */
 /*                                                                      */
-/* npds_galerie 3.2                                                     */
+/* npds_galerie 3.3                                                     */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2024 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2025 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -18,7 +18,6 @@
 $tmp.= "
 setup: function (editor) {
    editor.on('keyup', function() {
-      console.log('Editor was clicked');
       // Revalidate the comment field
       fv.revalidateField('card_msg');
     });
