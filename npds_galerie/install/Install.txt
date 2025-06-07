@@ -1,9 +1,9 @@
 ######################################################################################
 ##
-## Nom:  npds-galerie
-## Version: 3.0
-## Date:  2017
-## Auteurs: Tribal-Dolphin - Xgonin - Lopez - Dev - jpb - phr
+## Nom:  npds_galerie
+## Version: 3.3
+## Date:  2025
+## Auteurs: Tribal-Dolphin - Xgonin - Lopez - Dev - jpb - phr - Jireck
 ## 
 ## Description: Module de gestion de galerie photos
 ## 
@@ -12,55 +12,49 @@
 ## Fichiers à éditer :  Aucun
 ## Minimum Requis : NPDS REvolution 16 
 ##
-## Support sur: http://modules.npds.org/
+## Support sur: https://www.npds.org
 ##
 #######################################################################################
 ##
 ## INSTALLATION AUTOMATIQUE (RECOMMANDEE)
 ## 1. Décompresser l'archive dans le dossier modules de votre site
 ## 2. Via l'administration du portail aller dans Gestion/Installation Modules
-## 3. En face td-galerie, cliquer sur installer le module et suivez la procédure
+## 3. En face de npds_galerie, cliquer sur installer le module et suivez la procédure
 ##
 ## Attention: si td-galerie 1.4 était installé auparavant sur votre site et que vous souhaitez
 ## conserver vos tables tdgal_*, veillez sauter l'étape de mise à jour de la base de données MYSQL
 ##
 ##
-## INSTALLATION MANUELLE
+## INSTALLATION MANUELLE (DECONSEILLE)
 ## 1. Décompresser l'archive dans le dossier modules de votre site
 ## 2. Créer la base de données à l'aide du fichier SQL joint
 ## 3. Mettez un CHMOD 766 sur le fichier gal_conf.php
 ## 4. Mettez un CHMOD 777 sur les dossiers imgs/ et mini/
 ##
 ## CONFIGURATION
-## Via Admin-Plugins de NPDS.
+## Via Administration NPDS.
+## /admin.php?op=Extend-Admin-SubModule&ModPath=npds_galerie&ModStart=admin/adm&subop=config
 ##
 ## UTILISATION DU MODULE
 ## Appel grace à une URL du type : 
-##		<a href=modules.php?ModPath=td-galerie&ModStart=gal>Mes galeries</a>
+##	/modules.php?ModPath=npds_galerie&ModStart=gal
 ##
 ## ADMINISTRATION DU MODULE
-## Via Admin-Plugins de NPDS. 
+## Via Administration NPDS. 
+## /admin.php?op=Extend-Admin-SubModule&ModPath=npds_galerie&ModStart=admin/adm
 ##
 ## BLOC IMGALEA - GALERIE PHOTO
 ## Ce bloc n'est disponible que si vous avez fait une installation automatique, 
 ## si vous avez fait une installation manuelle, insérer le script imgalea.php
-## ou le script imgalea_priv.php dans un bloc en respectant la syntaxe suivante:
+## dans un bloc en respectant la syntaxe suivante:
 ##
-## include#modules/td-galerie/imgalea.php
-## ou
-## include#modules/td-galerie/imgalea_priv.php
+## include#modules/npds_galerie/imgalea.php
 ##
-## remarque: 
-## imgalea_priv.php permet de faire apparaitre également dans le bloc les vignettes
-## provenant de galeries photo membre ou privées (autorisées à un groupe NPDS), mais pour pouvoir consulter
-## les galeries en question, il faut bien sûr être inscrit, faire partie du groupe et être connecté.
 ##
-## imgealea_priv.php permet donc de donner un aperçu des galeries privées de manière à inciter
-## les utilisateurs à s'enregistrer et se connecter.
+########################################################################################
 ##
-## ------------------------------------------------------------------------------------
+## CHANGELOG et HISTORIQUE -------------------------------------------------------------
 ##
-
 ## CHANGEMENTS DEPUIS LA VERSION 2.1
 ## - Amélioration de l'administration via une version améliorée de ToggleDiv
 ## - Amélioration de l'administration via des ListBox plus "rationnelles"
@@ -99,8 +93,6 @@
 ## - Correction du bug de classement alphabéthique des galeries
 ## - Correction du bug de sécurité: sur la version 1.4 il était possible d'accèder à des galeries privées
 ##   via la page d'accueil et la section images aléatoires du module lorsqu'on était connecté membre.
-##
-##
 ##
 #######################################################################################
 ##
