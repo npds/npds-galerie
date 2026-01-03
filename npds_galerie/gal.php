@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2024 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2026 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -24,17 +24,17 @@ if (strstr($ModPath,'..') || strstr($ModStart,'..') || stristr($ModPath, 'script
 global $language, $NPDS_Prefix;
 // For More security
 
-include_once('functions.php');
-include_once("modules/$ModPath/gal_conf.php");
-include_once("modules/$ModPath/gal_func.php");
-include_once("modules/$ModPath/lang/galerie-$language.php");
-include_once("modules/$ModPath/admin/pages.php");
+include_once 'functions.php';
+include_once 'modules/'.$ModPath.'/gal_conf.php';
+include_once 'modules/'.$ModPath.'/gal_func.php';
+include_once 'modules/'.$ModPath.'/lang/galerie-'.$language.'.php';
+include_once 'modules/'.$ModPath.'/admin/pages.php';
 
 // Paramètres utilisés par le script
-$ThisFile = "modules.php?ModPath=$ModPath&amp;ModStart=gal";
-$ThisRedo = "modules.php?ModPath=$ModPath&ModStart=$ModStart";
+$ThisFile = 'modules.php?ModPath='.$ModPath.'&amp;ModStart=gal';
+$ThisRedo = 'modules.php?ModPath='.$ModPath.'&ModStart='.$ModStart;
 
-include("header.php");
+include 'header.php';
 settype($op,'string');
 switch($op) {
    // Affichage des catégories et ses galeries
@@ -187,5 +187,5 @@ switch($op) {
    break;
 }
 
-include("footer.php");
+include 'footer.php';
 ?>

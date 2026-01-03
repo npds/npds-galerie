@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2025 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2026 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -23,11 +23,11 @@ if (stristr($_SERVER['PHP_SELF'],'imgalea.php')) die();
 /* appel du bloc gauche ou droite: include#modules/npds_galerie/imgalea.php                       */
 /**************************************************************************************************/
 global $language, $NPDS_Prefix;
-$ModPath="npds_galerie";
-include_once("modules/$ModPath/lang/galerie-$language.php");
+$ModPath = 'npds_galerie';
+include_once 'modules/'.$ModPath.'/lang/galerie-'.$language.'.php';
 $tab_groupe2 = array();
 
-if (isset($user) and $user !='') {
+if (isset($user) and $user != '') {
    $tab_groupe2 = valid_group($user);
    $tab_groupe2[] = 1;
 }
@@ -36,35 +36,35 @@ if(autorisation(-127))
    $tab_groupe2[] = -127;
 $tab_groupe2[] = 0;
 // Fabrication de la requête 1
-$where1='';
+$where1 = '';
 $count = count($tab_groupe2); $i = 0;
 foreach($tab_groupe2 as $X => $val) {
-  if($val!='') $where1.= "(acces='$val')";
+  if($val != '') $where1 .= "(acces='$val')";
    $i++;
-   if ($i < $count and $val!='') $where1.= " OR ";
+   if ($i < $count and $val != '') $where1 .= " OR ";
 }
 $query = sql_query("SELECT id FROM ".$NPDS_Prefix."tdgal_gal WHERE $where1");
-$where2='';
+$where2 = '';
 $count = sql_num_rows($query); $i = 0;
 if($count > 0) {
    while ($row = sql_fetch_row($query)) {
-      $where2.= "(gal_id='$row[0]')";
+      $where2 .= "(gal_id='$row[0]')";
       $i++;
-      if ($i < $count) $where2.= ' OR ';
+      if ($i < $count) $where2 .= ' OR ';
    }
    $query = sql_query("SELECT * FROM ".$NPDS_Prefix."tdgal_img WHERE $where2 ORDER BY RAND() LIMIT 0,1");
    $row = sql_fetch_row($query);
 }
 // Affichage
 if (isset($row)) {
-   $image=$row[2];
-   $comment=$row[3];
-   list($gallery)=sql_fetch_row(sql_query("SELECT nom FROM ".$NPDS_Prefix."tdgal_gal WHERE id='$row[1]'"));
+   $image = $row[2];
+   $comment = $row[3];
+   list($gallery) = sql_fetch_row(sql_query("SELECT nom FROM ".$NPDS_Prefix."tdgal_gal WHERE id='$row[1]'"));
 
-   $ibid ='<img class="img-thumbnail n-irl" src="modules/'.$ModPath.'/imgs/'.$image.'" data-bs-toggle="tooltip" data-bs-placement="bottom" title="'.gal_translate("Cliquer sur image").'" loading="lazy" />';
-   $ibidg ='<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/imgs/'.$image.'" loading="lazy" />';
-   $content ='';
-   if ($image!='') {
+   $ibid = '<img class="img-thumbnail n-irl" src="modules/'.$ModPath.'/imgs/'.$image.'" data-bs-toggle="tooltip" data-bs-placement="bottom" title="'.gal_translate('Cliquer sur image').'" loading="lazy" />';
+   $ibidg = '<img class="img-fluid card-img-top" src="modules/'.$ModPath.'/imgs/'.$image.'" loading="lazy" />';
+   $content = '';
+   if ($image != '') {
       $content .= '
       <span data-bs-toggle="modal" data-bs-target="#photomodal">'.$ibid.'</span>
       <div class="modal fade" id="photomodal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -74,12 +74,12 @@ if (isset($row)) {
             </div>
          </div>
       </div>
-      <p class="card-text d-flex justify-content-left mt-2"><a data-bs-toggle="tooltip" data-bs-placement="bottom" title="'.gal_translate("Accès à la galerie").'" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=gal&amp;galid='.$row[1].'">
+      <p class="card-text d-flex justify-content-left mt-2"><a data-bs-toggle="tooltip" data-bs-placement="bottom" title="'.gal_translate('Accès à la galerie').'" href="modules.php?ModPath='.$ModPath.'&amp;ModStart=gal&amp;op=gal&amp;galid='.$row[1].'">
          '.stripslashes($gallery).'</a>
       </p>';
       }
    else
-      $content .= '<p class="card-text"><i class="fa fa-info-circle me-2"></i>'.gal_translate("Aucune galerie").'</p>';
+      $content .= '<p class="card-text"><i class="fa fa-info-circle me-2"></i>'.gal_translate('Aucune galerie').'</p>';
    }
 else $content = 'Aucune image !';
 if($admin)

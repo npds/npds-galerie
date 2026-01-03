@@ -2,7 +2,7 @@
 /************************************************************************/
 /* DUNE by NPDS                                                         */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2024 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2026 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -28,9 +28,9 @@ if (strstr($ModPath,'..') || strstr($ModStart,'..') || stristr($ModPath, 'script
 // For More security
 
    global $language;
-   include_once("modules/$ModPath/gal_conf.php");
-   include_once("modules/$ModPath/gal_func.php");
-   include_once("modules/$ModPath/lang/galerie-$language.php");
+   include_once 'modules/'.$ModPath.'/gal_conf.php';
+   include_once 'modules/'.$ModPath.'/gal_func.php';
+   include_once 'modules/'.$ModPath.'/lang/galerie-'.$language.'.php';
    if (!isset($data)) redirect_url("modules.php?ModPath=$ModPath&ModStart=gal");
 
    $card_data = array();
@@ -42,7 +42,7 @@ if (strstr($ModPath,'..') || strstr($ModStart,'..') || stristr($ModPath, 'script
 <html lang="'.language_iso(1,0,0).'">
    <head>
       <meta charset="utf-8" />
-      <title>'.gal_translate("Une E-carte pour vous").'</title>
+      <title>'.gal_translate('Une E-carte pour vous').'</title>
       <meta http-equiv="content-type" content="text/html" />
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />

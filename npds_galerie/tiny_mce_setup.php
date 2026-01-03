@@ -5,7 +5,7 @@
 /*                                                                      */
 /* npds_galerie 3.3                                                     */
 /*                                                                      */
-/* NPDS Copyright (c) 2002-2025 by Philippe Brunier                     */
+/* NPDS Copyright (c) 2002-2026 by Philippe Brunier                     */
 /*                                                                      */
 /* This program is free software. You can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -15,7 +15,7 @@
 /* qui doit obligatoirement se trouver concaténer dans la variable $tmp */
 /************************************************************************/
 
-$tmp.= "
+$tmp .= "
 setup: function (editor) {
    editor.on('keyup', function() {
       // Revalidate the comment field

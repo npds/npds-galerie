@@ -2,7 +2,7 @@
 ##
 ## Nom:  npds_galerie
 ## Version: 3.3
-## Date:  2025
+## Date:  2026
 ## Auteurs: Tribal-Dolphin - Xgonin - Lopez - Dev - jpb - phr - Jireck
 ## 
 ## Description: Module de gestion de galerie photos
